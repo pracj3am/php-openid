@@ -3,7 +3,7 @@
 /**
  * In-memory OpenID store implementation for testing only
  */
-require_once "Auth/OpenID/Interface.php";
+require_once "Auth/OpenID/Store.php";
 require_once 'Auth/OpenID/Nonce.php';
 
 class ServerAssocs {
@@ -75,8 +75,9 @@ class ServerAssocs {
  *
  * Use for single long-running processes.  No persistence supplied.
  */
-class Tests_Auth_OpenID_MemStore extends Auth_OpenID_OpenIDStore {
-    function Tests_Auth_OpenID_MemStore()
+class Tests_Auth_OpenID_MemStore extends Auth_OpenID_Store {
+
+    function __construct()
     {
         $this->server_assocs = array();
         $this->nonces = array();

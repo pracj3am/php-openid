@@ -13,6 +13,8 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
  */
 
+set_include_path(dirname(__FILE__) . '/../:' . get_include_path());
+
 require_once 'PHPUnit/Framework.php';
 //require_once 'PHPUnit/GUI/HTML.php';
 

@@ -35,7 +35,7 @@ function _Auth_OpenID_mkdtemp()
         }
     }
 
-    return Auth_OpenID_FileStore::_mkdtemp($dir);
+    return Auth_OpenID_Store_File::_mkdtemp($dir);
 }
 
 /**
@@ -416,7 +416,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
 
     function test_filestore()
     {
-        require_once 'Auth/OpenID/FileStore.php';
+        require_once 'Auth/OpenID/Store/File.php';
 
         $temp_dir = _Auth_OpenID_mkdtemp();
 
@@ -427,7 +427,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return null;
         }
 
-        $store = new Auth_OpenID_FileStore($temp_dir);
+        $store = new Auth_OpenID_Store_File($temp_dir);
         $this->_testStore($store);
         $this->_testNonce($store);
         $this->_testNonceCleanup($store);
@@ -445,7 +445,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        require_once 'Auth/OpenID/PostgreSQLStore.php';
+        require_once 'Auth/OpenID/Store/PostgreSQL.php';
 
         global $_Auth_OpenID_db_test_host;
 
@@ -563,7 +563,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        require_once 'Auth/OpenID/SQLiteStore.php';
+        require_once 'Auth/OpenID/Store/SQLite.php';
 
         $temp_dir = _Auth_OpenID_mkdtemp();
 
@@ -606,7 +606,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        require_once 'Auth/OpenID/MySQLStore.php';
+        require_once 'Auth/OpenID/Store/MySQL.php';
 
         global $_Auth_OpenID_db_test_host;
 
@@ -659,7 +659,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        require_once 'Auth/OpenID/MDB2Store.php';
+        require_once 'Auth/OpenID/Store/MDB2.php';
 
         global $_Auth_OpenID_db_test_host;
 
@@ -720,7 +720,7 @@ class Tests_Auth_OpenID_MemcachedStore_Test extends Tests_Auth_OpenID_Store {
             $this->pass();
             return;
         }
-        require_once 'Auth/OpenID/MemcachedStore.php';
+        require_once 'Auth/OpenID/Store/Memcached.php';
 
         global $_Auth_OpenID_memcache_test_host;
 

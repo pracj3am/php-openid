@@ -66,7 +66,7 @@
  *
  * The OpenID server needs to maintain state between requests in order
  * to function.  Its mechanism for doing this is called a store.  The
- * store interface is defined in Interface.php.  Additionally, several
+ * store interface is defined in Store.php.  Additionally, several
  * concrete store implementations are provided, so that most sites
  * won't need to implement a custom store.  For a store backed by flat
  * files on disk, see {@link Auth_OpenID_FileStore}.  For stores based
