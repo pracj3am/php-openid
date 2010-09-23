@@ -42,11 +42,7 @@ abstract class Auth_OpenID_Store
      *
      * @param Association $association The Association to store.
      */
-    function storeAssociation($server_url, $association)
-    {
-        trigger_error("Auth_OpenID_OpenIDStore::storeAssociation ".
-                      "not implemented", E_USER_ERROR);
-    }
+    abstract function storeAssociation($server_url, $association);
 
     /*
      * Remove expired nonces from the store.
@@ -60,11 +56,7 @@ abstract class Auth_OpenID_Store
      *
      * @return the number of nonces expired
      */
-    function cleanupNonces()
-    {
-        trigger_error("Auth_OpenID_OpenIDStore::cleanupNonces ".
-                      "not implemented", E_USER_ERROR);
-    }
+    abstract function cleanupNonces();
 
     /*
      * Remove expired associations from the store.
@@ -75,11 +67,7 @@ abstract class Auth_OpenID_Store
      *
      * @return the number of associations expired.
      */
-    function cleanupAssociations()
-    {
-        trigger_error("Auth_OpenID_OpenIDStore::cleanupAssociations ".
-                      "not implemented", E_USER_ERROR);
-    }
+    abstract function cleanupAssociations();
 
     /*
      * Shortcut for cleanupNonces(), cleanupAssociations().
@@ -132,11 +120,7 @@ abstract class Auth_OpenID_Store
      * @return Association The Association for the given identity
      * server.
      */
-    function getAssociation($server_url, $handle = null)
-    {
-        trigger_error("Auth_OpenID_OpenIDStore::getAssociation ".
-                      "not implemented", E_USER_ERROR);
-    }
+    abstract function getAssociation($server_url, $handle = null);
 
     /**
      * This method removes the matching association if it's found, and
@@ -156,11 +140,7 @@ abstract class Auth_OpenID_Store
      *
      * @return mixed Returns whether or not the given association existed.
      */
-    function removeAssociation($server_url, $handle)
-    {
-        trigger_error("Auth_OpenID_OpenIDStore::removeAssociation ".
-                      "not implemented", E_USER_ERROR);
-    }
+    abstract function removeAssociation($server_url, $handle);
 
     /**
      * Called when using a nonce.
@@ -181,11 +161,7 @@ abstract class Auth_OpenID_Store
      *
      * @return bool Whether or not the nonce was valid.
      */
-    function useNonce($server_url, $timestamp, $salt)
-    {
-        trigger_error("Auth_OpenID_OpenIDStore::useNonce ".
-                      "not implemented", E_USER_ERROR);
-    }
+    abstract function useNonce($server_url, $timestamp, $salt);
 
     /**
      * Removes all entries from the store; implementation is optional.
