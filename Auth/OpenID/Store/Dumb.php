@@ -17,7 +17,7 @@
 /**
  * Import the interface for creating a new store class.
  */
-require_once 'Auth/OpenID/Interface.php';
+require_once 'Auth/OpenID/Store.php';
 require_once 'Auth/OpenID/HMAC.php';
 
 /**
@@ -31,7 +31,7 @@ require_once 'Auth/OpenID/HMAC.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_DumbStore extends Auth_OpenID_OpenIDStore {
+class Auth_OpenID_Store_Dumb extends Auth_OpenID_Store {
 
     /**
      * Creates a new {@link Auth_OpenID_DumbStore} instance. For the security

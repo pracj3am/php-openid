@@ -18,7 +18,7 @@
  * Require base class for creating a new interface.
  */
 require_once 'Auth/OpenID.php';
-require_once 'Auth/OpenID/Interface.php';
+require_once 'Auth/OpenID/Store.php';
 require_once 'Auth/OpenID/HMAC.php';
 require_once 'Auth/OpenID/Nonce.php';
 
@@ -36,7 +36,7 @@ require_once 'Auth/OpenID/Nonce.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
+class Auth_OpenID_Store_File extends Auth_OpenID_Store {
 
     /**
      * Initializes a new {@link Auth_OpenID_FileStore}.  This

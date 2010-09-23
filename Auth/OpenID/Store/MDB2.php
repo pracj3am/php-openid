@@ -18,7 +18,7 @@ require_once 'MDB2.php';
 /**
  * @access private
  */
-require_once 'Auth/OpenID/Interface.php';
+require_once 'Auth/OpenID/Store.php';
 
 /**
  * @access private
@@ -43,7 +43,7 @@ require_once 'Auth/OpenID/Nonce.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_MDB2Store extends Auth_OpenID_OpenIDStore {
+class Auth_OpenID_Store_MDB2 extends Auth_OpenID_Store {
     /**
      * This creates a new MDB2Store instance.  It requires an
      * established database connection be given to it, and it allows

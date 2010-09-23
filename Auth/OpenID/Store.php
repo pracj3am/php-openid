@@ -27,7 +27,8 @@
  * @package OpenID
  * @author JanRain, Inc. <openid@janrain.com>
  */
-class Auth_OpenID_OpenIDStore {
+abstract class Auth_OpenID_Store
+{
     /**
      * This method puts an Association object into storage,
      * retrievable by server URL and handle.

@@ -18,7 +18,7 @@
 /**
  * Import the interface for creating a new store class.
  */
-require_once 'Auth/OpenID/Interface.php';
+require_once 'Auth/OpenID/Store.php';
 
 /**
  * This is a memcached-based store for OpenID associations and
@@ -33,7 +33,7 @@ require_once 'Auth/OpenID/Interface.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_MemcachedStore extends Auth_OpenID_OpenIDStore {
+class Auth_OpenID_Store_Memcached extends Auth_OpenID_Store {
 
     /**
      * Initializes a new {@link Auth_OpenID_MemcachedStore} instance.
