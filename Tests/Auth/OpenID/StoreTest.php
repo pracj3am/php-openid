@@ -440,8 +440,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         // because we can't run the test.
         if (!(extension_loaded('pgsql')) ||
             !(@include_once 'DB.php')) {
-            print "(not testing PostGreSQL store)";
-            $this->pass();
+            $this->markTestSkipped("not testing PostGreSQL store");
             return;
         }
 
@@ -484,8 +483,8 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             }
 
             $sleep_time *= ((mt_rand(1, 100) / 100.0) + 1.5);
-            print "Failed to create database $temp_db_name.\n".
-                "Waiting $sleep_time before trying again\n";
+            echo "Failed to create database $temp_db_name.\n"
+                . "Waiting $sleep_time before trying again\n";
 
             $int_sleep = floor($sleep_time);
             $frac_sleep = $sleep_time - $int_sleep;
@@ -510,7 +509,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        $store = new Auth_OpenID_PostgreSQLStore($db);
+        $store = new Auth_OpenID_Store_PostgreSQL($db);
 
         $this->assertFalse($store->tableExists($store->nonces_table_name));
         $this->assertFalse($store->tableExists($store->associations_table_name));
@@ -558,8 +557,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         // because we can't run the test.
         if (!(extension_loaded('sqlite')) ||
             !(@include_once 'DB.php')) {
-            print "(not testing SQLite store)";
-            $this->pass();
+            $this->markTestSkipped("not testing SQLite store");
             return;
         }
 
@@ -568,20 +566,19 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         $temp_dir = _Auth_OpenID_mkdtemp();
 
         if (!$temp_dir) {
-            trigger_error('Could not create temporary directory ' .
-                          'with Auth_OpenID_FileStore::_mkdtemp',
-                          E_USER_WARNING);
-            return null;
+            $this->fail('Could not create temporary directory ' .
+                'with Auth_OpenID_FileStore::_mkdtemp');
+            return;
         }
 
         $dsn = 'sqlite:///' . urlencode($temp_dir) . '/php_openid_storetest.db';
         $db =& DB::connect($dsn);
 
         if (PEAR::isError($db)) {
-            $this->pass("SQLite database connection failed: " .
+            $this->fail("SQLite database connection failed: " .
                         $db->getMessage());
         } else {
-            $store = new Auth_OpenID_SQLiteStore($db);
+            $store = new Auth_OpenID_Store_SQLite($db);
             $this->assertTrue($store->createTables(), "Table creation failed");
             $this->_testStore($store);
             $this->_testNonce($store);
@@ -601,8 +598,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         // because we can't run the test.
         if (!(extension_loaded('mysql')) ||
             !(@include_once 'DB.php')) {
-            print "(not testing MySQL store)";
-            $this->pass();
+            $this->markTestSkipped("not testing MySQL store");
             return;
         }
 
@@ -620,9 +616,8 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         $db =& DB::connect($dsn);
 
         if (PEAR::isError($db)) {
-            print "MySQL database connection failed: " .
-                $db->getMessage();
-            $this->pass();
+            $this->markTestSkipped("MySQL database connection failed: " .
+                $db->getMessage());
             return;
         }
 
@@ -631,14 +626,14 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         $result = $db->query("CREATE DATABASE $temp_db_name");
 
         if (PEAR::isError($result)) {
-            $this->pass("Error creating MySQL temporary database: " .
-                        $result->getMessage());
+            $this->fail("Error creating MySQL temporary database: " .
+                $result->getMessage());
             return;
         }
 
         $db->query("USE $temp_db_name");
 
-        $store = new Auth_OpenID_MySQLStore($db);
+        $store = new Auth_OpenID_Store_MySQL($db);
         $store->createTables();
         $this->_testStore($store);
         $this->_testNonce($store);
@@ -654,8 +649,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         if (!(extension_loaded('mysql') ||
               @dl('mysql.' . PHP_SHLIB_SUFFIX)) ||
             !(@include_once 'MDB2.php')) {
-            print "(not testing MDB2 store)";
-            $this->pass();
+            $this->markTestSkipped("not testing MDB2 store");
             return;
         }
 
@@ -673,9 +667,8 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         $db =& MDB2::connect($dsn);
 
         if (PEAR::isError($db)) {
-            print "MySQL database connection failed: " .
-                $db->getMessage();
-            $this->pass();
+            $this->fail("MySQL database connection failed: " .
+                $db->getMessage());
             return;
         }
 
@@ -685,7 +678,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
 
         if (PEAR::isError($result)) {
             $this->pass("Error creating MySQL temporary database: " .
-                        $result->getMessage());
+                $result->getMessage());
             return;
         }
 
@@ -716,8 +709,7 @@ class Tests_Auth_OpenID_MemcachedStore_Test extends Tests_Auth_OpenID_Store {
         // If the memcache extension isn't loaded or loadable, succeed
         // because we can't run the test.
         if (!extension_loaded('memcache')) {
-            print "(skipping memcache store tests)";
-            $this->pass();
+            $this->markTestSkipped("skipping memcache store tests");
             return;
         }
         require_once 'Auth/OpenID/Store/Memcached.php';
@@ -726,10 +718,9 @@ class Tests_Auth_OpenID_MemcachedStore_Test extends Tests_Auth_OpenID_Store {
 
         $memcached = new Memcache();
         if (!$memcached->connect($_Auth_OpenID_memcache_test_host)) {
-            print "(skipping memcache store tests - couldn't connect)";
-            $this->pass();
+            $this->fail("skipping memcache store tests - couldn't connect");
         } else {
-            $store = new Auth_OpenID_MemcachedStore($memcached);
+            $store = new Auth_OpenID_Store_Memcached($memcached);
 
             $this->_testStore($store);
             $this->_testNonce($store);
