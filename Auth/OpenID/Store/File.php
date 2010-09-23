@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file supplies a Memcached store backend for OpenID servers and
  * consumers.
@@ -37,6 +36,9 @@ require_once 'Auth/OpenID/Nonce.php';
  * @package OpenID
  */
 class Auth_OpenID_Store_File extends Auth_OpenID_Store {
+
+
+    protected $active, $directory;
 
     /**
      * Initializes a new {@link Auth_OpenID_FileStore}.  This
