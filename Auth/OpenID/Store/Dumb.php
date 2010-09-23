@@ -50,7 +50,7 @@ class Auth_OpenID_Store_Dumb extends Auth_OpenID_Store {
      * @param string secret_phrase The phrase used to create the auth
      * key returned by getAuthKey
      */
-    function Auth_OpenID_DumbStore($secret_phrase)
+    function __construct($secret_phrase)
     {
         $this->auth_key = Auth_OpenID_SHA1($secret_phrase);
     }

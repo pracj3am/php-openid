@@ -41,7 +41,7 @@ class Auth_OpenID_Store_Memcached extends Auth_OpenID_Store {
      *
      * @param resource connection Memcache connection resourse
      */
-    function Auth_OpenID_MemcachedStore($connection, $compress = false)
+    function __construct($connection, $compress = false)
     {
         $this->connection = $connection;
         $this->compress = $compress ? MEMCACHE_COMPRESSED : 0;

@@ -44,6 +44,7 @@ require_once 'Auth/OpenID/Nonce.php';
  * @package OpenID
  */
 class Auth_OpenID_Store_MDB2 extends Auth_OpenID_Store {
+
     /**
      * This creates a new MDB2Store instance.  It requires an
      * established database connection be given to it, and it allows
@@ -62,7 +63,7 @@ class Auth_OpenID_Store_MDB2 extends Auth_OpenID_Store {
      * the name of the table used for storing nonces.  The default
      * value is 'oid_nonces'.
      */
-    function Auth_OpenID_MDB2Store($connection,
+    function __construct($connection,
                                   $associations_table = null,
                                   $nonces_table = null)
     {
