@@ -1,5 +1,10 @@
 <?php
 /**
+ * Tests_Auth_OpenID_Store
+ */
+require_once dirname(__FILE__) . '/../Store.php';
+
+/**
  * Class that tests all of the stores included with the OpenID library
  *
  * @package OpenID
@@ -22,10 +27,9 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
         $temp_dir = _Auth_OpenID_mkdtemp();
 
         if (!$temp_dir) {
-            trigger_error('Could not create temporary directory ' .
-                          'with Auth_OpenID_FileStore::_mkdtemp',
-                          E_USER_WARNING);
-            return null;
+            $this->fail('Could not create temporary directory ' .
+                'with Auth_OpenID_FileStore::_mkdtemp');
+            return;
         }
 
         $store = new Auth_OpenID_Store_File($temp_dir);
