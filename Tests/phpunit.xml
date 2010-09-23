@@ -1,0 +1,5 @@
+<phpunit bootstrap="./TestDriver.php" colors="true">
+    <testsuite name="php-openid">
+        <directory>./Auth/OpenID</directory>
+    </testsuite>
+</phpunit>
