@@ -37,8 +37,15 @@ require_once 'Auth/OpenID/Nonce.php';
  */
 class Auth_OpenID_Store_File extends Auth_OpenID_Store {
 
-
-    protected $active, $directory;
+    /**
+     * @var boolean $active
+     */
+    protected $active;
+    
+    /**
+     * @var string $directory
+     */
+    protected $directory;
 
     /**
      * Initializes a new {@link Auth_OpenID_FileStore}.  This
@@ -48,7 +55,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      * @param string $directory This is the directory to put the store
      * directories in.
      */
-    function Auth_OpenID_FileStore($directory)
+    function __construct($directory)
     {
         if (!Auth_OpenID::ensureDir($directory)) {
             trigger_error('Not a directory and failed to create: '
