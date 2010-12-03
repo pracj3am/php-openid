@@ -77,7 +77,7 @@ class Tests_Auth_Yadis_Yadis extends PHPUnit_TestSuite {
         $i = 0;
         foreach ($test_cases as $case) {
             $i++;
-            list($input, $redir, $xrds) = $case;
+            @list($input, $redir, $xrds) = $case;
             $this->addTest(new Tests_Auth_Yadis_DiscoveryTest($input,
                                                                   $redir,
                                                                   $xrds, $i));
