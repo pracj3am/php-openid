@@ -5,7 +5,7 @@
  *
  * @package OpenID
  */
-abstract class Tests_Auth_OpenID_Store extends PHPUnit_Framework_TestCase {
+abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
 
     function pass() {}
 

@@ -25,7 +25,7 @@ class VerifyDisco_Consumer_verifiedError extends Auth_OpenID_GenericConsumer {
 }
 
 class _DiscoverAndVerify extends OpenIDTestMixin {
-    var $consumer_class = 'Auth_OpenID_GenericConsumer';
+    public $consumer_class = 'Auth_OpenID_GenericConsumer';
 
     function setUp()
     {
@@ -238,7 +238,7 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
 }
 
 class Tests_openid1UsePreDiscoveredWrongType extends _DiscoverAndVerify {
-    var $consumer_class = 'VerifyDisco_Consumer_verifiedError';
+    public $consumer_class = 'VerifyDisco_Consumer_verifiedError';
 
     function test_openid1UsePreDiscoveredWrongType()
     {
@@ -261,7 +261,7 @@ class Tests_openid1UsePreDiscoveredWrongType extends _DiscoverAndVerify {
 // XXX: test the implementation of _discoverAndVerify
 
 class Tests_openID2NoEndpointDoesDisco_sentinel extends Auth_OpenID_GenericConsumer {
-    var $sentinel = 'blah';
+    public $sentinel = 'blah';
 
     function _discoverAndVerify($to_match)
     {
@@ -270,7 +270,7 @@ class Tests_openID2NoEndpointDoesDisco_sentinel extends Auth_OpenID_GenericConsu
 }
 
 class Tests_openID2NoEndpointDoesDisco_failure extends Auth_OpenID_GenericConsumer {
-    var $failure_message = 'A fake failure response message';
+    public $failure_message = 'A fake failure response message';
 
     function _verifyDiscoverySingle($to_match)
     {
@@ -279,7 +279,7 @@ class Tests_openID2NoEndpointDoesDisco_failure extends Auth_OpenID_GenericConsum
 }
 
 class Tests_openID2NoEndpointDoesDisco extends Tests_Auth_OpenID_VerifyDisco {
-    var $consumer_class = 'Tests_openID2NoEndpointDoesDisco_sentinel';
+    public $consumer_class = 'Tests_openID2NoEndpointDoesDisco_sentinel';
 
     function test_openID2NoEndpointDoesDisco()
     {
@@ -299,7 +299,7 @@ class Tests_openID2NoEndpointDoesDisco extends Tests_Auth_OpenID_VerifyDisco {
 }
 
 class Tests_openID2MismatchedDoesDisco extends Tests_Auth_OpenID_VerifyDisco {
-    var $consumer_class = 'Tests_openID2NoEndpointDoesDisco_sentinel';
+    public $consumer_class = 'Tests_openID2NoEndpointDoesDisco_sentinel';
 
     function test_openID2MismatchedDoesDisco()
     {
@@ -324,8 +324,8 @@ class Tests_openID2MismatchedDoesDisco extends Tests_Auth_OpenID_VerifyDisco {
     }
 }
 
-class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_Framework_TestCase {
-    var $consumer_class = 'Tests_openID2NoEndpointDoesDisco_failure';
+class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_TestCase {
+    public $consumer_class = 'Tests_openID2NoEndpointDoesDisco_failure';
 
     function setUp()
     {
@@ -371,7 +371,7 @@ class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_Framework_TestCas
 }
 
 class TestVerifyDiscoverySingle extends OpenIDTestMixin {
-    var $consumer_class = 'Auth_OpenID_GenericConsumer';
+    public $consumer_class = 'Auth_OpenID_GenericConsumer';
 
     function setUp()
     {

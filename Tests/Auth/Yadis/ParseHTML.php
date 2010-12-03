@@ -16,7 +16,7 @@
 require_once 'Tests/Auth/Yadis/TestUtil.php';
 require_once 'Auth/Yadis/ParseHTML.php';
 
-class Tests_Auth_Yadis_ParseTest extends PHPUnit_Framework_TestCase {
+class Tests_Auth_Yadis_ParseTest extends PHPUnit_TestCase {
     function Tests_Auth_Yadis_ParseTest($case)
     {
         list($result, $comment, $html) = $case;
@@ -46,7 +46,7 @@ class Tests_Auth_Yadis_ParseTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_Yadis_ParseHTML extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_Yadis_ParseHTML extends PHPUnit_TestSuite {
 
     function getName()
     {

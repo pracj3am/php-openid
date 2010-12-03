@@ -1,10 +1,10 @@
 <?php
 
 require_once 'Tests/TestDriver.php';
-require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit.php';
 require_once 'Console/Getopt.php';
 
-class TextTestResult extends PHPUnit_Framework_TestResult {
+class TextTestResult extends PHPUnit_TestResult {
   function addError(&$test, &$t, $time=0)
     {
       parent::addError($test, $t, $time);
@@ -155,7 +155,7 @@ Test suite: $name
     $suite->run($result);
     $after = microtime_float();
 
-    $run = $result->count();
+    $run = $result->runCount();
     $error = $result->errorCount();
     $failure = $result->failureCount();
     $delta = $after - $before;

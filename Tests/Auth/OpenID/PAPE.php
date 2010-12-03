@@ -4,7 +4,7 @@ require_once "Auth/OpenID/PAPE.php";
 require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID/Server.php";
 
-class PapeRequestTestCase extends PHPUnit_Framework_TestCase {
+class PapeRequestTestCase extends PHPUnit_TestCase {
     function setUp()
     {
         $this->req = new Auth_OpenID_PAPE_Request();
@@ -105,7 +105,7 @@ class PAPE_DummySuccessResponse {
   }
 }
 
-class PapeResponseTestCase extends PHPUnit_Framework_TestCase {
+class PapeResponseTestCase extends PHPUnit_TestCase {
   function setUp() {
     $this->req = new Auth_OpenID_PAPE_Response();
   }
@@ -230,7 +230,7 @@ class PapeResponseTestCase extends PHPUnit_Framework_TestCase {
   }
 }
 
-class Tests_Auth_OpenID_PAPE extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_PAPE extends PHPUnit_TestSuite {
   function getName() {
     return "Tests_Auth_OpenID_PAPE";
   }

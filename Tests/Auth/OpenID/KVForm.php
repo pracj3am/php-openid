@@ -28,8 +28,8 @@ function Tests_Auth_OpenID_kvHandleError($errno, $errmsg)
 }
 
 
-class Tests_Auth_OpenID_KVForm_TestCase extends PHPUnit_Framework_TestCase {
-    var $errs;
+class Tests_Auth_OpenID_KVForm_TestCase extends PHPUnit_TestCase {
+    public $errs;
 
     function runTest()
     {
@@ -111,7 +111,7 @@ extends Tests_Auth_OpenID_KVForm_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_KVForm extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_KVForm extends PHPUnit_TestSuite {
     function Tests_Auth_OpenID_KVForm($name)
     {
         $this->setName($name);

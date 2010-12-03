@@ -26,7 +26,7 @@ class _SimpleMockFetcher {
     }
 }
 
-class Tests_Auth_OpenID_ServiceEndpoint extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_ServiceEndpoint extends PHPUnit_TestCase {
     function setUp() {
         $this->endpoint = new Auth_OpenID_ServiceEndpoint();
     }
@@ -58,7 +58,7 @@ class Tests_Auth_OpenID_ServiceEndpoint extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_DiscoveryFailure extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_DiscoveryFailure extends PHPUnit_TestCase {
 
     function Tests_Auth_OpenID_DiscoveryFailure($responses)
     {
@@ -119,7 +119,7 @@ define('E_AUTH_OPENID_VALUE_ERROR', 'e_valueerror');
 define('E_AUTH_OPENID_RUNTIME_ERROR', 'e_runtimeerror');
 define('E_AUTH_OPENID_OI', 'e_oi');
 
-class Tests_Auth_OpenID_Discover_FetchException extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Discover_FetchException extends PHPUnit_TestCase {
     // Make sure exceptions get passed through discover function from
     // fetcher.
 
@@ -192,9 +192,9 @@ class _DiscoveryMockFetcher extends Auth_Yadis_HTTPFetcher {
     }
 }
 
-class _DiscoveryBase extends PHPUnit_Framework_TestCase {
-    var $id_url = "http://someuser.unittest/";
-    var $fetcherClass = '_DiscoveryMockFetcher';
+class _DiscoveryBase extends PHPUnit_TestCase {
+    public $id_url = "http://someuser.unittest/";
+    public $fetcherClass = '_DiscoveryMockFetcher';
 
     function _checkService($s,
                            $server_url,
@@ -585,7 +585,7 @@ class _MockFetcherForXRIProxy extends Auth_Yadis_HTTPFetcher {
 }
 
 class TestXRIDiscovery extends _DiscoveryBase {
-    var $fetcherClass = '_MockFetcherForXRIProxy';
+    public $fetcherClass = '_MockFetcherForXRIProxy';
 
     function setUp() {
         parent::setUp();
@@ -684,7 +684,7 @@ class _FetcherWithoutSSL extends _DiscoveryMockFetcher {
 }
 
 class _NonFetcher extends _DiscoveryMockFetcher {
-    var $used = false;
+    public $used = false;
 
     function _NonFetcher()
     {
@@ -703,7 +703,7 @@ class _NonFetcher extends _DiscoveryMockFetcher {
     }
 }
 
-class Tests_Auth_OpenID_SSLSupport extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_SSLSupport extends PHPUnit_TestCase {
     function test_discoverDropSSL()
     {
         // In the absence of SSL support, the discovery process should

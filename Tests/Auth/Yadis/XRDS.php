@@ -9,7 +9,7 @@ require_once 'Auth/Yadis/XRIRes.php';
 require_once 'Auth/Yadis/XRI.php';
 require_once 'Tests/Auth/Yadis/TestUtil.php';
 
-class Tests_Auth_Yadis_XRDS extends PHPUnit_Framework_TestCase {
+class Tests_Auth_Yadis_XRDS extends PHPUnit_TestCase {
 
     function test_good()
     {

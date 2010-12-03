@@ -15,7 +15,7 @@
 
 require_once 'Auth/OpenID.php';
 
-class Tests_Auth_OpenID_Util extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Util extends PHPUnit_TestCase {
     function test_base64()
     {
         // This is not good for international use, but PHP doesn't

@@ -7,7 +7,7 @@
 require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID.php";
 
-class MessageTest extends PHPUnit_Framework_TestCase {
+class MessageTest extends PHPUnit_TestCase {
     function _argTest($ns, $key, $expected = null)
     {
         $a_default = 'a bogus default value';
@@ -553,7 +553,7 @@ class Tests_Auth_OpenID_OpenID1Message extends MessageTest {
     }
 }
 
-class Tests_Auth_OpenID_OpenID1ExplicitMessage extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_OpenID1ExplicitMessage extends PHPUnit_TestCase {
     function setUp()
     {
         $this->msg = Auth_OpenID_Message::fromPostArgs(array('openid.mode' => 'error',
@@ -951,7 +951,7 @@ class Tests_Auth_OpenID_OpenID2Message extends MessageTest {
     }
 }
 
-class Tests_Auth_OpenID_GeneralMessageTest extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_GeneralMessageTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->postargs = array(
@@ -1198,7 +1198,7 @@ class Tests_Auth_OpenID_GeneralMessageTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_NamespaceMap extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_NamespaceMap extends PHPUnit_TestCase {
     function test_onealias()
     {
         $nsm = new Auth_OpenID_NamespaceMap();
@@ -1235,7 +1235,7 @@ class Tests_Auth_OpenID_NamespaceMap extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_Message extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Message extends PHPUnit_TestCase {
 }
 
 global $Tests_Auth_OpenID_Message_other;

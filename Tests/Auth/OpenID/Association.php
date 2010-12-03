@@ -15,7 +15,7 @@
 
 require_once 'Auth/OpenID/Association.php';
 
-class Tests_Auth_OpenID_Association extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Association extends PHPUnit_TestCase {
     function test_me()
     {
         $issued = time();

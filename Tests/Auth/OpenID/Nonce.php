@@ -18,7 +18,7 @@ require_once 'Auth/OpenID/Nonce.php';
 define('Tests_Auth_OpenID_nonce_re',
        '/\A\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ/');
 
-class Tests_Auth_OpenID_Nonce extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_Nonce extends PHPUnit_TestSuite {
     function Tests_Auth_OpenID_Nonce()
     {
         $this->addTestSuite('Tests_Auth_OpenID_NonceTests');
@@ -94,7 +94,7 @@ class Tests_Auth_OpenID_Nonce extends PHPUnit_Framework_TestSuite {
     }
 }
 
-class Tests_Auth_OpenID_Nonce_TimestampCase extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Nonce_TimestampCase extends PHPUnit_TestCase {
     function Tests_Auth_OpenID_Nonce_TimestampCase(
         $nonce_str, $skew, $now, $expected)
     {
@@ -113,7 +113,7 @@ class Tests_Auth_OpenID_Nonce_TimestampCase extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_NonceTests extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_NonceTests extends PHPUnit_TestCase {
     function test_mkNonce()
     {
         $nonce_str = Auth_OpenID_mkNonce();
@@ -150,7 +150,7 @@ class Tests_Auth_OpenID_NonceTests extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_Nonce_BadSplitCase extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Nonce_BadSplitCase extends PHPUnit_TestCase {
     function Tests_Auth_OpenID_Nonce_BadSplitCase($nonce_str)
     {
         $this->nonce_str = $nonce_str;

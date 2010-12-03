@@ -6,10 +6,10 @@ require_once 'Auth/OpenID/Association.php';
 require_once 'Auth/OpenID/Consumer.php';
 
 class AuthRequest_DummyEndpoint {
-    var $preferred_namespace = null;
-    var $local_id = null;
-    var $server_url = null;
-    var $is_op_identifier = false;
+    public $preferred_namespace = null;
+    public $local_id = null;
+    public $server_url = null;
+    public $is_op_identifier = false;
 
     function preferredNamespace()
     {
@@ -28,7 +28,7 @@ class AuthRequest_DummyEndpoint {
 }
 
 class AuthRequest_DummyAssoc {
-    var $handle = "assoc-handle";
+    public $handle = "assoc-handle";
 }
 
 /**
@@ -36,9 +36,9 @@ class AuthRequest_DummyAssoc {
  */
 class TestAuthRequestMixin extends OpenIDTestMixin {
 
-    var $preferred_namespace = null;
-    var $immediate = false;
-    var $expected_mode = 'checkid_setup';
+    public $preferred_namespace = null;
+    public $immediate = false;
+    public $expected_mode = 'checkid_setup';
 
     function setUp()
     {
@@ -128,7 +128,7 @@ class TestAuthRequestMixin extends OpenIDTestMixin {
 }
 
 class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
-    var $preferred_namespace = Auth_OpenID_OPENID2_NS;
+    public $preferred_namespace = Auth_OpenID_OPENID2_NS;
 
     function failUnlessHasRealm($msg)
     {
@@ -209,7 +209,7 @@ class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
 }
 
 class TestAuthRequestOpenID1 extends TestAuthRequestMixin {
-    var $preferred_namespace = Auth_OpenID_OPENID1_NS;
+    public $preferred_namespace = Auth_OpenID_OPENID1_NS;
 
     function setUpEndpoint()
     {
@@ -272,16 +272,16 @@ class TestAuthRequestOpenID1 extends TestAuthRequestMixin {
 }
 
 class TestAuthRequestOpenID1Immediate extends TestAuthRequestOpenID1 {
-    var $immediate = true;
-    var $expected_mode = 'checkid_immediate';
+    public $immediate = true;
+    public $expected_mode = 'checkid_immediate';
 }
 
 class TestAuthRequestOpenID2Immediate extends TestAuthRequestOpenID2 {
-    var $immediate = true;
-    var $expected_mode = 'checkid_immediate';
+    public $immediate = true;
+    public $expected_mode = 'checkid_immediate';
 }
 
-class Tests_Auth_OpenID_AuthRequest extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_AuthRequest extends PHPUnit_TestSuite {
 
     function getName()
     {

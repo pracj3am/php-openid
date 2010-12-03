@@ -15,7 +15,7 @@
 
 set_include_path(dirname(__FILE__) . '/../:' . get_include_path());
 
-require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit.php';
 //require_once 'PHPUnit/GUI/HTML.php';
 
 error_reporting(E_ALL | E_STRICT);
@@ -87,8 +87,8 @@ function loadTests($test_dir, $test_names)
 function makeSuite($class_name) {
     $test = new $class_name($class_name);
 
-    if (is_a($test, 'PHPUnit_Framework_TestCase')) {
-        $s = new PHPUnit_Framework_TestSuite();
+    if (is_a($test, 'PHPUnit_TestCase')) {
+        $s = new PHPUnit_TestSuite();
         $s->setName($class_name);
         $s->addTestSuite($class_name);
         $test = $s;

@@ -17,7 +17,7 @@
 require_once 'Auth/OpenID/URINorm.php';
 require_once 'Tests/Auth/OpenID/TestUtil.php';
 
-class Tests_Auth_OpenID_URINorm_TestCase extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_URINorm_TestCase extends PHPUnit_TestCase {
     function Tests_Auth_OpenID_URINorm_TestCase(
                                $name, $uri, $expected)
     {
@@ -34,7 +34,7 @@ class Tests_Auth_OpenID_URINorm_TestCase extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_URINorm extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_URINorm extends PHPUnit_TestSuite {
     function _readTestCases()
     {
         $lines = Tests_Auth_OpenID_readlines('urinorm.txt');

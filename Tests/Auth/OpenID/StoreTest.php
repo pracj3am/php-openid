@@ -59,14 +59,14 @@ function _Auth_OpenID_getTmpDbName()
 /**
  * Hub test suite class
  */
-class Tests_Auth_OpenID_StoreTest extends PHPUnit_Framework_TestSuite
+class Tests_Auth_OpenID_StoreTest extends PHPUnit_TestSuite
 {
     function suite()
     {
         require_once dirname(__FILE__) . '/MemcachedStore/Test.php';
         require_once dirname(__FILE__) . '/Included/StoreTest.php';
 
-        $suite = new PHPUnit_Framework_TestSuite("Tests_Auth_OpenID_StoreTest");
+        $suite = new PHPUnit_TestSuite("Tests_Auth_OpenID_StoreTest");
     
         $suite->addTestSuite('Tests_Auth_OpenID_Included_StoreTest');
         $suite->addTestSuite('Tests_Auth_OpenID_MemcachedStore_Test');

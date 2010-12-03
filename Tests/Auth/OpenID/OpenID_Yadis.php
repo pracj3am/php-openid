@@ -140,7 +140,7 @@ function __subsets($list)
     return $subsets_list;
 }
 
-class Tests_Auth_OpenID_Tester extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Tester extends PHPUnit_TestCase {
     function Tests_Auth_OpenID_Tester($uris, $type_uris, $delegate)
     {
         parent::__construct();
@@ -210,7 +210,7 @@ class Tests_Auth_OpenID_Tester extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_OpenID_Yadis extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_OpenID_Yadis extends PHPUnit_TestSuite {
     function Tests_Auth_OpenID_OpenID_Yadis()
     {
         global $__data;

@@ -7,7 +7,7 @@
 require_once 'Auth/Yadis/Yadis.php';
 require_once 'Tests/Auth/Yadis/TestUtil.php';
 
-class Tests_Auth_Yadis_DiscoveryTest extends PHPUnit_Framework_TestCase {
+class Tests_Auth_Yadis_DiscoveryTest extends PHPUnit_TestCase {
 
     function Tests_Auth_Yadis_DiscoveryTest($input_url, $redir_uri,
                                                 $xrds_uri, $num)
@@ -47,7 +47,7 @@ class Tests_Auth_Yadis_DiscoveryTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_Yadis_Yadis extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_Yadis_Yadis extends PHPUnit_TestSuite {
 
     function getName()
     {

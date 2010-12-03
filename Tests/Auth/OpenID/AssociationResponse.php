@@ -38,7 +38,7 @@ function mkAssocResponse($keys)
     return Auth_OpenID_Message::fromOpenIDArgs($args);
 }
 
-class Tests_Auth_OpenID_AssociationResponse extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_AssociationResponse extends PHPUnit_TestCase {
     function setUp()
     {
         $this->store = new Tests_Auth_OpenID_MemStore();
@@ -237,10 +237,10 @@ class TestOpenID1AssociationResponseSessionType extends Tests_Auth_OpenID_Associ
 }
 
 class DummyAssociationSession {
-    var $secret = "shh! don't tell!";
-    var $extract_secret_called = false;
-    var $session_type = null;
-    var $allowed_assoc_types = null;
+    public $secret = "shh! don't tell!";
+    public $extract_secret_called = false;
+    public $session_type = null;
+    public $allowed_assoc_types = null;
 
     function extractSecret($message)
     {
@@ -309,7 +309,7 @@ class TestInvalidFields extends Tests_Auth_OpenID_AssociationResponse {
 }
 
 class TestExtractAssociationDiffieHellman extends Tests_Auth_OpenID_AssociationResponse {
-    var $secret = 'xxxxxxxxxxxxxxxxxxxx';
+    public $secret = 'xxxxxxxxxxxxxxxxxxxx';
 
     function _setUpDH()
     {

@@ -108,7 +108,7 @@ function Auth_OpenID_associate($qs, $assoc_secret, $assoc_handle)
 }
 
 class Auth_OpenID_TestFetcher extends Auth_Yadis_HTTPFetcher {
-    function Auth_OpenID_TestFetcher($user_url, $user_page,
+    public function __construct($user_url, $user_page,
                                      $assoc_secret, $assoc_handle)
     {
         $this->get_responses = array($user_url =>
@@ -189,7 +189,7 @@ $_Auth_OpenID_server_url = "http://server.example.com/";
 global $_Auth_OpenID_consumer_url;
 $_Auth_OpenID_consumer_url = "http://consumer.example.com/";
 
-class Tests_Auth_OpenID_Consumer extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Consumer extends PHPUnit_TestCase {
 
     function _run($consumer, $user_url, $mode, $delegate_url,
                   $fetcher, $store, $immediate)
@@ -346,7 +346,7 @@ class Tests_Auth_OpenID_Consumer extends PHPUnit_Framework_TestCase {
 }
 
 class ConfigurableConsumer extends Auth_OpenID_GenericConsumer {
-  var $return_to_check_disabled = false;
+  public $return_to_check_disabled = false;
 
   function disableReturnToChecking() {
     $this->return_to_check_disabled = true;
@@ -369,8 +369,8 @@ class ConfigurableConsumer extends Auth_OpenID_GenericConsumer {
   }
 }
 
-class _TestIdRes extends PHPUnit_Framework_TestCase {
-    var $consumer_class = 'ConfigurableConsumer';
+class _TestIdRes extends PHPUnit_TestCase {
+    public $consumer_class = 'ConfigurableConsumer';
 
     function setUp()
     {
@@ -623,8 +623,8 @@ global $GOODSIG;
 $GOODSIG = "[A Good Signature]";
 
 class GoodAssociation {
-    var $expiresIn = 3600;
-    var $handle = "-blah-";
+    public $expiresIn = 3600;
+    public $handle = "-blah-";
 
     function getExpiresIn()
     {
@@ -692,7 +692,7 @@ class StatelessConsumer1 extends ConfigurableConsumer {
 }
 
 class Tests_Auth_OpenID_Stateless1 extends _TestIdRes {
-    var $consumer_class = "StatelessConsumer1";
+    public $consumer_class = "StatelessConsumer1";
 
     function setUp()
     {
@@ -730,7 +730,7 @@ class StatelessConsumer2 extends ConfigurableConsumer {
 }
 
 class Tests_Auth_OpenID_Stateless2 extends _TestIdRes {
-    var $consumer_class = "StatelessConsumer2";
+    public $consumer_class = "StatelessConsumer2";
 
     function setUp()
     {
@@ -869,7 +869,7 @@ class Tests_Auth_OpenID_Consumer_CheckNonceTest extends _TestIdRes {
 }
 
 class Tests_Auth_OpenID_Consumer_TestCheckAuthTriggered extends _TestIdRes {
-    var $consumer_class = '_CheckAuthDetectingConsumer';
+    public $consumer_class = '_CheckAuthDetectingConsumer';
 
     function _doIdRes($message, $endpoint, $return_to)
     {
@@ -1111,7 +1111,7 @@ class Consumer_idResURLMismatch extends ConfigurableConsumer {
 }
 
 class Tests_idResURLMismatch extends _TestIdRes {
-    var $consumer_class = 'Consumer_idResURLMismatch';
+    public $consumer_class = 'Consumer_idResURLMismatch';
 
     function test_idResURLMismatch()
     {
@@ -1154,7 +1154,7 @@ class TempConsumer extends ConfigurableConsumer {
     }
 }
 
-class TestCompleteMissingSig extends PHPUnit_Framework_TestCase {
+class TestCompleteMissingSig extends PHPUnit_TestCase {
 
     function setUp()
     {
@@ -1245,7 +1245,7 @@ class TestCompleteMissingSig extends PHPUnit_Framework_TestCase {
     }
 }
 
-class TestReturnToArgs extends PHPUnit_Framework_TestCase {
+class TestReturnToArgs extends PHPUnit_TestCase {
     function setUp()
     {
         $store = null;
@@ -1466,7 +1466,7 @@ class Tests_Auth_OpenID_CheckAuthResponse extends _TestIdRes {
 }
 
 class _IdResFetchFailingConsumer extends Auth_OpenID_GenericConsumer {
-    var $message = 'fetch failed';
+    public $message = 'fetch failed';
 
     function _doIdRes($message, $endpoint)
     {
@@ -1476,7 +1476,7 @@ class _IdResFetchFailingConsumer extends Auth_OpenID_GenericConsumer {
 }
 
 class Tests_Auth_OpenID_FetchErrorInIdRes extends _TestIdRes {
-    var $consumer_class = '_IdResFetchFailingConsumer';
+    public $consumer_class = '_IdResFetchFailingConsumer';
 
     function test_idResFailure()
     {
@@ -1607,7 +1607,7 @@ class Tests_Auth_OpenID_Consumer_TestCheckAuth extends _TestIdRes {
     }
 }
 
-class Tests_Auth_OpenID_Consumer_TestFetchAssoc extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_Consumer_TestFetchAssoc extends PHPUnit_TestCase {
     function setUp()
     {
         $this->store = new Tests_Auth_OpenID_MemStore();
@@ -1680,7 +1680,7 @@ class Tests_Auth_OpenID_Consumer_TestFetchAssoc extends PHPUnit_Framework_TestCa
     }
 }
 
-class Tests_Auth_OpenID_AuthRequestHTMLMarkup extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_AuthRequestHTMLMarkup extends PHPUnit_TestCase {
     function setUp()
     {
         $this->endpoint = new Auth_OpenID_ServiceEndpoint();
@@ -1702,7 +1702,7 @@ class Tests_Auth_OpenID_AuthRequestHTMLMarkup extends PHPUnit_Framework_TestCase
     }
 }
 
-class Tests_Auth_OpenID_SuccessResponse extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_SuccessResponse extends PHPUnit_TestCase {
     function setUp()
     {
         $this->endpoint = new Auth_OpenID_ServiceEndpoint();
@@ -1802,8 +1802,8 @@ class _StubConsumer {
     }
 }
 
-class Tests_Auth_OpenID_DiscoFailure extends PHPUnit_Framework_TestCase {
-    var $consumerClass = null;
+class Tests_Auth_OpenID_DiscoFailure extends PHPUnit_TestCase {
+    public $consumerClass = null;
 
     function setUp()
     {
@@ -1826,8 +1826,8 @@ class Tests_Auth_OpenID_DiscoFailure extends PHPUnit_Framework_TestCase {
 }
 
 class Consumer_completeEmptySession extends Auth_OpenID_GenericConsumer {
-    var $test_case = null;
-    var $text = "failed complete";
+    public $test_case = null;
+    public $text = "failed complete";
 
     function complete($message, $endpoint, $return_to)
     {
@@ -1836,7 +1836,7 @@ class Consumer_completeEmptySession extends Auth_OpenID_GenericConsumer {
     }
 }
 
-class Tests_Auth_OpenID_ConsumerTest2 extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_ConsumerTest2 extends PHPUnit_TestCase {
     function setUp()
     {
         foreach ($_SESSION as $k => $v) {
@@ -2041,10 +2041,10 @@ class Tests_Auth_OpenID_ConsumerTest2 extends PHPUnit_Framework_TestCase {
 }
 
 class IDPDrivenTest_Consumer1 extends ConfigurableConsumer {
-    var $iverified = array();
-    var $endpoint = null;
-    var $failure_cb = null;
-    var $check_endpoint = null;
+    public $iverified = array();
+    public $endpoint = null;
+    public $failure_cb = null;
+    public $check_endpoint = null;
 
     function _idResCheckNonce($message, $endpoint)
     {
@@ -2068,7 +2068,7 @@ class IDPDrivenTest_Consumer2 extends ConfigurableConsumer {
     }
 }
 
-class IDPDrivenTest extends PHPUnit_Framework_TestCase {
+class IDPDrivenTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->store = new GoodAssocStore();
@@ -2155,8 +2155,8 @@ class TestDiscoveryVerification_test_otherServer extends Auth_OpenID_GenericCons
     }
 }
 
-class TestDiscoveryVerification extends PHPUnit_Framework_TestCase {
-    var $services = array();
+class TestDiscoveryVerification extends PHPUnit_TestCase {
+    public $services = array();
 
     function discoveryFunc($identifier)
     {
@@ -2253,7 +2253,7 @@ class TestDiscoveryVerification extends PHPUnit_Framework_TestCase {
 }
 
 class DummyEndpoint {
-    var $use_compatibility = false;
+    public $use_compatibility = false;
 
     function compatibilityMode()
     {
@@ -2261,7 +2261,7 @@ class DummyEndpoint {
     }
 }
 
-class TestCreateAssociationRequest extends PHPUnit_Framework_TestCase {
+class TestCreateAssociationRequest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->endpoint = new DummyEndpoint();
@@ -2375,9 +2375,9 @@ class TestCreateAssociationRequest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class TestDiffieHellmanResponseParameters extends PHPUnit_Framework_TestCase {
-    var $session_cls = null;
-    var $message_namespace = null;
+class TestDiffieHellmanResponseParameters extends PHPUnit_TestCase {
+    public $session_cls = null;
+    public $message_namespace = null;
 
     function setUp()
     {
@@ -2458,24 +2458,24 @@ class TestDiffieHellmanResponseParameters extends PHPUnit_Framework_TestCase {
 }
 
 class TestOpenID1SHA1 extends TestDiffieHellmanResponseParameters {
-    var $session_cls = 'Auth_OpenID_DiffieHellmanSHA1ConsumerSession';
-    var $message_namespace = Auth_OpenID_OPENID1_NS;
+    public $session_cls = 'Auth_OpenID_DiffieHellmanSHA1ConsumerSession';
+    public $message_namespace = Auth_OpenID_OPENID1_NS;
 }
 
 class TestOpenID2SHA1 extends TestDiffieHellmanResponseParameters {
-    var $session_cls = 'Auth_OpenID_DiffieHellmanSHA1ConsumerSession';
-    var $message_namespace = Auth_OpenID_OPENID2_NS;
+    public $session_cls = 'Auth_OpenID_DiffieHellmanSHA1ConsumerSession';
+    public $message_namespace = Auth_OpenID_OPENID2_NS;
 }
 
 if (!defined('Auth_OpenID_NO_MATH_SUPPORT') &&
     Auth_OpenID_SHA256_SUPPORTED) {
     class TestOpenID2SHA256 extends TestDiffieHellmanResponseParameters {
-        var $session_cls = 'Auth_OpenID_DiffieHellmanSHA256ConsumerSession';
-        var $message_namespace = Auth_OpenID_OPENID2_NS;
+        public $session_cls = 'Auth_OpenID_DiffieHellmanSHA256ConsumerSession';
+        public $message_namespace = Auth_OpenID_OPENID2_NS;
     }
 }
 
-class Tests_Auth_OpenID_KVPost extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_KVPost extends PHPUnit_TestCase {
     function setUp()
     {
         $this->server_url = 'http://unittest/bogus';

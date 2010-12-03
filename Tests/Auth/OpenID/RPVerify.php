@@ -13,7 +13,7 @@ require_once 'Auth/Yadis/Yadis.php';
  * Tests for building the discovery URL from a realm and a return_to
  * URL
  */
-class Tests_Auth_OpenID_BuildDiscoveryURL extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_BuildDiscoveryURL extends PHPUnit_TestCase {
     /*
      * Build a discovery URL out of the realm and a return_to and make
      * sure that it matches the expected discovery URL
@@ -58,8 +58,8 @@ class _MockDiscover {
     }
 }
 
-class Tests_Auth_OpenID_ExtractReturnToURLs extends PHPUnit_Framework_TestCase {
-    var $disco_url = 'http://example.com/';
+class Tests_Auth_OpenID_ExtractReturnToURLs extends PHPUnit_TestCase {
+    public $disco_url = 'http://example.com/';
 
     function failUnlessXRDSHasReturnURLs($data, $expected_return_urls)
     {
@@ -176,7 +176,7 @@ class Tests_Auth_OpenID_ExtractReturnToURLs extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_ReturnToMatches extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_ReturnToMatches extends PHPUnit_TestCase {
     function test_noEntries()
     {
         $this->assertFalse(Auth_OpenID_returnToMatches(array(), 'anything'));
@@ -237,7 +237,7 @@ class Verifier {
     }
 }
 
-class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_Framework_TestCase {
+class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_TestCase {
 
     function test_bogusRealm()
     {
@@ -275,7 +275,7 @@ class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_RPVerify extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_RPVerify extends PHPUnit_TestSuite {
     function getName()
     {
         return "Tests_Auth_OpenID_RPVerify";

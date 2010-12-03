@@ -8,7 +8,7 @@ require_once 'Auth/OpenID/SReg.php';
 require_once 'Auth/OpenID/Message.php';
 require_once 'Auth/OpenID/Server.php';
 
-class SRegURITest extends PHPUnit_Framework_TestCase {
+class SRegURITest extends PHPUnit_TestCase {
     function test_is11()
     {
         $this->assertEquals(Auth_OpenID_SREG_NS_URI_1_1,
@@ -16,7 +16,7 @@ class SRegURITest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class CheckFieldNameTest extends PHPUnit_Framework_TestCase {
+class CheckFieldNameTest extends PHPUnit_TestCase {
     function test_goodNamePasses()
     {
         global $Auth_OpenID_sreg_data_fields;
@@ -52,7 +52,7 @@ class FakeEndpoint {
     }
 }
 
-class SupportsSRegTest extends PHPUnit_Framework_TestCase {
+class SupportsSRegTest extends PHPUnit_TestCase {
     function test_unsupported()
     {
         $endpoint = new FakeEndpoint(array());
@@ -93,7 +93,7 @@ class FakeMessage {
     }
 }
 
-class GetNSTest extends PHPUnit_Framework_TestCase {
+class GetNSTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->msg = new FakeMessage();
@@ -230,7 +230,7 @@ class TestingReq extends Auth_OpenID_SRegRequest {
     }
 }
 
-class SRegRequestTest extends PHPUnit_Framework_TestCase {
+class SRegRequestTest extends PHPUnit_TestCase {
     function test_constructEmpty()
     {
         $req = Auth_OpenID_SRegRequest::build();
@@ -571,7 +571,7 @@ class DummySuccessResponse {
     }
 }
 
-class SRegResponseTest extends PHPUnit_Framework_TestCase {
+class SRegResponseTest extends PHPUnit_TestCase {
     function test_fromSuccessResponse_signed()
     {
         $message = Auth_OpenID_Message::fromOpenIDArgs(array(
@@ -597,7 +597,7 @@ class SRegResponseTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class SendFieldsTest extends PHPUnit_Framework_TestCase {
+class SendFieldsTest extends PHPUnit_TestCase {
     function _test($uri)
     {
         // Create a request message with simple registration fields
@@ -652,7 +652,7 @@ class SendFieldsTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_SReg extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_SReg extends PHPUnit_TestSuite {
     function getName()
     {
         return "Tests_Auth_OpenID_SReg";

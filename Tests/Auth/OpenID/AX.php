@@ -10,7 +10,7 @@ require_once "Auth/OpenID/Consumer.php";
 require_once "Auth/OpenID/Server.php";
 
 class BogusAXMessage extends Auth_OpenID_AX_Message {
-    var $mode = 'bogus';
+    public $mode = 'bogus';
 
     function getExtensionArgs()
     {
@@ -18,7 +18,7 @@ class BogusAXMessage extends Auth_OpenID_AX_Message {
     }
 }
 
-class AXMessageTest extends PHPUnit_Framework_TestCase {
+class AXMessageTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->bax = new BogusAXMessage();
@@ -47,7 +47,7 @@ class AXMessageTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class AttrInfoTest extends PHPUnit_Framework_TestCase {
+class AttrInfoTest extends PHPUnit_TestCase {
     function test_construct()
     {
         $type_uri = 'a uri';
@@ -60,7 +60,7 @@ class AttrInfoTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class ToTypeURIsTest extends PHPUnit_Framework_TestCase {
+class ToTypeURIsTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->aliases = new Auth_OpenID_NamespaceMap();
@@ -106,7 +106,7 @@ class ToTypeURIsTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class ParseAXValuesTest extends PHPUnit_Framework_TestCase {
+class ParseAXValuesTest extends PHPUnit_TestCase {
     function failUnlessAXKeyError($ax_args)
     {
         $msg = new Auth_OpenID_AX_KeyValueMessage();
@@ -249,7 +249,7 @@ class ParseAXValuesTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class FetchRequestTest extends PHPUnit_Framework_TestCase {
+class FetchRequestTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->msg = new Auth_OpenID_AX_FetchRequest();
@@ -522,7 +522,7 @@ class FauxEndpoint {
     }
 }
 
-class FetchResponseTest extends PHPUnit_Framework_TestCase {
+class FetchResponseTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->msg = new Auth_OpenID_AX_FetchResponse();
@@ -701,7 +701,7 @@ class FetchResponseTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class StoreRequestTest extends PHPUnit_Framework_TestCase {
+class StoreRequestTest extends PHPUnit_TestCase {
     function setUp()
     {
         $this->msg = new Auth_OpenID_AX_StoreRequest();
@@ -741,7 +741,7 @@ class StoreRequestTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class StoreResponseTest extends PHPUnit_Framework_TestCase {
+class StoreResponseTest extends PHPUnit_TestCase {
     function test_success()
     {
         $msg = new Auth_OpenID_AX_StoreResponse();
@@ -771,7 +771,7 @@ class StoreResponseTest extends PHPUnit_Framework_TestCase {
     }
 }
 
-class Tests_Auth_OpenID_AX extends PHPUnit_Framework_TestSuite {
+class Tests_Auth_OpenID_AX extends PHPUnit_TestSuite {
     function getName()
     {
         return "Tests_Auth_OpenID_AX";
