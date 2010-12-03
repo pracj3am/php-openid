@@ -16,7 +16,7 @@
 require_once 'Auth/OpenID/CryptUtil.php';
 require_once 'Auth/Yadis/HTTPFetcher.php';
 require_once 'Auth/OpenID/DiffieHellman.php';
-require_once 'Auth/OpenID/FileStore.php';
+require_once 'Auth/OpenID/Store/File.php';
 require_once 'Auth/OpenID/KVForm.php';
 require_once 'Auth/OpenID/Consumer.php';
 require_once 'Auth/OpenID/Server.php';
