@@ -51,7 +51,7 @@ class Tests_Auth_OpenID_AssociationResponse extends PHPUnit_TestCase {
         $this->assertTrue(Auth_OpenID::isFailure($thing));
     }
 
-    function _run($keys)
+    function _run($keys, $session_type_value=null, $openid1=false)
     {
         $msg = mkAssocResponse($keys);
         $dumb = null;
@@ -182,7 +182,7 @@ class ExtractAssociationSessionTypeMismatch extends Tests_Auth_OpenID_Associatio
 }
 
 class TestOpenID1AssociationResponseSessionType extends Tests_Auth_OpenID_AssociationResponse {
-    function _run($expected_session_type, $session_type_value)
+    function _run($expected_session_type, $session_type_value=null)
     {
         // Create a Message with just 'session_type' in it, since
         // that's all this function will use. 'session_type' may be

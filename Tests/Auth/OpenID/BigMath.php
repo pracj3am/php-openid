@@ -184,7 +184,7 @@ class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
 
     function _addBinLongTests()
     {
-        $lib =& Auth_OpenID_getMathLib();
+        $lib = Auth_OpenID_getMathLib();
         $max = Tests_Auth_OpenID_maxint();
         $upper = defined('Tests_Auth_OpenID_thorough') ? 499 : 3;
 

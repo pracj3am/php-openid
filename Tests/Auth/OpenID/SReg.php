@@ -209,7 +209,7 @@ function &__getTestCase() {
 }
 
 class TestingReq extends Auth_OpenID_SRegRequest {
-    static function fromOpenIDRequest($thing, $test_case)
+    static function fromOpenIDRequest($thing, $test_case='Auth_OpenID_SRegRequest')
     {
         __setTestCase($test_case);
         $obj = parent::fromOpenIDRequest($thing, 'TestingReq');
@@ -222,7 +222,7 @@ class TestingReq extends Auth_OpenID_SRegRequest {
         return $__ns_sentinel;
     }
 
-    function parseExtensionArgs($args)
+    function parseExtensionArgs($args, $strict=false)
     {
         global $__args_sentinel;
         $tc =& __getTestCase();
