@@ -22,8 +22,8 @@ class Auth_OpenID_Extension {
      * ns_uri: The namespace to which to add the arguments for this
      * extension
      */
-    var $ns_uri = null;
-    var $ns_alias = null;
+    public $ns_uri = null;
+    public $ns_alias = null;
 
     /**
      * Get the string arguments that should be added to an OpenID

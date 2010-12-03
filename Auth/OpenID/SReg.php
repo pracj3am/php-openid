@@ -168,7 +168,7 @@ class Auth_OpenID_SRegBase extends Auth_OpenID_Extension {
  */
 class Auth_OpenID_SRegRequest extends Auth_OpenID_SRegBase {
 
-    var $ns_alias = 'sreg';
+    public $ns_alias = 'sreg';
 
     /**
      * Initialize an empty simple registration request.
@@ -416,9 +416,9 @@ class Auth_OpenID_SRegRequest extends Auth_OpenID_SRegBase {
  */
 class Auth_OpenID_SRegResponse extends Auth_OpenID_SRegBase {
 
-    var $ns_alias = 'sreg';
+    public $ns_alias = 'sreg';
 
-    function Auth_OpenID_SRegResponse($data=null,
+    public function __construct($data=null,
                                       $sreg_ns_uri=Auth_OpenID_SREG_NS_URI)
     {
         if ($data === null) {

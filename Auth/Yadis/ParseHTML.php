@@ -25,25 +25,25 @@ class Auth_Yadis_ParseHTML {
     /**
      * @access private
      */
-    var $_re_flags = "si";
+    public $_re_flags = "si";
 
     /**
      * @access private
      */
-    var $_removed_re =
+    public $_removed_re =
            "<!--.*?-->|<!\[CDATA\[.*?\]\]>|<script\b(?!:)[^>]*>.*?<\/script>";
 
     /**
      * @access private
      */
-    var $_tag_expr = "<%s%s(?:\s.*?)?%s>";
+    public $_tag_expr = "<%s%s(?:\s.*?)?%s>";
 
     /**
      * @access private
      */
-    var $_attr_find = '\b([-\w]+)=(".*?"|\'.*?\'|.+?)[\/\s>]';
+    public $_attr_find = '\b([-\w]+)=(".*?"|\'.*?\'|.+?)[\/\s>]';
 
-    function Auth_Yadis_ParseHTML()
+    public function __construct()
     {
         $this->_attr_find = sprintf("/%s/%s",
                                     $this->_attr_find,

@@ -89,26 +89,26 @@ class Auth_OpenID_Parse {
     /**
      * Specify some flags for use with regex matching.
      */
-    var $_re_flags = "si";
+    public $_re_flags = "si";
 
     /**
      * Stuff to remove before we start looking for tags
      */
-    var $_removed_re =
+    public $_removed_re =
            "<!--.*?-->|<!\[CDATA\[.*?\]\]>|<script\b(?!:)[^>]*>.*?<\/script>";
 
     /**
      * Starts with the tag name at a word boundary, where the tag name
      * is not a namespace
      */
-    var $_tag_expr = "<%s\b(?!:)([^>]*?)(?:\/>|>(.*)(?:<\/?%s\s*>|\Z))";
+    public $_tag_expr = "<%s\b(?!:)([^>]*?)(?:\/>|>(.*)(?:<\/?%s\s*>|\Z))";
 
-    var $_attr_find = '\b(\w+)=("[^"]*"|\'[^\']*\'|[^\'"\s\/<>]+)';
+    public $_attr_find = '\b(\w+)=("[^"]*"|\'[^\']*\'|[^\'"\s\/<>]+)';
 
-    var $_open_tag_expr = "<%s\b";
-    var $_close_tag_expr = "<((\/%s\b)|(%s[^>\/]*\/))>";
+    public $_open_tag_expr = "<%s\b";
+    public $_close_tag_expr = "<((\/%s\b)|(%s[^>\/]*\/))>";
 
-    function Auth_OpenID_Parse()
+    public function __construct()
     {
         $this->_link_find = sprintf("/<link\b(?!:)([^>]*)(?!<)>/%s",
                                     $this->_re_flags);

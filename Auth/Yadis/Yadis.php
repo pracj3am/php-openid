@@ -48,27 +48,27 @@ define('Auth_Yadis_HEADER_NAME', 'X-XRDS-Location');
 class Auth_Yadis_DiscoveryResult {
 
     // The URI that was passed to the fetcher
-    var $request_uri = null;
+    public $request_uri = null;
 
     // The result of following redirects from the request_uri
-    var $normalized_uri = null;
+    public $normalized_uri = null;
 
     // The URI from which the response text was returned (set to
     // None if there was no XRDS document found)
-    var $xrds_uri = null;
+    public $xrds_uri = null;
 
-    var $xrds = null;
+    public $xrds = null;
 
     // The content-type returned with the response_text
-    var $content_type = null;
+    public $content_type = null;
 
     // The document returned from the xrds_uri
-    var $response_text = null;
+    public $response_text = null;
 
     // Did the discovery fail miserably?
-    var $failed = false;
+    public $failed = false;
 
-    function Auth_Yadis_DiscoveryResult($request_uri)
+    public function __construct($request_uri)
     {
         // Initialize the state of the object
         // sets all attributes to None except the request_uri

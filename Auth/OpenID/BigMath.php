@@ -188,7 +188,7 @@ class Auth_OpenID_MathLibrary {
  * @package OpenID
  */
 class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
-    var $type = 'bcmath';
+    public $type = 'bcmath';
 
     function add($x, $y)
     {
@@ -274,7 +274,7 @@ class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
  * @package OpenID
  */
 class Auth_OpenID_GmpMathWrapper extends Auth_OpenID_MathLibrary{
-    var $type = 'gmp';
+    public $type = 'gmp';
 
     function add($x, $y)
     {

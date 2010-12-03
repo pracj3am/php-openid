@@ -48,14 +48,14 @@ class Auth_OpenID_Association {
      *
      * @access private
      */
-    var $SIG_LENGTH = 20;
+    public $SIG_LENGTH = 20;
 
     /**
      * The ordering and name of keys as stored by serialize.
      *
      * @access private
      */
-    var $assoc_keys = array(
+    public $assoc_keys = array(
                             'version',
                             'handle',
                             'secret',
@@ -64,7 +64,7 @@ class Auth_OpenID_Association {
                             'assoc_type'
                             );
 
-    var $_macs = array(
+    public $_macs = array(
                        'HMAC-SHA1' => 'Auth_OpenID_HMACSHA1',
                        'HMAC-SHA256' => 'Auth_OpenID_HMACSHA256'
                        );
@@ -128,7 +128,7 @@ class Auth_OpenID_Association {
      * this time is 'HMAC-SHA1' and 'HMAC-SHA256', but new types may
      * be defined in the future.
      */
-    function Auth_OpenID_Association(
+    public function __construct(
         $handle, $secret, $issued, $lifetime, $assoc_type)
     {
         if (!in_array($assoc_type,
@@ -523,7 +523,7 @@ function Auth_OpenID_getEncryptedNegotiator()
  * @package OpenID
  */
 class Auth_OpenID_SessionNegotiator {
-    function Auth_OpenID_SessionNegotiator($allowed_types)
+    public function __construct($allowed_types)
     {
         $this->allowed_types = array();
         $this->setAllowedTypes($allowed_types);

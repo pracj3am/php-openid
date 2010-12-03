@@ -62,7 +62,7 @@ function Auth_OpenID_getOpenIDTypeName($type_uri) {
  * Object representing an OpenID service endpoint.
  */
 class Auth_OpenID_ServiceEndpoint {
-    function Auth_OpenID_ServiceEndpoint()
+    public function __construct()
     {
         $this->claimed_id = null;
         $this->server_url = null;
@@ -203,9 +203,9 @@ class Auth_OpenID_ServiceEndpoint {
      * @return array of Auth_OpenID_ServiceEndpoint or null if the
      * document cannot be parsed.
      */
-    function consumerFromXRDS($uri, $xrds_text)
+    static function consumerFromXRDS($uri, $xrds_text)
     {
-        $xrds =& Auth_Yadis_XRDS::parseXRDS($xrds_text);
+        $xrds = Auth_Yadis_XRDS::parseXRDS($xrds_text);
 
         if ($xrds) {
             $yadis_services =

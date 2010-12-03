@@ -18,9 +18,8 @@ configuration changes necessary to run the library.
 INSTALLATION
 ============
 
-You will need PHP 4.3.0 or greater to use this library.  We have
-tested the library Linux on PHP 4.3.0, 4.4.1, 5.0.5, and 5.1.1.  We
-have tested the library on Windows XP on PHP 4.4.4.
+You will need PHP 5.1.0 or greater to use this library.  We have
+tested the library Linux on PHP 5.3.3.
 
 Follow these steps:
 
@@ -126,11 +125,11 @@ For more detailed information on how to contribute, see
 
   http://openidenabled.com/contribute/
 
-To run the test suite included with this package, install PHPUnit 1.x
+To run the test suite included with this package, install PHPUnit 1.3
 and run
 
   php admin/texttest.php
 
-PHPUnit 1.x can be found at
+PHPUnit 1.3 can be found at
 
   http://pear.phpunit.de/get/

@@ -280,7 +280,7 @@ class Auth_Yadis_Manager {
      *
      * @access private
      */
-    function Auth_Yadis_Manager($starting_url, $yadis_url,
+    public function __construct($starting_url, $yadis_url,
                                     $services, $session_key)
     {
         // The URL that was used to initiate the Yadis protocol
@@ -371,12 +371,12 @@ class Auth_Yadis_Discovery {
     /**
      * @access private
      */
-    var $DEFAULT_SUFFIX = 'auth';
+    public $DEFAULT_SUFFIX = 'auth';
 
     /**
      * @access private
      */
-    var $PREFIX = '_yadis_services_';
+    public $PREFIX = '_yadis_services_';
 
     /**
      * Initialize a discovery object.
@@ -387,7 +387,7 @@ class Auth_Yadis_Discovery {
      * @param string $session_key_suffix The optional session key
      * suffix override.
      */
-    function Auth_Yadis_Discovery($session, $url,
+    public function __construct($session, $url,
                                       $session_key_suffix = null)
     {
         /// Initialize a discovery object
