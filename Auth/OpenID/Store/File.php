@@ -95,7 +95,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      *
      * @access private
      */
-    function _setup()
+    private function _setup()
     {
         return (Auth_OpenID::ensureDir($this->nonce_dir) &&
                 Auth_OpenID::ensureDir($this->association_dir) &&
@@ -114,7 +114,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      * @return array ($fd, $filename)
      * @access private
      */
-    function _mktemp()
+    private function _mktemp()
     {
         $name = self::_mkstemp($dir = $this->temp_dir);
         $file_obj = @fopen($name, 'wb');
@@ -301,7 +301,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _getAssociation($filename)
+    private function _getAssociation($filename)
     {
         if (!$this->active) {
             trigger_error("FileStore no longer active", E_USER_ERROR);
@@ -410,7 +410,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      *
      * @access private
      */
-    function _allAssocs()
+    private function _allAssocs()
     {
         $all_associations = array();
 
@@ -473,7 +473,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _rmtree($dir)
+    private function _rmtree($dir)
     {
         if ($dir[strlen($dir) - 1] != DIRECTORY_SEPARATOR) {
             $dir .= DIRECTORY_SEPARATOR;
@@ -511,7 +511,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _mkstemp($dir)
+    private function _mkstemp($dir)
     {
         foreach (range(0, 4) as $i) {
             $name = tempnam($dir, "php_openid_filestore_");
@@ -543,7 +543,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _listdir($dir)
+    private function _listdir($dir)
     {
         $handle = opendir($dir);
         $files = array();
@@ -558,7 +558,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _isFilenameSafe($char)
+    private function _isFilenameSafe($char)
     {
         $_Auth_OpenID_filename_allowed = Auth_OpenID_letters .
             Auth_OpenID_digits . ".";
@@ -568,7 +568,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _safe64($str)
+    private function _safe64($str)
     {
         $h64 = base64_encode(Auth_OpenID_SHA1($str));
         $h64 = str_replace('+', '_', $h64);
@@ -580,7 +580,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _filenameEscape($str)
+    private function _filenameEscape($str)
     {
         $filename = "";
         $b = Auth_OpenID::toBytes($str);
@@ -603,7 +603,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      * @access private
      * @return bool $result True if the file was present, false if not.
      */
-    function _removeIfPresent($filename)
+    private function _removeIfPresent($filename)
     {
         return @unlink($filename);
     }

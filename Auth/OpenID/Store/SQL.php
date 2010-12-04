@@ -209,7 +209,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _verifySQL()
+    private function _verifySQL()
     {
         $missing = array();
         $empty = array();
@@ -237,7 +237,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _fixSQL()
+    private function _fixSQL()
     {
         $replacements = array(
                               array(
@@ -319,7 +319,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _set_assoc($server_url, $handle, $secret, $issued,
+    private function _set_assoc($server_url, $handle, $secret, $issued,
                         $lifetime, $assoc_type)
     {
         return $this->connection->query($this->sql['set_assoc'],
@@ -352,7 +352,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _get_assoc($server_url, $handle)
+    private function _get_assoc($server_url, $handle)
     {
         $result = $this->connection->getRow($this->sql['get_assoc'],
                                             array($server_url, $handle));
@@ -366,7 +366,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _get_assocs($server_url)
+    private function _get_assocs($server_url)
     {
         $result = $this->connection->getAll($this->sql['get_assocs'],
                                             array($server_url));
@@ -452,7 +452,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     /**
      * @access private
      */
-    function _add_nonce($server_url, $timestamp, $salt)
+    private function _add_nonce($server_url, $timestamp, $salt)
     {
         $sql = $this->sql['add_nonce'];
         $result = $this->connection->query($sql, array($server_url,
@@ -484,7 +484,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
      *
      * @access private
      */
-    function _octify($str)
+    private function _octify($str)
     {
         $result = "";
         for ($i = 0; $i < Auth_OpenID::bytes($str); $i++) {
@@ -506,7 +506,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
      *
      * @access private
      */
-    function _unoctify($str)
+    private function _unoctify($str)
     {
         $result = "";
         $i = 0;

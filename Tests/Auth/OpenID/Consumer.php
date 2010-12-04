@@ -41,7 +41,7 @@ function mkSuccess($endpoint, $q)
 }
 
 class FastConsumerSession extends Auth_OpenID_DiffieHellmanSHA1ConsumerSession {
-    function FastConsumerSession($dh = null)
+    function __construct($dh = null)
     {
         if ($dh === null) {
             $dh = new Auth_OpenID_DiffieHellman(100389557, 2);
@@ -139,7 +139,7 @@ class Auth_OpenID_TestFetcher extends Auth_Yadis_HTTPFetcher {
         }
     }
 
-    function _checkAuth($url, $body)
+    public function _checkAuth($url, $body)
     {
         $query_data = Auth_OpenID_parse($body);
         $expected = array(
@@ -191,7 +191,7 @@ $_Auth_OpenID_consumer_url = "http://consumer.example.com/";
 
 class Tests_Auth_OpenID_Consumer extends PHPUnit_TestCase {
 
-    function _run($consumer, $user_url, $mode, $delegate_url,
+    private function _run($consumer, $user_url, $mode, $delegate_url,
                   $fetcher, $store, $immediate)
     {
         global $_Auth_OpenID_consumer_url,
@@ -265,7 +265,7 @@ class Tests_Auth_OpenID_Consumer extends PHPUnit_TestCase {
         $this->assertEquals($result->identity_url, $user_url);
     }
 
-    function _test_success($user_url, $delegate_url, $links, $immediate = false)
+    private function _test_success($user_url, $delegate_url, $links, $immediate = false)
     {
         global $_Auth_OpenID_filestore_base_dir,
             $_Auth_OpenID_server_url,
@@ -360,7 +360,7 @@ class ConfigurableConsumer extends Auth_OpenID_GenericConsumer {
     return parent::complete($message, $endpoint, $return_to);
   }
 
-  function _checkReturnTo($unused, $unused2) {
+  public function _checkReturnTo($unused, $unused2) {
     if ($this->return_to_check_disabled) {
       return true;
     } else {
@@ -603,17 +603,17 @@ define('E_MOCK_FETCHER_EXCEPTION', 'mock fetcher exception');
 define('E_ASSERTION_ERROR', 'assertion error');
 
 class _CheckAuthDetectingConsumer extends ConfigurableConsumer {
-    function _verifyDiscoveryResults($message, $endpoint=null)
+    public function _verifyDiscoveryResults($message, $endpoint=null)
     {
         return $endpoint;
     }
 
-    function _idResCheckNonce($message, $endpoint)
+    public function _idResCheckNonce($message, $endpoint)
     {
         return true;
     }
 
-    function _checkAuth($query, $server_url)
+    public function _checkAuth($query, $server_url)
     {
         __raiseError(E_CHECK_AUTH_HAPPENED);
     }
@@ -680,12 +680,12 @@ class TestIdResCheckSignature extends _TestIdRes {
 }
 
 class StatelessConsumer1 extends ConfigurableConsumer {
-    function _processCheckAuthResponse($response, $server_url)
+    public function _processCheckAuthResponse($response, $server_url)
     {
         return true;
     }
 
-    function _makeKVPost($args, $server_url)
+    public function _makeKVPost($args, $server_url)
     {
         return array();
     }
@@ -723,7 +723,7 @@ class Tests_Auth_OpenID_Stateless1 extends _TestIdRes {
 }
 
 class StatelessConsumer2 extends ConfigurableConsumer {
-    function _checkAuth($_, $__)
+    public function _checkAuth($_, $__)
     {
         return false;
     }
@@ -871,7 +871,7 @@ class Tests_Auth_OpenID_Consumer_CheckNonceTest extends _TestIdRes {
 class Tests_Auth_OpenID_Consumer_TestCheckAuthTriggered extends _TestIdRes {
     public $consumer_class = '_CheckAuthDetectingConsumer';
 
-    function _doIdRes($message, $endpoint, $return_to)
+    private function _doIdRes($message, $endpoint, $return_to)
     {
         return $this->consumer->_doIdRes($message, $endpoint, $return_to);
     }
@@ -992,7 +992,7 @@ class Tests_Auth_OpenID_Consumer_TestCheckAuthTriggered extends _TestIdRes {
 }
 
 class _MockFetcher {
-    function _MockFetcher($response = null)
+    public function __construct($response = null)
     {
         // response is (code, url, body)
         $this->response = $response;
@@ -1104,7 +1104,7 @@ class _VerifiedError extends Auth_OpenID_FailureResponse {
 }
 
 class Consumer_idResURLMismatch extends ConfigurableConsumer {
-    function _discoverAndVerify($to_match, $to_match_endpoints=null)
+    private function _discoverAndVerify($to_match, $to_match_endpoints=null)
     {
         return new _VerifiedError(null, 'verified error');
     }
@@ -1131,7 +1131,7 @@ class Tests_idResURLMismatch extends _TestIdRes {
 }
 
 class SetupNeededConsumer extends Auth_OpenID_GenericConsumer {
-    function _checkSetupNeeded($message)
+    private function _checkSetupNeeded($message)
     {
         return true;
     }
@@ -1148,7 +1148,7 @@ class Tests_Auth_OpenID_SetupNeeded extends _TestIdRes {
 }
 
 class TempConsumer extends ConfigurableConsumer {
-    function _verifyDiscoveryResults($message, $endpoint=null)
+    public function _verifyDiscoveryResults($message, $endpoint=null)
     {
         return $endpoint;
     }
@@ -1379,7 +1379,7 @@ class TestReturnToArgs extends PHPUnit_TestCase {
 }
 
 class Tests_Auth_OpenID_CheckAuthResponse extends _TestIdRes {
-    function _createAssoc()
+    private function _createAssoc()
     {
         $issued = time();
         $lifetime = 1000;
@@ -1468,7 +1468,7 @@ class Tests_Auth_OpenID_CheckAuthResponse extends _TestIdRes {
 class _IdResFetchFailingConsumer extends Auth_OpenID_GenericConsumer {
     public $message = 'fetch failed';
 
-    function _doIdRes($message, $endpoint, $return_to=null)
+    public function _doIdRes($message, $endpoint, $return_to=null)
     {
         return new Auth_OpenID_FailureResponse($endpoint,
                                                $this->message);
@@ -1505,7 +1505,7 @@ class _ExceptionRaisingMockFetcher {
 }
 
 class _BadArgCheckingConsumer extends Auth_OpenID_GenericConsumer {
-    function _makeKVPost($message, $tmp)
+    public function _makeKVPost($message, $tmp)
     {
         $args = $message->toPostArgs();
 
@@ -1781,7 +1781,7 @@ class Tests_Auth_OpenID_SuccessResponse extends PHPUnit_TestCase {
 }
 
 class _StubConsumer {
-    function _StubConsumer()
+    public function __construct()
     {
         $this->assoc = null;
         $this->response = null;
@@ -1889,7 +1889,7 @@ class Tests_Auth_OpenID_ConsumerTest2 extends PHPUnit_TestCase {
         $this->assertTrue($response->identity_url === null);
     }
 
-    function _doResp($auth_req, $exp_resp)
+    private function _doResp($auth_req, $exp_resp)
     {
         // complete a transaction, using the expected response from
         // the generic consumer.
@@ -1915,7 +1915,7 @@ class Tests_Auth_OpenID_ConsumerTest2 extends PHPUnit_TestCase {
         return $resp;
     }
 
-    function _doRespNoDisco($exp_resp)
+    private function _doRespNoDisco($exp_resp)
     {
         // Set up a transaction without discovery
         $auth_req = $this->consumer->beginWithoutDiscovery($this->endpoint);
@@ -1976,7 +1976,7 @@ class Tests_Auth_OpenID_ConsumerTest2 extends PHPUnit_TestCase {
 
     // To test that discovery is cleaned up, we need to initialize a
     // Yadis manager, and have it put its values in the session.
-    function _doRespDisco($is_clean, $exp_resp)
+    private function _doRespDisco($is_clean, $exp_resp)
     {
         // Set up and execute a transaction, with discovery
         $this->discovery->createManager(array($this->endpoint),
@@ -2046,12 +2046,12 @@ class IDPDrivenTest_Consumer1 extends ConfigurableConsumer {
     public $failure_cb = null;
     public $check_endpoint = null;
 
-    function _idResCheckNonce($message, $endpoint)
+    public function _idResCheckNonce($message, $endpoint)
     {
         return true;
     }
 
-    function _verifyDiscoveryResults($identifier, $endpoint)
+    public function _verifyDiscoveryResults($identifier, $endpoint=null)
     {
         call_user_func($this->failure_cb,
                        $endpoint === $this->check_endpoint);
@@ -2148,7 +2148,7 @@ class IDPDrivenTest extends PHPUnit_TestCase {
 global $__test_otherServer_text;
 $__test_otherServer_text = "__test_otherServer";
 class TestDiscoveryVerification_test_otherServer extends Auth_OpenID_GenericConsumer {
-    function _discoverAndVerify($to_match, $to_match_endpoints=null)
+    private function _discoverAndVerify($to_match, $to_match_endpoints=null)
     {
         global $__test_otherServer_text;
         return new Auth_OpenID_FailureResponse(null, $__test_otherServer_text);

@@ -13,7 +13,7 @@ require_once 'Auth/Yadis/XRI.php';
  */
 
 class _SimpleMockFetcher {
-    function _SimpleMockFetcher($responses)
+    public function __construct($responses)
     {
         $this->responses = $responses;
     }
@@ -97,7 +97,7 @@ class Tests_Auth_OpenID_DiscoveryFailure extends PHPUnit_TestCase {
 class _ErrorRaisingFetcher {
     // Just raise an exception when fetch is called
 
-    function _ErrorRaisingFetcher($thing_to_raise)
+    public function __construct($thing_to_raise)
     {
         $this->thing_to_raise = $thing_to_raise;
     }
@@ -151,7 +151,7 @@ class Tests_Auth_OpenID_Discover_FetchException extends PHPUnit_TestCase {
 // Tests for openid.consumer.discover.discover
 
 class _DiscoveryMockFetcher extends Auth_Yadis_HTTPFetcher {
-    function _DiscoveryMockFetcher($documents)
+    public function __construct($documents)
     {
         $this->redirect = null;
         $this->documents = $documents;
@@ -196,7 +196,7 @@ class _DiscoveryBase extends PHPUnit_TestCase {
     public $id_url = "http://someuser.unittest/";
     public $fetcherClass = '_DiscoveryMockFetcher';
 
-    function _checkService($s,
+    protected function _checkService($s,
                            $server_url,
                            $claimed_id=null,
                            $local_id=null,
@@ -263,7 +263,7 @@ class _DiscoveryBase extends PHPUnit_TestCase {
 }
 
 class Tests_Auth_OpenID_Discover_OpenID extends _DiscoveryBase {
-    function _discover($content_type, $data,
+    private function _discover($content_type, $data,
                        $expected_services, $expected_id=null)
     {
         if ($expected_id === null) {
@@ -536,7 +536,7 @@ class Tests_Auth_OpenID_Discover_OpenID extends _DiscoveryBase {
 
 class _MockFetcherForXRIProxy extends Auth_Yadis_HTTPFetcher {
 
-    function _MockFetcherForXRIProxy($documents)
+    public function __construct($documents)
     {
         $this->documents = $documents;
         $this->fetchlog = array();
@@ -686,10 +686,10 @@ class _FetcherWithoutSSL extends _DiscoveryMockFetcher {
 class _NonFetcher extends _DiscoveryMockFetcher {
     public $used = false;
 
-    function _NonFetcher()
+    public function __construct()
     {
         $a = array();
-        parent::_DiscoveryMockFetcher($a);
+        parent::__construct($a);
     }
 
     function supportsSSL()
@@ -697,7 +697,7 @@ class _NonFetcher extends _DiscoveryMockFetcher {
         return false;
     }
 
-    function get($url, $headers)
+    function get($url, $headers = null, $body = null)
     {
         $this->used = true;
     }

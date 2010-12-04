@@ -41,7 +41,7 @@ class Auth_Yadis_ParanoidHTTPFetcher extends Auth_Yadis_HTTPFetcher {
     /**
      * @access private
      */
-    function _writeHeader($ch, $header)
+    private function _writeHeader($ch, $header)
     {
         array_push($this->headers, rtrim($header));
         return strlen($header);
@@ -50,7 +50,7 @@ class Auth_Yadis_ParanoidHTTPFetcher extends Auth_Yadis_HTTPFetcher {
     /**
      * @access private
      */
-    function _writeData($ch, $data)
+    private function _writeData($ch, $data)
     {
         if (strlen($this->data) > 1024*Auth_OpenID_FETCHER_MAX_RESPONSE_KB) {
             return 0;

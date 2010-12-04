@@ -114,7 +114,7 @@ class Tests_Auth_Yadis_XRDS extends PHPUnit_TestCase {
         }
     }
 
-    function _getCanonicalID($iname, $xrds, $expectedID)
+    private function _getCanonicalID($iname, $xrds, $expectedID)
     {
         if ($expectedID === null) {
             $result = Auth_Yadis_getCanonicalID($iname, $xrds);

@@ -1086,19 +1086,19 @@ class Tests_Auth_OpenID_CheckID extends PHPUnit_TestCase {
         $this->assertEquals($result->message, $sentinel);
     }
 
-    function _verify($trust_root, $return_to, $value)
+    private function _verify($trust_root, $return_to, $value)
     {
         $this->assertEquals($this->request->trust_root, $trust_root);
         $this->assertEquals($this->request->return_to, $return_to);
         return $value;
     }
 
-    function _verifyTrue($trust_root, $return_to)
+    private function _verifyTrue($trust_root, $return_to)
     {
         return $this->_verify($trust_root, $return_to, true);
     }
 
-    function _verifyFalse($trust_root, $return_to)
+    private function _verifyFalse($trust_root, $return_to)
     {
         return $this->_verify($trust_root, $return_to, false);
     }
@@ -1129,7 +1129,7 @@ class Tests_Auth_OpenID_CheckID extends PHPUnit_TestCase {
         $this->assertTrue($this->request->answer(false));
     }
 
-    function _expectAnswer($answer, $identity=null, $claimed_id=null)
+    private function _expectAnswer($answer, $identity=null, $claimed_id=null)
     {
         if (is_a($answer, 'Auth_OpenID_ServerError')) {
             $this->fail("Got ServerError, expected valid response in ".$this->getName());
@@ -1532,7 +1532,7 @@ class Tests_Auth_OpenID_CheckIDExtension extends PHPUnit_TestCase {
 class _MockSignatory {
     public $isValid = true;
 
-    function _MockSignatory($assoc)
+    public function __construct($assoc)
     {
         $this->assocs = array($assoc);
     }

@@ -327,7 +327,7 @@ class Auth_OpenID_Association {
      *
      * @access private
      */
-    function _makePairs($message)
+    private function _makePairs($message)
     {
         $signed = $message->getArg(Auth_OpenID_OPENID_NS, 'signed');
         if (!$signed || Auth_OpenID::isFailure($signed)) {

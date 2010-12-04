@@ -69,7 +69,7 @@ class Tests_Auth_OpenID_DiffieHellman_Exch extends PHPUnit_TestCase {
 }
 
 class Tests_Auth_OpenID_DiffieHellman extends PHPUnit_TestSuite {
-    function _readPrivateTestCases()
+    private function _readPrivateTestCases()
     {
         $lines = Tests_Auth_OpenID_readlines('dhpriv');
         $cases = array();
@@ -92,7 +92,7 @@ class Tests_Auth_OpenID_DiffieHellman extends PHPUnit_TestSuite {
         return $cases;
     }
 
-    function _readExchTestCases()
+    private function _readExchTestCases()
     {
         $lines = Tests_Auth_OpenID_readlines('dhexch');
         $cases = array();

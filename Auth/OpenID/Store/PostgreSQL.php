@@ -75,7 +75,7 @@ class Auth_OpenID_Store_PostgreSQL extends Auth_OpenID_Store_SQL {
     /**
      * @access private
      */
-    function _set_assoc($server_url, $handle, $secret, $issued, $lifetime,
+    private function _set_assoc($server_url, $handle, $secret, $issued, $lifetime,
                         $assoc_type)
     {
         $result = $this->_get_assoc($server_url, $handle);

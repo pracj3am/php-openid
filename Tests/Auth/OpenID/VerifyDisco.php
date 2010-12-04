@@ -7,7 +7,7 @@ require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID/Consumer.php";
 
 class Tests_Auth_OpenID_VerifyDisco_1 extends Auth_OpenID_GenericConsumer {
-    function _discoverAndVerify($claimed_id, $to_match_endpoints)
+    private function _discoverAndVerify($claimed_id, $to_match_endpoints)
     {
         $this->test_case->assertEquals($this->endpoint->claimed_id, $claimed_id);
         return new Auth_OpenID_FailureResponse(null, $this->text);
@@ -18,7 +18,7 @@ class __VerifiedError extends Auth_OpenID_FailureResponse {
 }
 
 class VerifyDisco_Consumer_verifiedError extends Auth_OpenID_GenericConsumer {
-    function _discoverAndVerify($to_match, $to_match_endpoints=null)
+    private function _discoverAndVerify($to_match, $to_match_endpoints=null)
     {
         return new __VerifiedError(null, 'verified error');
     }
@@ -52,7 +52,7 @@ class _DiscoverAndVerify extends OpenIDTestMixin {
 }
 
 class _Tests_discoveryOverride {
-    function _Tests_discoveryOverride($endpoint)
+    public function __construct($endpoint)
     {
         $this->endpoint = $endpoint;
     }
@@ -263,7 +263,7 @@ class Tests_openid1UsePreDiscoveredWrongType extends _DiscoverAndVerify {
 class Tests_openID2NoEndpointDoesDisco_sentinel extends Auth_OpenID_GenericConsumer {
     public $sentinel = 'blah';
 
-    function _discoverAndVerify($to_match, $to_match_endpoints)
+    private function _discoverAndVerify($to_match, $to_match_endpoints)
     {
         return $this->sentinel;
     }
@@ -272,7 +272,7 @@ class Tests_openID2NoEndpointDoesDisco_sentinel extends Auth_OpenID_GenericConsu
 class Tests_openID2NoEndpointDoesDisco_failure extends Auth_OpenID_GenericConsumer {
     public $failure_message = 'A fake failure response message';
 
-    function _verifyDiscoverySingle($to_match, $to_match=null)
+    private function _verifyDiscoverySingle($to_match, $to_match2 = null)
     {
         return new Auth_OpenID_FailureResponse(null, $this->failure_message);
     }
@@ -347,7 +347,7 @@ class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_TestCase {
         $this->endpoint->type_uris = array(Auth_OpenID_TYPE_1_1);
     }
 
-    function _getServices($claimed_id, $fetcher=null) {
+    public function _getServices($claimed_id, $fetcher=null) {
         return array(null, array($this->endpoint));
     }
 

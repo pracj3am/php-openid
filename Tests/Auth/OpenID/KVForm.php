@@ -47,7 +47,7 @@ class Tests_Auth_OpenID_KVForm_TestCase extends PHPUnit_TestCase {
         restore_error_handler();
     }
 
-    function _runTest()
+    private function _runTest()
     {
         trigger_error('Must be overridden', E_USER_ERROR);
     }
@@ -65,7 +65,7 @@ extends Tests_Auth_OpenID_KVForm_TestCase {
         $this->errs = $errs;
     }
 
-    function _runTest()
+    private function _runTest()
     {
         // Do one parse, after which arrayToKV and kvToArray should be
         // inverses.
@@ -103,7 +103,7 @@ extends Tests_Auth_OpenID_KVForm_TestCase {
         $this->errs = $errs;
     }
 
-    function _runTest()
+    private function _runTest()
     {
         $serialized = Auth_OpenID_KVForm::fromArray($this->arr);
         $this->assertTrue($serialized === null,

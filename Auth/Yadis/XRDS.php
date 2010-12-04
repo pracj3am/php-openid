@@ -328,7 +328,7 @@ class Auth_Yadis_XRDS {
     /**
      * @access private
      */
-    function _addService($priority, $service)
+    private function _addService($priority, $service)
     {
         $priority = intval($priority);
 
@@ -345,7 +345,7 @@ class Auth_Yadis_XRDS {
      *
      * @access private
      */
-    function _parse()
+    private function _parse()
     {
         $this->serviceList = array();
 

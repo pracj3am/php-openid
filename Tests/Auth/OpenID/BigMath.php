@@ -141,7 +141,7 @@ function Tests_Auth_OpenID_maxint()
 
 
 class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
-    function _parseBase64Data()
+    private function _parseBase64Data()
     {
         $lines = Tests_Auth_OpenID_readlines('n2b64');
 
@@ -157,7 +157,7 @@ class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
         return $data;
     }
 
-    function _addB64Tests()
+    private function _addB64Tests()
     {
         $lib = Auth_OpenID_getMathLib();
         $count = defined('Tests_Auth_OpenID_thorough') ? -1 : 2;
@@ -182,7 +182,7 @@ class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
         }
     }
 
-    function _addBinLongTests()
+    private function _addBinLongTests()
     {
         $lib = Auth_OpenID_getMathLib();
         $max = Tests_Auth_OpenID_maxint();

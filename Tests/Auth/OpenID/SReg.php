@@ -598,7 +598,7 @@ class SRegResponseTest extends PHPUnit_TestCase {
 }
 
 class SendFieldsTest extends PHPUnit_TestCase {
-    function _test($uri)
+    private function _test($uri)
     {
         // Create a request message with simple registration fields
         $sreg_req = Auth_OpenID_SRegRequest::build(array('nickname', 'email'),

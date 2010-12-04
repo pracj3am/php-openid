@@ -222,7 +222,7 @@ class Auth_OpenID_Mapping {
     /**
      * @access private
      */
-    function _reflow()
+    private function _reflow()
     {
         // PHP is broken yet again.  Sort the arrays to remove the
         // hole in the numeric indexes that make up the array.
@@ -493,7 +493,7 @@ class Auth_OpenID_Message {
     /**
      * @access private
      */
-    function _fromOpenIDArgs($openid_args)
+    private function _fromOpenIDArgs($openid_args)
     {
         global $Auth_OpenID_registered_aliases;
 
@@ -561,7 +561,7 @@ class Auth_OpenID_Message {
         return true;
     }
 
-    function _getDefaultNamespace($mystery_alias)
+    private function _getDefaultNamespace($mystery_alias)
     {
         global $Auth_OpenID_registered_aliases;
         if ($this->isOpenID1()) {
@@ -726,7 +726,7 @@ class Auth_OpenID_Message {
     /**
      * @access private
      */
-    function _fixNS($namespace)
+    private function _fixNS($namespace)
     {
         // Convert an input value into the internally used values of
         // this object

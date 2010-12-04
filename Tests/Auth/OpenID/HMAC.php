@@ -37,7 +37,7 @@ class Tests_Auth_OpenID_HMAC_TestCase extends PHPUnit_TestCase {
 }
 
 class Tests_Auth_OpenID_HMAC extends PHPUnit_TestSuite {
-    function _strConvert($s)
+    private function _strConvert($s)
     {
         $repeat_pat = '/^0x([a-f0-9]{2}) repeated (\d+) times$/';
         if (preg_match($repeat_pat, $s, $match)) {
@@ -57,7 +57,7 @@ class Tests_Auth_OpenID_HMAC extends PHPUnit_TestSuite {
         return $data;
     }
 
-    function _readTestCases($test_file_name, $digest_len)
+    private function _readTestCases($test_file_name, $digest_len)
     {
         $lines = Tests_Auth_OpenID_readlines($test_file_name);
         $cases = array();
@@ -157,7 +157,7 @@ class Tests_Auth_OpenID_HMAC extends PHPUnit_TestSuite {
         }
     }
 
-    function _addTestByValue($test) {
+    private function _addTestByValue($test) {
         $this->addTest($test);
     }
 }

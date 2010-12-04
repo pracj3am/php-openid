@@ -44,7 +44,7 @@ class Tests_Auth_OpenID_Nonce extends PHPUnit_TestSuite {
         }
     }
 
-    function _mkSplitTest($nonce_str)
+    private function _mkSplitTest($nonce_str)
     {
         $test = new Tests_Auth_OpenID_Nonce_BadSplitCase($nonce_str);
         $test->setName('BadNonceSplit ' . var_export($nonce_str, true));
@@ -84,7 +84,7 @@ class Tests_Auth_OpenID_Nonce extends PHPUnit_TestSuite {
         }
     }
 
-    function _mkCheckTest($case)
+    private function _mkCheckTest($case)
     {
         list($nonce_str, $skew, $now, $expected) = $case;
         $test = new Tests_Auth_OpenID_Nonce_TimestampCase(

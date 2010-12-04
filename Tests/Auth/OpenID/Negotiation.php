@@ -19,7 +19,7 @@ class ErrorRaisingConsumer extends Auth_OpenID_GenericConsumer {
     // as-is.
     public $return_messages = array();
 
-    function _requestAssociation($endpoint, $assoc_type, $session_type)
+    private function _requestAssociation($endpoint, $assoc_type, $session_type)
     {
         $m = array_pop($this->return_messages);
         if (is_a($m, 'Auth_OpenID_Message')) {

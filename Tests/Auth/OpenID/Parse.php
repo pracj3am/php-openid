@@ -105,7 +105,7 @@ class Tests_Auth_OpenID_Parse extends PHPUnit_TestSuite {
         return "Tests_Auth_OpenID_Parse";
     }
 
-    function _parseCheck($cond, $where)
+    private function _parseCheck($cond, $where)
     {
         if (!$cond) {
             trigger_error('Parse error in ' . $where, E_USER_ERROR);

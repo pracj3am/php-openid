@@ -101,9 +101,9 @@ class Auth_OpenID_AX_Message extends Auth_OpenID_Extension {
      * exchange arguments does not match what is expected for this
      * class; true otherwise.
      *
-     * @access private
+     * @access public
      */
-    function _checkMode($ax_args)
+    public function _checkMode($ax_args)
     {
         $mode = Auth_OpenID::arrayGet($ax_args, 'mode');
         if ($mode != $this->mode) {
@@ -121,9 +121,9 @@ class Auth_OpenID_AX_Message extends Auth_OpenID_Extension {
      * basic information that must be in every attribute exchange
      * message.
      *
-     * @access private
+     * @access public
      */
-    function _newArgs()
+    public function _newArgs()
     {
         return array('mode' => $this->mode);
     }
@@ -585,9 +585,9 @@ class Auth_OpenID_AX_KeyValueMessage extends Auth_OpenID_AX_Message {
      * @param aliases: An alias mapping. Set to None if you don't care
      * about the aliases for this request.
      *
-     * @access private
+     * @access protected
      */
-    function _getExtensionKVArgs($aliases)
+    protected function _getExtensionKVArgs($aliases)
     {
         if ($aliases === null) {
             $aliases = new Auth_OpenID_NamespaceMap();

@@ -26,7 +26,7 @@ function mkResponse($data)
     return $r;
 }
 class TestFetcher {
-    function TestFetcher($base_url)
+    function __construct($base_url)
     {
         $this->base_url = $base_url;
     }
@@ -73,7 +73,7 @@ class NoContentTypeFetcher {
 }
 
 class MockFetcher {
-    function MockFetcher() {
+    function __construct() {
         $this->count = 0;
     }
 
@@ -103,7 +103,7 @@ class TestSecondGet extends PHPUnit_TestCase {
 class _TestCase extends PHPUnit_TestCase {
     public $base_url = 'http://invalid.unittest/';
 
-    function _TestCase($input_name, $id_name, $result_name, $success)
+    public function __construct($input_name, $id_name, $result_name, $success)
     {
       parent::__construct();
         $this->input_name = $input_name;

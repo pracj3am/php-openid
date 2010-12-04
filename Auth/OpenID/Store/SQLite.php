@@ -55,7 +55,7 @@ class Auth_OpenID_Store_SQLite extends Auth_OpenID_Store_SQL {
     /**
      * @access private
      */
-    function _add_nonce($server_url, $timestamp, $salt)
+    private function _add_nonce($server_url, $timestamp, $salt)
     {
         // PECL SQLite extensions 1.0.3 and older (1.0.3 is the
         // current release at the time of this writing) have a broken

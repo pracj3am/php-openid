@@ -8,7 +8,7 @@ require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID.php";
 
 class MessageTest extends PHPUnit_TestCase {
-    function _argTest($ns, $key, $expected = null)
+    protected function _argTest($ns, $key, $expected = null)
     {
         $a_default = 'a bogus default value';
 
@@ -161,7 +161,7 @@ class Tests_Auth_OpenID_EmptyMessage extends MessageTest {
         $this->assertTrue(Auth_OpenID::isFailure($result));
     }
 
-    function _test_updateArgsNS($ns)
+    private function _test_updateArgsNS($ns)
     {
         $update_args = array(
             'Camper van Beethoven' => 'David Lowery',
@@ -199,7 +199,7 @@ class Tests_Auth_OpenID_EmptyMessage extends MessageTest {
         $this->assertTrue(Auth_OpenID::isFailure($result));
     }
 
-    function _test_setArgNS($ns)
+    private function _test_setArgNS($ns)
     {
         $key = 'Camper van Beethoven';
         $value = 'David Lowery';
@@ -234,7 +234,7 @@ class Tests_Auth_OpenID_EmptyMessage extends MessageTest {
         $this->assertTrue(Auth_OpenID::isFailure($result));
     }
 
-    function _test_delArgNS($ns)
+    private function _test_delArgNS($ns)
     {
         $key = 'Camper van Beethoven';
         $this->assertEquals($this->msg->delArg($ns, $key), false);
@@ -418,7 +418,7 @@ class Tests_Auth_OpenID_OpenID1Message extends MessageTest {
         $this->assertEquals($this->msg->getArgs('urn:nothing-significant'), array());
     }
 
-    function _test_updateArgsNS($ns, $before=null)
+    private function _test_updateArgsNS($ns, $before=null)
     {
         if ($before === null) {
             $before = array();
@@ -462,7 +462,7 @@ class Tests_Auth_OpenID_OpenID1Message extends MessageTest {
         $this->_test_updateArgsNS('urn:nothing-significant');
     }
 
-    function _test_setArgNS($ns)
+    private function _test_setArgNS($ns)
     {
         $key = 'Camper van Beethoven';
         $value = 'David Lowery';
@@ -496,7 +496,7 @@ class Tests_Auth_OpenID_OpenID1Message extends MessageTest {
         $this->_test_setArgNS('urn:nothing-significant');
     }
 
-    function _test_delArgNS($ns)
+    private function _test_delArgNS($ns)
     {
         $key = 'Camper van Beethoven';
         $value = 'David Lowery';
@@ -656,7 +656,7 @@ class Tests_Auth_OpenID_OpenID2Message extends MessageTest {
                                        Auth_OpenID_OPENID2_NS));
     }
 
-    function _test_urlencoded($s)
+    private function _test_urlencoded($s)
     {
         $expected = 'openid.error=unit+test&openid.mode=error&' .
             'openid.ns=%s&xey=value';
@@ -775,7 +775,7 @@ class Tests_Auth_OpenID_OpenID2Message extends MessageTest {
         $this->assertEquals($this->msg->getArgs('urn:nothing-significant'), array());
     }
 
-    function _test_updateArgsNS($ns, $before=null)
+    private function _test_updateArgsNS($ns, $before=null)
     {
         if ($before === null) {
             $before = array();
@@ -820,7 +820,7 @@ class Tests_Auth_OpenID_OpenID2Message extends MessageTest {
         $this->_test_updateArgsNS('urn:nothing-significant');
     }
 
-    function _test_setArgNS($ns)
+    private function _test_setArgNS($ns)
     {
         $key = 'Camper van Beethoven';
         $value = 'David Lowery';
@@ -875,7 +875,7 @@ class Tests_Auth_OpenID_OpenID2Message extends MessageTest {
         }
     }
 
-    function _test_delArgNS($ns)
+    private function _test_delArgNS($ns)
     {
         $key = 'Camper van Beethoven';
         $value = 'David Lowery';
@@ -977,7 +977,7 @@ class Tests_Auth_OpenID_GeneralMessageTest extends PHPUnit_TestCase {
             'method' => 'post');
     }
 
-    function _checkForm($html, $message_, $action_url,
+    private function _checkForm($html, $message_, $action_url,
                         $form_tag_attrs, $submit_text)
     {
         $parser = Auth_Yadis_getXMLParser();

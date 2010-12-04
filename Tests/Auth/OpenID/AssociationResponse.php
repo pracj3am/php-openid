@@ -51,7 +51,7 @@ class Tests_Auth_OpenID_AssociationResponse extends PHPUnit_TestCase {
         $this->assertTrue(Auth_OpenID::isFailure($thing));
     }
 
-    function _run($keys, $session_type_value=null, $openid1=false)
+    protected function _run($keys, $session_type_value=null, $openid1=false)
     {
         $msg = mkAssocResponse($keys);
         $dumb = null;
@@ -118,7 +118,7 @@ class TestExtractAssociationMissingFieldsOpenID1 extends Tests_Auth_OpenID_Assoc
 }
 
 class DummyAssocationSession {
-    function DummyAssocationSession($session_type, $allowed_assoc_types=array())
+    function __construct($session_type, $allowed_assoc_types=array())
     {
         $this->session_type = $session_type;
         $this->allowed_assoc_types = $allowed_assoc_types;
@@ -126,7 +126,7 @@ class DummyAssocationSession {
 }
 
 class ExtractAssociationSessionTypeMismatch extends Tests_Auth_OpenID_AssociationResponse {
-    function _run($requested_session_type, $response_session_type, $openid1=false)
+    protected function _run($requested_session_type, $response_session_type=null, $openid1=false)
     {
         global $association_response_values;
 
@@ -182,7 +182,7 @@ class ExtractAssociationSessionTypeMismatch extends Tests_Auth_OpenID_Associatio
 }
 
 class TestOpenID1AssociationResponseSessionType extends Tests_Auth_OpenID_AssociationResponse {
-    function _run($expected_session_type, $session_type_value=null)
+    protected function _run($expected_session_type, $session_type_value=null, $openid1=false)
     {
         // Create a Message with just 'session_type' in it, since
         // that's all this function will use. 'session_type' may be
@@ -311,7 +311,7 @@ class TestInvalidFields extends Tests_Auth_OpenID_AssociationResponse {
 class TestExtractAssociationDiffieHellman extends Tests_Auth_OpenID_AssociationResponse {
     public $secret = 'xxxxxxxxxxxxxxxxxxxx';
 
-    function _setUpDH()
+    private function _setUpDH()
     {
         list($sess, $message) = $this->consumer->_createAssociateRequest(
                                   $this->endpoint, 'HMAC-SHA1', 'DH-SHA1');

@@ -35,7 +35,7 @@ class Tests_Auth_OpenID_URINorm_TestCase extends PHPUnit_TestCase {
 }
 
 class Tests_Auth_OpenID_URINorm extends PHPUnit_TestSuite {
-    function _readTestCases()
+    private function _readTestCases()
     {
         $lines = Tests_Auth_OpenID_readlines('urinorm.txt');
         $cases = array();

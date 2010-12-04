@@ -235,7 +235,7 @@ class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
      *
      * @access private
      */
-    function _powmod($base, $exponent, $modulus)
+    private function _powmod($base, $exponent, $modulus)
     {
         $square = $this->mod($base, $modulus);
         $result = 1;

@@ -41,7 +41,7 @@ abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
     /**
      * @access private
      */
-    function _checkRetrieve($store, $url, $handle, $expected, $name = null)
+    private function _checkRetrieve($store, $url, $handle, $expected, $name = null)
     {
         $retrieved_assoc = $store->getAssociation($url, $handle);
         if ($expected === null) {
@@ -51,7 +51,7 @@ abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
         }
     }
 
-    function _checkRemove($store, $url, $handle, $expected, $name = null)
+    private function _checkRemove($store, $url, $handle, $expected, $name = null)
     {
         $present = $store->removeAssociation($url, $handle);
         $this->assertTrue((!$expected && !$present) ||
@@ -69,7 +69,7 @@ abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
      * 
      * @param Auth_OpenID_Store $store
      */
-    function _testStore(Auth_OpenID_Store $store)
+    private function _testStore(Auth_OpenID_Store $store)
     {
         // Association functions
         $now = time();
@@ -251,14 +251,14 @@ explicitly');
         $this->assertEquals(2, $cleaned);
     }
 
-    function _checkUseNonce($store, $nonce, $expected, $server_url, $msg=null)
+    private function _checkUseNonce($store, $nonce, $expected, $server_url, $msg=null)
     {
         list($stamp, $salt) = Auth_OpenID_splitNonce($nonce);
         $actual = $store->useNonce($server_url, $stamp, $salt);
         $this->assertEquals(intval($expected), intval($actual), "_checkUseNonce failed: $server_url, $msg");
     }
 
-    function _testNonce($store)
+    private function _testNonce($store)
     {
         // Nonce functions
 
@@ -286,7 +286,7 @@ explicitly');
         }
     }
 
-    function _testNonceCleanup($store) {
+    private function _testNonceCleanup($store) {
         if (!$store->supportsCleanup()) {
         	return;
         }
