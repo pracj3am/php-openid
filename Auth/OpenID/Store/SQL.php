@@ -88,8 +88,7 @@ class SQL extends \Auth\OpenID\Store {
         // database connection.
         if (!(is_object($connection) &&
               (is_subclass_of($connection, 'db_common') ||
-               is_subclass_of($connection,
-                              'auth_openid_databaseconnection')))) {
+               $connection instanceof \Auth\OpenID\DatabaseConnection))) {
             trigger_error("\Auth\OpenID\SQLStore expected PEAR connection " .
                           "object (got ".get_class($connection).")",
                           E_USER_ERROR);

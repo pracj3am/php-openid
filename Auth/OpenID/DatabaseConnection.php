@@ -23,16 +23,14 @@ namespace Auth\OpenID;
  *
  * @package OpenID
  */
-class DatabaseConnection {
+interface DatabaseConnection {
     /**
      * Sets auto-commit mode on this database connection.
      *
      * @param bool $mode True if auto-commit is to be used; false if
      * not.
      */
-    function autoCommit($mode)
-    {
-    }
+    function autoCommit($mode);
 
     /**
      * Run an SQL query with the specified parameters, if any.
@@ -49,30 +47,22 @@ class DatabaseConnection {
      * underlying database engine.  This method is usually used when
      * the result of a query is not important, like a DDL query.
      */
-    function query($sql, $params = array())
-    {
-    }
+    function query($sql, $params = array());
 
     /**
      * Starts a transaction on this connection, if supported.
      */
-    function begin()
-    {
-    }
+    function begin();
 
     /**
      * Commits a transaction on this connection, if supported.
      */
-    function commit()
-    {
-    }
+    function commit();
 
     /**
      * Performs a rollback on this connection, if supported.
      */
-    function rollback()
-    {
-    }
+    function rollback();
 
     /**
      * Run an SQL query and return the first column of the first row
@@ -89,9 +79,7 @@ class DatabaseConnection {
      * first row of the result set.  False if no such result was
      * found.
      */
-    function getOne($sql, $params = array())
-    {
-    }
+    function getOne($sql, $params = array());
 
     /**
      * Run an SQL query and return the first row of the result set, if
@@ -107,9 +95,7 @@ class DatabaseConnection {
      * @return array $result The first row of the result set, if any,
      * keyed on column name.  False if no such result was found.
      */
-    function getRow($sql, $params = array())
-    {
-    }
+    function getRow($sql, $params = array());
 
     /**
      * Run an SQL query with the specified parameters, if any.
@@ -124,8 +110,6 @@ class DatabaseConnection {
      * @return array $result An array of arrays representing the
      * result of the query; each array is keyed on column name.
      */
-    function getAll($sql, $params = array())
-    {
-    }
+    function getAll($sql, $params = array());
 }
 
