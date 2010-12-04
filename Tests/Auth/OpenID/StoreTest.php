@@ -35,7 +35,7 @@ function _Auth_OpenID_mkdtemp()
         }
     }
 
-    return Auth_OpenID_Store_File::_mkdtemp($dir);
+    return \Auth\OpenID\Store\File::_mkdtemp($dir);
 }
 
 /**

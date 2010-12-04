@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID {
 
 /**
  * The OpenID and Yadis discovery implementation for OpenID 1.2.
@@ -11,29 +12,29 @@ require_once "Auth/Yadis/XRIRes.php";
 require_once "Auth/Yadis/Yadis.php";
 
 // XML namespace value
-define('Auth_OpenID_XMLNS_1_0', 'http://openid.net/xmlns/1.0');
+define('Auth\OpenID\XMLNS_1_0', 'http://openid.net/xmlns/1.0');
 
 // Yadis service types
-define('Auth_OpenID_TYPE_1_2', 'http://openid.net/signon/1.2');
-define('Auth_OpenID_TYPE_1_1', 'http://openid.net/signon/1.1');
-define('Auth_OpenID_TYPE_1_0', 'http://openid.net/signon/1.0');
-define('Auth_OpenID_TYPE_2_0_IDP', 'http://specs.openid.net/auth/2.0/server');
-define('Auth_OpenID_TYPE_2_0', 'http://specs.openid.net/auth/2.0/signon');
-define('Auth_OpenID_RP_RETURN_TO_URL_TYPE',
+define('Auth\OpenID\TYPE_1_2', 'http://openid.net/signon/1.2');
+define('Auth\OpenID\TYPE_1_1', 'http://openid.net/signon/1.1');
+define('Auth\OpenID\TYPE_1_0', 'http://openid.net/signon/1.0');
+define('Auth\OpenID\TYPE_2_0_IDP', 'http://specs.openid.net/auth/2.0/server');
+define('Auth\OpenID\TYPE_2_0', 'http://specs.openid.net/auth/2.0/signon');
+define('Auth\OpenID\RP_RETURN_TO_URL_TYPE',
        'http://specs.openid.net/auth/2.0/return_to');
 
-function Auth_OpenID_getOpenIDTypeURIs()
+function getOpenIDTypeURIs()
 {
-    return array(Auth_OpenID_TYPE_2_0_IDP,
-                 Auth_OpenID_TYPE_2_0,
-                 Auth_OpenID_TYPE_1_2,
-                 Auth_OpenID_TYPE_1_1,
-                 Auth_OpenID_TYPE_1_0);
+    return array(TYPE_2_0_IDP,
+                 TYPE_2_0,
+                 TYPE_1_2,
+                 TYPE_1_1,
+                 TYPE_1_0);
 }
 
-function Auth_OpenID_getOpenIDConsumerTypeURIs()
+function getOpenIDConsumerTypeURIs()
 {
-    return array(Auth_OpenID_RP_RETURN_TO_URL_TYPE);
+    return array(RP_RETURN_TO_URL_TYPE);
 }
 
 
@@ -41,19 +42,19 @@ function Auth_OpenID_getOpenIDConsumerTypeURIs()
  * Provides a user-readable interpretation of a type uri.
  * Useful for error messages.
  */
-function Auth_OpenID_getOpenIDTypeName($type_uri) {
+function getOpenIDTypeName($type_uri) {
     switch ($type_uri) {
-    case Auth_OpenID_TYPE_2_0_IDP:
+    case TYPE_2_0_IDP:
       return 'OpenID 2.0 IDP';
-    case Auth_OpenID_TYPE_2_0:
+    case TYPE_2_0:
       return 'OpenID 2.0';
-    case Auth_OpenID_TYPE_1_2:
+    case TYPE_1_2:
       return 'OpenID 1.2';
-    case Auth_OpenID_TYPE_1_1:
+    case TYPE_1_1:
       return 'OpenID 1.1';
-    case Auth_OpenID_TYPE_1_0:
+    case TYPE_1_0:
       return 'OpenID 1.0';
-    case Auth_OpenID_RP_RETURN_TO_URL_TYPE:
+    case RP_RETURN_TO_URL_TYPE:
       return 'OpenID relying party';
     }
 }
@@ -61,7 +62,7 @@ function Auth_OpenID_getOpenIDTypeName($type_uri) {
 /**
  * Object representing an OpenID service endpoint.
  */
-class Auth_OpenID_ServiceEndpoint {
+class ServiceEndpoint {
     public function __construct()
     {
         $this->claimed_id = null;
@@ -101,11 +102,11 @@ class Auth_OpenID_ServiceEndpoint {
 
     function preferredNamespace()
     {
-        if (in_array(Auth_OpenID_TYPE_2_0_IDP, $this->type_uris) ||
-            in_array(Auth_OpenID_TYPE_2_0, $this->type_uris)) {
-            return Auth_OpenID_OPENID2_NS;
+        if (in_array(TYPE_2_0_IDP, $this->type_uris) ||
+            in_array(TYPE_2_0, $this->type_uris)) {
+            return OPENID2_NS;
         } else {
-            return Auth_OpenID_OPENID1_NS;
+            return OPENID1_NS;
         }
     }
 
@@ -136,27 +137,27 @@ class Auth_OpenID_ServiceEndpoint {
     {
         // Does this endpoint support this type?
         return ((in_array($type_uri, $this->type_uris)) ||
-                (($type_uri == Auth_OpenID_TYPE_2_0) &&
+                (($type_uri == TYPE_2_0) &&
                  $this->isOPIdentifier()));
     }
 
     function compatibilityMode()
     {
-        return $this->preferredNamespace() != Auth_OpenID_OPENID2_NS;
+        return $this->preferredNamespace() != OPENID2_NS;
     }
 
     function isOPIdentifier()
     {
-        return in_array(Auth_OpenID_TYPE_2_0_IDP, $this->type_uris);
+        return in_array(TYPE_2_0_IDP, $this->type_uris);
     }
 
     static function fromOPEndpointURL($op_endpoint_url)
     {
         // Construct an OP-Identifier OpenIDServiceEndpoint object for
         // a given OP Endpoint URL
-        $obj = new Auth_OpenID_ServiceEndpoint();
+        $obj = new ServiceEndpoint();
         $obj->server_url = $op_endpoint_url;
-        $obj->type_uris = array(Auth_OpenID_TYPE_2_0_IDP);
+        $obj->type_uris = array(TYPE_2_0_IDP);
         return $obj;
     }
 
@@ -171,7 +172,7 @@ class Auth_OpenID_ServiceEndpoint {
 
         if (!$this->isOPIdentifier()) {
             $this->claimed_id = $yadis_url;
-            $this->local_id = Auth_OpenID_findOPLocalIdentifier(
+            $this->local_id = findOPLocalIdentifier(
                                                     $service_element,
                                                     $this->type_uris);
             if ($this->local_id === false) {
@@ -200,17 +201,17 @@ class Auth_OpenID_ServiceEndpoint {
     /*
      * Parse the given document as XRDS looking for OpenID consumer services.
      *
-     * @return array of Auth_OpenID_ServiceEndpoint or null if the
+     * @return array of \Auth\OpenID\ServiceEndpoint or null if the
      * document cannot be parsed.
      */
     static function consumerFromXRDS($uri, $xrds_text)
     {
-        $xrds = Auth_Yadis_XRDS::parseXRDS($xrds_text);
+        $xrds = \Auth\Yadis\XRDS::parseXRDS($xrds_text);
 
         if ($xrds) {
             $yadis_services =
               $xrds->services(array('filter_MatchesAnyOpenIDConsumerType'));
-            return Auth_OpenID_makeOpenIDEndpoints($uri, $yadis_services);
+            return makeOpenIDEndpoints($uri, $yadis_services);
         }
 
         return null;
@@ -219,17 +220,17 @@ class Auth_OpenID_ServiceEndpoint {
     /*
      * Parse the given document as XRDS looking for OpenID services.
      *
-     * @return array of Auth_OpenID_ServiceEndpoint or null if the
+     * @return array of \Auth\OpenID\ServiceEndpoint or null if the
      * document cannot be parsed.
      */
     static function fromXRDS($uri, $xrds_text)
     {
-        $xrds = Auth_Yadis_XRDS::parseXRDS($xrds_text);
+        $xrds = \Auth\Yadis\XRDS::parseXRDS($xrds_text);
 
         if ($xrds) {
             $yadis_services =
               $xrds->services(array('filter_MatchesAnyOpenIDType'));
-            return Auth_OpenID_makeOpenIDEndpoints($uri, $yadis_services);
+            return makeOpenIDEndpoints($uri, $yadis_services);
         }
 
         return null;
@@ -238,18 +239,18 @@ class Auth_OpenID_ServiceEndpoint {
     /*
      * Create endpoints from a DiscoveryResult.
      *
-     * @param discoveryResult Auth_Yadis_DiscoveryResult
-     * @return array of Auth_OpenID_ServiceEndpoint or null if
+     * @param discoveryResult \Auth\Yadis\DiscoveryResult
+     * @return array of \Auth\OpenID\ServiceEndpoint or null if
      * endpoints cannot be created.
      */
     static function fromDiscoveryResult($discoveryResult)
     {
         if ($discoveryResult->isXRDS()) {
-            return Auth_OpenID_ServiceEndpoint::fromXRDS(
+            return ServiceEndpoint::fromXRDS(
                                      $discoveryResult->normalized_uri,
                                      $discoveryResult->response_text);
         } else {
-            return Auth_OpenID_ServiceEndpoint::fromHTML(
+            return ServiceEndpoint::fromHTML(
                                      $discoveryResult->normalized_uri,
                                      $discoveryResult->response_text);
         }
@@ -258,9 +259,9 @@ class Auth_OpenID_ServiceEndpoint {
     static function fromHTML($uri, $html)
     {
         $discovery_types = array(
-                                 array(Auth_OpenID_TYPE_2_0,
+                                 array(TYPE_2_0,
                                        'openid2.provider', 'openid2.local_id'),
-                                 array(Auth_OpenID_TYPE_1_1,
+                                 array(TYPE_1_1,
                                        'openid.server', 'openid.delegate')
                                  );
 
@@ -269,7 +270,7 @@ class Auth_OpenID_ServiceEndpoint {
         foreach ($discovery_types as $triple) {
             list($type_uri, $server_rel, $delegate_rel) = $triple;
 
-            $urls = Auth_OpenID_legacy_discover($html, $server_rel,
+            $urls = legacy_discover($html, $server_rel,
                                                 $delegate_rel);
 
             if ($urls === false) {
@@ -278,7 +279,7 @@ class Auth_OpenID_ServiceEndpoint {
 
             list($delegate_url, $server_url) = $urls;
 
-            $service = new Auth_OpenID_ServiceEndpoint();
+            $service = new ServiceEndpoint();
             $service->claimed_id = $uri;
             $service->local_id = $delegate_url;
             $service->server_url = $server_url;
@@ -292,7 +293,7 @@ class Auth_OpenID_ServiceEndpoint {
 
     function copy()
     {
-        $x = new Auth_OpenID_ServiceEndpoint();
+        $x = new ServiceEndpoint();
 
         $x->claimed_id = $this->claimed_id;
         $x->server_url = $this->server_url;
@@ -305,7 +306,7 @@ class Auth_OpenID_ServiceEndpoint {
     }
 }
 
-function Auth_OpenID_findOPLocalIdentifier($service, $type_uris)
+function findOPLocalIdentifier($service, $type_uris)
 {
     // Extract a openid:Delegate value from a Yadis Service element.
     // If no delegate is found, returns null.  Returns false on
@@ -313,21 +314,21 @@ function Auth_OpenID_findOPLocalIdentifier($service, $type_uris)
     // different values).
 
     $service->parser->registerNamespace('openid',
-                                        Auth_OpenID_XMLNS_1_0);
+                                        XMLNS_1_0);
 
     $service->parser->registerNamespace('xrd',
-                                        Auth_Yadis_XMLNS_XRD_2_0);
+                                        \Auth\Yadis\XMLNS_XRD_2_0);
 
     $parser = $service->parser;
 
     $permitted_tags = array();
 
-    if (in_array(Auth_OpenID_TYPE_1_1, $type_uris) ||
-        in_array(Auth_OpenID_TYPE_1_0, $type_uris)) {
+    if (in_array(TYPE_1_1, $type_uris) ||
+        in_array(TYPE_1_0, $type_uris)) {
         $permitted_tags[] = 'openid:Delegate';
     }
 
-    if (in_array(Auth_OpenID_TYPE_2_0, $type_uris)) {
+    if (in_array(TYPE_2_0, $type_uris)) {
         $permitted_tags[] = 'xrd:LocalID';
     }
 
@@ -350,33 +351,8 @@ function Auth_OpenID_findOPLocalIdentifier($service, $type_uris)
     return $local_id;
 }
 
-function filter_MatchesAnyOpenIDType($service)
-{
-    $uris = $service->getTypes();
 
-    foreach ($uris as $uri) {
-        if (in_array($uri, Auth_OpenID_getOpenIDTypeURIs())) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function filter_MatchesAnyOpenIDConsumerType(&$service)
-{
-    $uris = $service->getTypes();
-
-    foreach ($uris as $uri) {
-        if (in_array($uri, Auth_OpenID_getOpenIDConsumerTypeURIs())) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function Auth_OpenID_bestMatchingService($service, $preferred_types)
+function bestMatchingService($service, $preferred_types)
 {
     // Return the index of the first matching type, or something
     // higher if no type matches.
@@ -395,7 +371,7 @@ function Auth_OpenID_bestMatchingService($service, $preferred_types)
     return count($preferred_types);
 }
 
-function Auth_OpenID_arrangeByType($service_list, $preferred_types)
+function arrangeByType($service_list, $preferred_types)
 {
     // Rearrange service_list in a new list so services are ordered by
     // types listed in preferred_types.  Return the new list.
@@ -404,7 +380,7 @@ function Auth_OpenID_arrangeByType($service_list, $preferred_types)
     // comparison will prefer the one with the best matching service
     $prio_services = array();
     foreach ($service_list as $index => $service) {
-        $prio_services[] = array(Auth_OpenID_bestMatchingService($service,
+        $prio_services[] = array(bestMatchingService($service,
                                                         $preferred_types),
                                  $index, $service);
     }
@@ -427,13 +403,13 @@ function Auth_OpenID_arrangeByType($service_list, $preferred_types)
 // openid_services is a list of OpenIDServiceEndpoint objects.
 //
 // Returns a list of OpenIDServiceEndpoint objects."""
-function Auth_OpenID_getOPOrUserServices($openid_services)
+function getOPOrUserServices($openid_services)
 {
-    $op_services = Auth_OpenID_arrangeByType($openid_services,
-                                     array(Auth_OpenID_TYPE_2_0_IDP));
+    $op_services = arrangeByType($openid_services,
+                                     array(TYPE_2_0_IDP));
 
-    $openid_services = Auth_OpenID_arrangeByType($openid_services,
-                                     Auth_OpenID_getOpenIDTypeURIs());
+    $openid_services = arrangeByType($openid_services,
+                                     getOpenIDTypeURIs());
 
     if ($op_services) {
         return $op_services;
@@ -442,7 +418,7 @@ function Auth_OpenID_getOPOrUserServices($openid_services)
     }
 }
 
-function Auth_OpenID_makeOpenIDEndpoints($uri, $yadis_services)
+function makeOpenIDEndpoints($uri, $yadis_services)
 {
     $s = array();
 
@@ -459,7 +435,7 @@ function Auth_OpenID_makeOpenIDEndpoints($uri, $yadis_services)
         if ($type_uris &&
             $uris) {
             foreach ($uris as $service_uri) {
-                $openid_endpoint = new Auth_OpenID_ServiceEndpoint();
+                $openid_endpoint = new ServiceEndpoint();
                 if ($openid_endpoint->parseService($uri,
                                                    $service_uri,
                                                    $type_uris,
@@ -473,8 +449,8 @@ function Auth_OpenID_makeOpenIDEndpoints($uri, $yadis_services)
     return $s;
 }
 
-function Auth_OpenID_discoverWithYadis($uri, $fetcher,
-              $endpoint_filter='Auth_OpenID_getOPOrUserServices',
+function discoverWithYadis($uri, $fetcher,
+              $endpoint_filter='\Auth\OpenID\getOPOrUserServices',
               $discover_function=null)
 {
     // Discover OpenID services for a URI. Tries Yadis and falls back
@@ -485,7 +461,7 @@ function Auth_OpenID_discoverWithYadis($uri, $fetcher,
     // OpenID 1.0 discovery on the same URL will help, so don't bother
     // to catch it.
     if ($discover_function === null) {
-        $discover_function = array('Auth_Yadis_Yadis', 'discover');
+        $discover_function = array('\Auth\Yadis\Yadis', 'discover');
     }
 
     $openid_services = array();
@@ -500,19 +476,19 @@ function Auth_OpenID_discoverWithYadis($uri, $fetcher,
         return array($uri, array());
     }
 
-    $openid_services = Auth_OpenID_ServiceEndpoint::fromXRDS(
+    $openid_services = ServiceEndpoint::fromXRDS(
                                          $yadis_url,
                                          $response->response_text);
 
     if (!$openid_services) {
         if ($response->isXRDS()) {
-            return Auth_OpenID_discoverWithoutYadis($uri,
+            return discoverWithoutYadis($uri,
                                                     $fetcher);
         }
 
         // Try to parse the response as HTML to get OpenID 1.0/1.1
         // <link rel="...">
-        $openid_services = Auth_OpenID_ServiceEndpoint::fromHTML(
+        $openid_services = ServiceEndpoint::fromHTML(
                                         $yadis_url,
                                         $response->response_text);
     }
@@ -523,13 +499,13 @@ function Auth_OpenID_discoverWithYadis($uri, $fetcher,
     return array($yadis_url, $openid_services);
 }
 
-function Auth_OpenID_discoverURI($uri, $fetcher)
+function discoverURI($uri, $fetcher)
 {
-    $uri = Auth_OpenID::normalizeUrl($uri);
-    return Auth_OpenID_discoverWithYadis($uri, $fetcher);
+    $uri = \Auth\OpenID::normalizeUrl($uri);
+    return discoverWithYadis($uri, $fetcher);
 }
 
-function Auth_OpenID_discoverWithoutYadis($uri, $fetcher)
+function discoverWithoutYadis($uri, $fetcher)
 {
     $http_resp = @$fetcher->get($uri);
 
@@ -541,25 +517,25 @@ function Auth_OpenID_discoverWithoutYadis($uri, $fetcher)
 
     // Try to parse the response as HTML to get OpenID 1.0/1.1 <link
     // rel="...">
-    $openid_services = Auth_OpenID_ServiceEndpoint::fromHTML(
+    $openid_services = ServiceEndpoint::fromHTML(
                                            $identity_url,
                                            $http_resp->body);
 
     return array($identity_url, $openid_services);
 }
 
-function Auth_OpenID_discoverXRI($iname, $fetcher)
+function discoverXRI($iname, $fetcher)
 {
-    $resolver = new Auth_Yadis_ProxyResolver($fetcher);
+    $resolver = new \Auth\Yadis\ProxyResolver($fetcher);
     list($canonicalID, $yadis_services) =
         $resolver->query($iname,
-                         Auth_OpenID_getOpenIDTypeURIs(),
+                         getOpenIDTypeURIs(),
                          array('filter_MatchesAnyOpenIDType'));
 
-    $openid_services = Auth_OpenID_makeOpenIDEndpoints($iname,
+    $openid_services = makeOpenIDEndpoints($iname,
                                                        $yadis_services);
 
-    $openid_services = Auth_OpenID_getOPOrUserServices($openid_services);
+    $openid_services = getOPOrUserServices($openid_services);
 
     for ($i = 0; $i < count($openid_services); $i++) {
         $openid_services[$i]->canonicalID = $canonicalID;
@@ -571,7 +547,7 @@ function Auth_OpenID_discoverXRI($iname, $fetcher)
     return array($iname, $openid_services);
 }
 
-function Auth_OpenID_discover($uri, $fetcher)
+function discover($uri, $fetcher)
 {
     // If the fetcher (i.e., PHP) doesn't support SSL, we can't do
     // discovery on an HTTPS URL.
@@ -579,10 +555,10 @@ function Auth_OpenID_discover($uri, $fetcher)
         return array($uri, array());
     }
 
-    if (Auth_Yadis_identifierScheme($uri) == 'XRI') {
-        $result = Auth_OpenID_discoverXRI($uri, $fetcher);
+    if (\Auth\Yadis\identifierScheme($uri) == 'XRI') {
+        $result = discoverXRI($uri, $fetcher);
     } else {
-        $result = Auth_OpenID_discoverURI($uri, $fetcher);
+        $result = discoverURI($uri, $fetcher);
     }
 
     // If the fetcher doesn't support SSL, we can't interact with
@@ -603,4 +579,33 @@ function Auth_OpenID_discover($uri, $fetcher)
     return $result;
 }
 
+}
+namespace {
 
+function filter_MatchesAnyOpenIDType($service)
+{
+    $uris = $service->getTypes();
+
+    foreach ($uris as $uri) {
+        if (in_array($uri, Auth\OpenID\getOpenIDTypeURIs())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function filter_MatchesAnyOpenIDConsumerType(&$service)
+{
+    $uris = $service->getTypes();
+
+    foreach ($uris as $uri) {
+        if (in_array($uri, Auth\OpenID\getOpenIDConsumerTypeURIs())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+}

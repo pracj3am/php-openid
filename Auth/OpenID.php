@@ -1,4 +1,5 @@
 <?php
+namespace Auth {
 
 /**
  * This is the PHP OpenID library by JanRain, Inc.
@@ -20,7 +21,7 @@
 /**
  * The library version string
  */
-define('Auth_OpenID_VERSION', '2.2.2');
+define('Auth\OpenID\VERSION', '2.2.2');
 
 /**
  * Require the fetcher code.
@@ -36,18 +37,18 @@ require_once "Auth/OpenID/URINorm.php";
  * back to the consumer. The associated value is an error message that
  * should be displayed on an HTML error page.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  */
-define('Auth_OpenID_LOCAL_ERROR', 'local_error');
+define('Auth\OpenID\LOCAL_ERROR', 'local_error');
 
 /**
  * Status code returned when there is an error to return in key-value
  * form to the consumer. The caller should return a 400 Bad Request
  * response with content-type text/plain and the value as the body.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  */
-define('Auth_OpenID_REMOTE_ERROR', 'remote_error');
+define('Auth\OpenID\REMOTE_ERROR', 'remote_error');
 
 /**
  * Status code returned when there is a key-value form OK response to
@@ -55,9 +56,9 @@ define('Auth_OpenID_REMOTE_ERROR', 'remote_error');
  * response. The caller should return a 200 OK response with
  * content-type text/plain and the value as the body.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  */
-define('Auth_OpenID_REMOTE_OK', 'remote_ok');
+define('Auth\OpenID\REMOTE_OK', 'remote_ok');
 
 /**
  * Status code returned when there is a redirect back to the
@@ -65,20 +66,20 @@ define('Auth_OpenID_REMOTE_OK', 'remote_ok');
  * should return a 302 Found redirect with a Location: header
  * containing the URL.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  */
-define('Auth_OpenID_REDIRECT', 'redirect');
+define('Auth\OpenID\REDIRECT', 'redirect');
 
 /**
  * Status code returned when the caller needs to authenticate the
- * user. The associated value is a {@link Auth_OpenID_ServerRequest}
+ * user. The associated value is a {@link \Auth\OpenID\ServerRequest}
  * object that can be used to complete the authentication. If the user
  * has taken some authentication action, use the retry() method of the
- * {@link Auth_OpenID_ServerRequest} object to complete the request.
+ * {@link \Auth\OpenID\ServerRequest} object to complete the request.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  */
-define('Auth_OpenID_DO_AUTH', 'do_auth');
+define('Auth\OpenID\DO_AUTH', 'do_auth');
 
 /**
  * Status code returned when there were no OpenID arguments
@@ -86,23 +87,23 @@ define('Auth_OpenID_DO_AUTH', 'do_auth');
  * response and display an HTML page that says that this is an OpenID
  * server endpoint.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  */
-define('Auth_OpenID_DO_ABOUT', 'do_about');
+define('Auth\OpenID\DO_ABOUT', 'do_about');
 
 /**
  * Defines for regexes and format checking.
  */
-define('Auth_OpenID_letters',
+define('Auth\OpenID\letters',
        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-define('Auth_OpenID_digits',
+define('Auth\OpenID\digits',
        "0123456789");
 
-define('Auth_OpenID_punct',
+define('Auth\OpenID\punct',
        "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
-Auth_OpenID_include_init();
+OpenID\include_init();
 
 /**
  * The OpenID utility function class.
@@ -110,17 +111,17 @@ Auth_OpenID_include_init();
  * @package OpenID
  * @access private
  */
-class Auth_OpenID {
+class OpenID {
 
     /**
-     * Return true if $thing is an Auth_OpenID_FailureResponse object;
+     * Return true if $thing is an \Auth\OpenID\FailureResponse object;
      * false if not.
      *
      * @access private
      */
     static function isFailure($thing)
     {
-        return is_a($thing, 'Auth_OpenID_FailureResponse');
+        return is_a($thing, '\Auth\OpenID\FailureResponse');
     }
 
     /**
@@ -147,7 +148,7 @@ class Auth_OpenID {
         $data = array();
 
         if ($query_str !== null) {
-            $data = Auth_OpenID::params_from_string($query_str);
+            $data = OpenID::params_from_string($query_str);
         } else if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
             // Do nothing.
         } else {
@@ -160,7 +161,7 @@ class Auth_OpenID {
           // going to emulate the behavior of some other environments
           // by defaulting to GET and overwriting with POST if POST
           // data is available.
-          $data = Auth_OpenID::params_from_string($_SERVER['QUERY_STRING']);
+          $data = OpenID::params_from_string($_SERVER['QUERY_STRING']);
 
           if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $str = file_get_contents('php://input');
@@ -168,7 +169,7 @@ class Auth_OpenID {
             if ($str === false) {
               $post = array();
             } else {
-              $post = Auth_OpenID::params_from_string($str);
+              $post = OpenID::params_from_string($str);
             }
 
             $data = array_merge($data, $post);
@@ -216,7 +217,7 @@ class Auth_OpenID {
                 return true;
             }
 
-            return (Auth_OpenID::ensureDir($parent_dir) && @mkdir($dir_name));
+            return (OpenID::ensureDir($parent_dir) && @mkdir($dir_name));
         }
     }
 
@@ -251,7 +252,7 @@ class Auth_OpenID {
                 return $fallback;
             }
         } else {
-            trigger_error("Auth_OpenID::arrayGet (key = ".$key.") expected " .
+            trigger_error("\Auth\OpenID::arrayGet (key = ".$key.") expected " .
                           "array as first parameter, got " .
                           gettype($arr), E_USER_WARNING);
 
@@ -350,7 +351,7 @@ class Auth_OpenID {
             $sep = '&';
         }
 
-        return $url . $sep . Auth_OpenID::httpBuildQuery($args);
+        return $url . $sep . OpenID::httpBuildQuery($args);
     }
 
     /**
@@ -431,11 +432,11 @@ class Auth_OpenID {
             $url = 'http://' . $url;
         }
 
-        $normalized = Auth_OpenID_urinorm($url);
+        $normalized = OpenID\urinorm($url);
         if ($normalized === null) {
             return null;
         }
-        list($defragged, $frag) = Auth_OpenID::urldefrag($normalized);
+        list($defragged, $frag) = OpenID::urldefrag($normalized);
         return $defragged;
     }
 
@@ -550,14 +551,17 @@ class Auth_OpenID {
                "</html>");
     }
 }
+}
 
-/*
- * Function to run when this file is included.
- * Abstracted to a function to make life easier
- * for some PHP optimizers.
- */
-function Auth_OpenID_include_init() {
-  if (Auth_OpenID_getMathLib() === null) {
-    Auth_OpenID_setNoMathSupport();
-  }
+namespace Auth\OpenID {
+    /*
+     * Function to run when this file is included.
+     * Abstracted to a function to make life easier
+     * for some PHP optimizers.
+     */
+    function include_init() {
+      if (getMathLib() === null) {
+        setNoMathSupport();
+      }
+    }
 }

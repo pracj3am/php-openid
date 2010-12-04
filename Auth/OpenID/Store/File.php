@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID\Store;
 /**
  * This file supplies a Memcached store backend for OpenID servers and
  * consumers.
@@ -35,7 +36,7 @@ require_once 'Auth/OpenID/Nonce.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_File extends Auth_OpenID_Store {
+class File extends \Auth\OpenID\Store {
 
     /**
      * @var boolean $active
@@ -48,7 +49,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     protected $directory;
 
     /**
-     * Initializes a new {@link Auth_OpenID_FileStore}.  This
+     * Initializes a new {@link \Auth\OpenID\FileStore}.  This
      * initializes the nonce and association directories, which are
      * subdirectories of the directory passed in.
      *
@@ -57,7 +58,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      */
     function __construct($directory)
     {
-        if (!Auth_OpenID::ensureDir($directory)) {
+        if (!\Auth\OpenID::ensureDir($directory)) {
             trigger_error('Not a directory and failed to create: '
                           . $directory, E_USER_ERROR);
         }
@@ -97,9 +98,9 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      */
     private function _setup()
     {
-        return (Auth_OpenID::ensureDir($this->nonce_dir) &&
-                Auth_OpenID::ensureDir($this->association_dir) &&
-                Auth_OpenID::ensureDir($this->temp_dir));
+        return (\Auth\OpenID::ensureDir($this->nonce_dir) &&
+                \Auth\OpenID::ensureDir($this->association_dir) &&
+                \Auth\OpenID::ensureDir($this->temp_dir));
     }
 
     /**
@@ -322,7 +323,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
         }
 
         $association =
-            Auth_OpenID_Association::deserialize('Auth_OpenID_Association',
+            \Auth\OpenID\Association::deserialize('\Auth\OpenID\Association',
                                                 $assoc_s);
 
         if (!$association) {
@@ -426,8 +427,8 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
 
                 // Remove expired or corrupted associations
                 $association =
-                  Auth_OpenID_Association::deserialize(
-                         'Auth_OpenID_Association', $assoc_s);
+                  \Auth\OpenID\Association::deserialize(
+                         '\Auth\OpenID\Association', $assoc_s);
 
                 if ($association === null) {
                     self::_removeIfPresent(
@@ -456,7 +457,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
 
         // Check all nonces for expiry
         foreach ($nonces as $nonce) {
-            if (!Auth_OpenID_checkTimestamp($nonce, $now)) {
+            if (!\Auth\OpenID\checkTimestamp($nonce, $now)) {
                 $filename = $this->nonce_dir . DIRECTORY_SEPARATOR . $nonce;
                 self::_removeIfPresent($filename);
             }
@@ -560,8 +561,8 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      */
     private function _isFilenameSafe($char)
     {
-        $_Auth_OpenID_filename_allowed = Auth_OpenID_letters .
-            Auth_OpenID_digits . ".";
+        $_Auth_OpenID_filename_allowed = \Auth\OpenID\letters .
+            \Auth\OpenID\digits . ".";
         return (strpos($_Auth_OpenID_filename_allowed, $char) !== false);
     }
 
@@ -570,7 +571,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
      */
     private function _safe64($str)
     {
-        $h64 = base64_encode(Auth_OpenID_SHA1($str));
+        $h64 = base64_encode(\Auth\OpenID\SHA1($str));
         $h64 = str_replace('+', '_', $h64);
         $h64 = str_replace('/', '.', $h64);
         $h64 = str_replace('=', '', $h64);
@@ -583,7 +584,7 @@ class Auth_OpenID_Store_File extends Auth_OpenID_Store {
     private function _filenameEscape($str)
     {
         $filename = "";
-        $b = Auth_OpenID::toBytes($str);
+        $b = \Auth\OpenID::toBytes($str);
 
         for ($i = 0; $i < count($b); $i++) {
             $c = $b[$i];

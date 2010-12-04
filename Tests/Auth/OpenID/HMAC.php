@@ -104,7 +104,7 @@ class Tests_Auth_OpenID_HMAC extends PHPUnit_TestSuite {
             $clean["key"] =
                 Tests_Auth_OpenID_HMAC::_strConvert($case["key"]);
             if (defined(@$case["key_len"])) {
-                if (Auth_OpenID::bytes($clean["key"]) != $case["key_len"]) {
+                if (\Auth\OpenID::bytes($clean["key"]) != $case["key_len"]) {
                     trigger_error("Bad key length", E_USER_ERROR);
                 }
             }
@@ -112,15 +112,15 @@ class Tests_Auth_OpenID_HMAC extends PHPUnit_TestSuite {
             $clean["data"] =
                 Tests_Auth_OpenID_HMAC::_strConvert($case["data"]);
             if (defined(@$case["data_len"])) {
-                if (Auth_OpenID::bytes($clean["data"]) != $case["data_len"]) {
+                if (\Auth\OpenID::bytes($clean["data"]) != $case["data_len"]) {
                     trigger_error("Bad data length", E_USER_ERROR);
                 }
             }
 
             $clean["digest"] =
                 Tests_Auth_OpenID_HMAC::_strConvert($case["digest"]);
-            if (Auth_OpenID::bytes($clean["digest"]) != $digest_len) {
-                $l = Auth_OpenID::bytes($clean["digest"]);
+            if (\Auth\OpenID::bytes($clean["digest"]) != $digest_len) {
+                $l = \Auth\OpenID::bytes($clean["digest"]);
                 trigger_error("Bad digest length: $l", E_USER_ERROR);
             }
 
@@ -135,10 +135,10 @@ class Tests_Auth_OpenID_HMAC extends PHPUnit_TestSuite {
     {
         $this->setName($name);
         $hash_test_defs = array(array(
-            'Auth_OpenID_HMACSHA1', 'hmac-sha1.txt', 20));
-        if (Auth_OpenID_HMACSHA256_SUPPORTED) {
+            '\Auth\OpenID\HMACSHA1', 'hmac-sha1.txt', 20));
+        if (\Auth\OpenID\HMACSHA256_SUPPORTED) {
             $hash_test_defs[] =
-                array('Auth_OpenID_HMACSHA256', 'hmac-sha256.txt', 32);
+                array('\Auth\OpenID\HMACSHA256', 'hmac-sha256.txt', 32);
         }
         foreach ($hash_test_defs as $params) {
             list($hash_func, $filename, $hash_len) = $params;

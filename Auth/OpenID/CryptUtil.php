@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * CryptUtil: A suite of wrapper utility functions for the OpenID
@@ -15,15 +16,15 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
  */
 
-if (!defined('Auth_OpenID_RAND_SOURCE')) {
+if (!defined('Auth\OpenID\RAND_SOURCE')) {
     /**
      * The filename for a source of random bytes. Define this yourself
      * if you have a different source of randomness.
      */
-    define('Auth_OpenID_RAND_SOURCE', '/dev/urandom');
+    define('Auth\OpenID\RAND_SOURCE', '/dev/urandom');
 }
 
-class Auth_OpenID_CryptUtil {
+class CryptUtil {
     /**
      * Get the specified number of random bytes.
      *
@@ -31,7 +32,7 @@ class Auth_OpenID_CryptUtil {
      * source of randomness if available. If there is no high-entropy
      * randomness source available, it will fail. As a last resort,
      * for non-critical systems, define
-     * <code>Auth_OpenID_RAND_SOURCE</code> as <code>null</code>, and
+     * <code>\Auth\OpenID\RAND_SOURCE</code> as <code>null</code>, and
      * the code will fall back on a pseudo-random number generator.
      *
      * @param int $num_bytes The length of the return value
@@ -42,12 +43,12 @@ class Auth_OpenID_CryptUtil {
         static $f = null;
         $bytes = '';
         if ($f === null) {
-            if (Auth_OpenID_RAND_SOURCE === null) {
+            if (RAND_SOURCE === null) {
                 $f = false;
             } else {
-                $f = @fopen(Auth_OpenID_RAND_SOURCE, "r");
+                $f = @fopen(RAND_SOURCE, "r");
                 if ($f === false) {
-                    $msg = 'Define Auth_OpenID_RAND_SOURCE as null to ' .
+                    $msg = 'Define \Auth\OpenID\RAND_SOURCE as null to ' .
                         ' continue with an insecure random number generator.';
                     trigger_error($msg, E_USER_ERROR);
                 }
@@ -80,7 +81,7 @@ class Auth_OpenID_CryptUtil {
     static function randomString($length, $population = null)
     {
         if ($population === null) {
-            return Auth_OpenID_CryptUtil::getBytes($length);
+            return CryptUtil::getBytes($length);
         }
 
         $popsize = strlen($population);
@@ -95,7 +96,7 @@ class Auth_OpenID_CryptUtil {
         $str = "";
         for ($i = 0; $i < $length; $i++) {
             do {
-                $n = ord(Auth_OpenID_CryptUtil::getBytes(1));
+                $n = ord(CryptUtil::getBytes(1));
             } while ($n < $duplicate);
 
             $n %= $popsize;

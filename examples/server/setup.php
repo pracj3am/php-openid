@@ -22,10 +22,10 @@ require_once "Auth/OpenID.php";
  * Data.
  */
 
-$store_types = array("Filesystem" => "Auth_OpenID_FileStore",
-                     "MySQL" => "Auth_OpenID_MySQLStore",
-                     "PostgreSQL" => "Auth_OpenID_PostgreSQLStore",
-                     "SQLite" => "Auth_OpenID_SQLiteStore");
+$store_types = array("Filesystem" => "\Auth\OpenID\FileStore",
+                     "MySQL" => "\Auth\OpenID\MySQLStore",
+                     "PostgreSQL" => "\Auth\OpenID\PostgreSQLStore",
+                     "SQLite" => "\Auth\OpenID\SQLiteStore");
 
 /**
  * Main.
@@ -48,7 +48,7 @@ if (!check_session() ||
  */
 
 function check_url($url) {
-    return (Auth_OpenID::normalizeUrl($url) !== null);
+    return (\Auth\OpenID::normalizeUrl($url) !== null);
 }
 
 function build_url() {
@@ -475,13 +475,13 @@ function getOpenIDStore()
     case "Filesystem":
 
         print "require_once \"Auth/OpenID/FileStore.php\";\n    ";
-        print "return new Auth_OpenID_FileStore(\"".$_SESSION['store_data']['fs_path']."\");\n";
+        print "return new \Auth\OpenID\FileStore(\"".$_SESSION['store_data']['fs_path']."\");\n";
         break;
 
     case "SQLite":
 
         print "require_once \"Auth/OpenID/SQLiteStore.php\";\n    ";
-        print "\$s = new Auth_OpenID_SQLiteStore(\"".$_SESSION['store_data']['sqlite_path']."\");\n    ";
+        print "\$s = new \Auth\OpenID\SQLiteStore(\"".$_SESSION['store_data']['sqlite_path']."\");\n    ";
         print "\$s->createTables();\n    ";
         print "return \$s;\n";
         break;
@@ -506,7 +506,7 @@ function getOpenIDStore()
 
     $db->query("USE <?php print $_SESSION['store_data']['database']; ?>");
         
-    $s =& new Auth_OpenID_MySQLStore($db);
+    $s =& new \Auth\OpenID\MySQLStore($db);
 
     $s->createTables();
 
@@ -533,7 +533,7 @@ function getOpenIDStore()
         return null;
     }
 
-    $s =& new Auth_OpenID_PostgreSQLStore($db);
+    $s =& new \Auth\OpenID\PostgreSQLStore($db);
 
     $s->createTables();
 

@@ -23,7 +23,7 @@ function idpXrds_render()
     $headers = array('Content-type: application/xrds+xml');
 
     $body = sprintf(idp_xrds_pat,
-                    Auth_OpenID_TYPE_2_0_IDP,
+                    \Auth\OpenID\TYPE_2_0_IDP,
                     buildURL());
 
     return array($headers, $body);

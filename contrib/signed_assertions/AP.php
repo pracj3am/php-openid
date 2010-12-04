@@ -114,14 +114,14 @@ class AP_OP_StoreRequest
    /**
     * Creates store request and adds it as an extension to AuthRequest object 
       passed to it.
-    * @param &Auth_OpenID_AuthRequest &$auth_request - A reference to 
+    * @param &\Auth\OpenID\AuthRequest &$auth_request - A reference to 
       the AuthRequest object.
     * @param &Attribute_Provider &$attributeProvider - A reference to the  
       Attribute Provider object.
     * @param string $attribute - The attribute name being asserted.
     * @param string $value - The attribute value being asserted.
     * @param string $openid - Openid of the entity being asserted.
-    * @return &Auth_OpenID_AuthRequest - Auth_OpenID_AuthRequest object 
+    * @return &\Auth\OpenID\AuthRequest - \Auth\OpenID\AuthRequest object 
                                    returned with StoreRequest extension.
    */
    static function createStoreRequest(&$auth_request,&$attributeProvider,
@@ -131,7 +131,7 @@ class AP_OP_StoreRequest
          return null;
       }
       $signedAssertion=$attributeProvider->sign($openid,$attribute,$value);
-      $store_request=new Auth_OpenID_AX_StoreRequest;
+      $store_request=new \Auth\OpenID\AX_StoreRequest;
       $store_request->addValue($attribute,base64_encode($value));
       $store_request->addValue($attribute.'/signature',
                                            base64_encode($signedAssertion));
@@ -152,13 +152,13 @@ class RP_OP_Verify
     * Verifies a given signed assertion.
     * @param &Attribute_Verifier &$attributeVerifier - An instance of the class 
                                             passed for the verification.
-    * @param Auth_OpenID_Response - Response object for extraction.
+    * @param \Auth\OpenID\Response - Response object for extraction.
     * @return boolean - true if successful, false if verification fails.
     */
    function verifyAssertion(&$attributeVerifier,$response)
    {
-      $ax_resp=Auth_OpenID_AX_FetchResponse::fromSuccessResponse($response);
-      if($ax_resp instanceof Auth_OpenID_AX_FetchResponse){
+      $ax_resp=\Auth\OpenID\AX_FetchResponse::fromSuccessResponse($response);
+      if($ax_resp instanceof \Auth\OpenID\AX_FetchResponse){
          $ax_args=$ax_resp->getExtensionArgs();
          if($ax_args) {
             $value=base64_decode($ax_args['value.ext1.1']);

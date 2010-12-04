@@ -1,4 +1,5 @@
 <?php
+namespace Auth\Yadis;
 
 /**
  * This module contains the HTTP fetcher interface
@@ -18,11 +19,11 @@
  */
 require_once "Auth/OpenID.php";
 
-define('Auth_OpenID_FETCHER_MAX_RESPONSE_KB', 1024);
-define('Auth_OpenID_USER_AGENT', 
-       'php-openid/'.Auth_OpenID_VERSION.' (php/'.phpversion().')');
+define('Auth\OpenID\FETCHER_MAX_RESPONSE_KB', 1024);
+define('Auth\OpenID\USER_AGENT', 
+       'php-openid/'.\Auth\OpenID\VERSION.' (php/'.phpversion().')');
 
-class Auth_Yadis_HTTPResponse {
+class HTTPResponse {
     public function __construct($final_url = null, $status = null,
                                          $headers = null, $body = null)
     {
@@ -41,7 +42,7 @@ class Auth_Yadis_HTTPResponse {
  * @access private
  * @package OpenID
  */
-class Auth_Yadis_HTTPFetcher {
+class HTTPFetcher {
 
     public $timeout = 20; // timeout in seconds.
 
@@ -55,13 +56,13 @@ class Auth_Yadis_HTTPFetcher {
     function canFetchURL($url)
     {
         if ($this->isHTTPS($url) && !$this->supportsSSL()) {
-            Auth_OpenID::log("HTTPS URL unsupported fetching %s",
+            \Auth\OpenID::log("HTTPS URL unsupported fetching %s",
                              $url);
             return false;
         }
 
         if (!$this->allowedURL($url)) {
-            Auth_OpenID::log("URL fetching not allowed for '%s'",
+            \Auth\OpenID::log("URL fetching not allowed for '%s'",
                              $url);
             return false;
         }

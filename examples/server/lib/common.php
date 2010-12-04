@@ -67,10 +67,10 @@ function doAuth($info, $trusted=null, $fail_cancels=false,
 
         // Add the simple registration response values to the OpenID
         // response message.
-        $sreg_request = Auth_OpenID_SRegRequest::fromOpenIDRequest(
+        $sreg_request = \Auth\OpenID\SRegRequest::fromOpenIDRequest(
                                               $info);
 
-        $sreg_response = Auth_OpenID_SRegResponse::extractResponse(
+        $sreg_response = \Auth\OpenID\SRegResponse::extractResponse(
                                               $sreg_request, $sreg_data);
 
         $sreg_response->toMessage($response->fields);

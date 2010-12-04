@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * URI normalization routines.
@@ -12,17 +13,17 @@
 require_once 'Auth/Yadis/Misc.php';
 
 // from appendix B of rfc 3986 (http://www.ietf.org/rfc/rfc3986.txt)
-function Auth_OpenID_getURIPattern()
+function getURIPattern()
 {
     return '&^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?&';
 }
 
-function Auth_OpenID_getAuthorityPattern()
+function getAuthorityPattern()
 {
     return '/^([^@]*@)?([^:]*)(:.*)?/';
 }
 
-function Auth_OpenID_getEncodedPattern()
+function getEncodedPattern()
 {
     return '/%([0-9A-Fa-f]{2})/';
 }
@@ -33,12 +34,12 @@ function Auth_OpenID_getEncodedPattern()
 #                  / "*" / "+" / "," / ";" / "="
 #
 # unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
-function Auth_OpenID_getURLIllegalCharRE()
+function getURLIllegalCharRE()
 {
     return "/([^-A-Za-z0-9:\/\?#\[\]@\!\$&'\(\)\*\+,;=\._~\%])/";
 }
 
-function Auth_OpenID_getUnreserved()
+function getUnreserved()
 {
     $_unreserved = array();
     for ($i = 0; $i < 256; $i++) {
@@ -65,11 +66,11 @@ function Auth_OpenID_getUnreserved()
     return $_unreserved;
 }
 
-function Auth_OpenID_getEscapeRE()
+function getEscapeRE()
 {
     $parts = array();
-    foreach (array_merge(Auth_Yadis_getUCSChars(),
-                         Auth_Yadis_getIPrivateChars()) as $pair) {
+    foreach (array_merge(\Auth\Yadis\getUCSChars(),
+                         \Auth\Yadis\getIPrivateChars()) as $pair) {
         list($m, $n) = $pair;
         $parts[] = sprintf("%s-%s", chr($m), chr($n));
     }
@@ -77,9 +78,9 @@ function Auth_OpenID_getEscapeRE()
     return sprintf('[%s]', implode('', $parts));
 }
 
-function Auth_OpenID_pct_encoded_replace_unreserved($mo)
+function pct_encoded_replace_unreserved($mo)
 {
-    $_unreserved = Auth_OpenID_getUnreserved();
+    $_unreserved = getUnreserved();
 
     $i = intval($mo[1], 16);
     if ($_unreserved[$i]) {
@@ -91,25 +92,25 @@ function Auth_OpenID_pct_encoded_replace_unreserved($mo)
     return $mo[0];
 }
 
-function Auth_OpenID_pct_encoded_replace($mo)
+function pct_encoded_replace($mo)
 {
     return chr(intval($mo[1], 16));
 }
 
-function Auth_OpenID_remove_dot_segments($path)
+function remove_dot_segments($path)
 {
     $result_segments = array();
 
     while ($path) {
-        if (Auth_Yadis_startswith($path, '../')) {
+        if (\Auth\Yadis\startswith($path, '../')) {
             $path = substr($path, 3);
-        } else if (Auth_Yadis_startswith($path, './')) {
+        } else if (\Auth\Yadis\startswith($path, './')) {
             $path = substr($path, 2);
-        } else if (Auth_Yadis_startswith($path, '/./')) {
+        } else if (\Auth\Yadis\startswith($path, '/./')) {
             $path = substr($path, 2);
         } else if ($path == '/.') {
             $path = '/';
-        } else if (Auth_Yadis_startswith($path, '/../')) {
+        } else if (\Auth\Yadis\startswith($path, '/../')) {
             $path = substr($path, 3);
             if ($result_segments) {
                 array_pop($result_segments);
@@ -139,10 +140,10 @@ function Auth_OpenID_remove_dot_segments($path)
     return implode('', $result_segments);
 }
 
-function Auth_OpenID_urinorm($uri)
+function urinorm($uri)
 {
     $uri_matches = array();
-    preg_match(Auth_OpenID_getURIPattern(), $uri, $uri_matches);
+    preg_match(getURIPattern(), $uri, $uri_matches);
 
     if (count($uri_matches) < 9) {
         for ($i = count($uri_matches); $i <= 9; $i++) {
@@ -151,7 +152,7 @@ function Auth_OpenID_urinorm($uri)
     }
 
     $illegal_matches = array();
-    preg_match(Auth_OpenID_getURLIllegalCharRE(),
+    preg_match(getURLIllegalCharRE(),
                $uri, $illegal_matches);
     if ($illegal_matches) {
         return null;
@@ -181,7 +182,7 @@ function Auth_OpenID_urinorm($uri)
     }
 
     $authority_matches = array();
-    preg_match(Auth_OpenID_getAuthorityPattern(),
+    preg_match(getAuthorityPattern(),
                $authority, $authority_matches);
     if (count($authority_matches) === 0) {
         // URI does not have a valid authority
@@ -203,8 +204,8 @@ function Auth_OpenID_urinorm($uri)
     if (strpos($host, '%') !== -1) {
         $host = strtolower($host);
         $host = preg_replace_callback(
-                  Auth_OpenID_getEncodedPattern(),
-                  'Auth_OpenID_pct_encoded_replace', $host);
+                  getEncodedPattern(),
+                  '\Auth\OpenID\pct_encoded_replace', $host);
         // NO IDNA.
         // $host = unicode($host, 'utf-8').encode('idna');
     } else {
@@ -225,10 +226,10 @@ function Auth_OpenID_urinorm($uri)
 
     $path = $uri_matches[5];
     $path = preg_replace_callback(
-               Auth_OpenID_getEncodedPattern(),
-               'Auth_OpenID_pct_encoded_replace_unreserved', $path);
+               getEncodedPattern(),
+               '\Auth\OpenID\pct_encoded_replace_unreserved', $path);
 
-    $path = Auth_OpenID_remove_dot_segments($path);
+    $path = remove_dot_segments($path);
     if (!$path) {
         $path = '/';
     }

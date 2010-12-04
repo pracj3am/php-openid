@@ -1,4 +1,5 @@
 <?php
+namespace Auth\Yadis;
 
 /**
  * Miscellaneous utility values and functions for OpenID and Yadis.
@@ -9,7 +10,7 @@
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache
  */
 
-function Auth_Yadis_getUCSChars()
+function getUCSChars()
 {
     return array(
                  array(0xA0, 0xD7FF),
@@ -32,7 +33,7 @@ function Auth_Yadis_getUCSChars()
                  );
 }
 
-function Auth_Yadis_getIPrivateChars()
+function getIPrivateChars()
 {
     return array(
                  array(0xE000, 0xF8FF),
@@ -41,7 +42,7 @@ function Auth_Yadis_getIPrivateChars()
                  );
 }
 
-function Auth_Yadis_pct_escape_unicode($char_match)
+function pct_escape_unicode($char_match)
 {
     $c = $char_match[0];
     $result = "";
@@ -51,7 +52,7 @@ function Auth_Yadis_pct_escape_unicode($char_match)
     return $result;
 }
 
-function Auth_Yadis_startswith($s, $stuff)
+function startswith($s, $stuff)
 {
     return strpos($s, $stuff) === 0;
 }

@@ -106,7 +106,7 @@ class Tests_Auth_OpenID_Nonce_TimestampCase extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $actual = Auth_OpenID_checkTimestamp($this->nonce_string,
+        $actual = \Auth\OpenID\checkTimestamp($this->nonce_string,
                                              $this->allowed_skew,
                                              $this->now);
         $this->assertEquals($this->expected, $actual);
@@ -116,13 +116,13 @@ class Tests_Auth_OpenID_Nonce_TimestampCase extends PHPUnit_TestCase {
 class Tests_Auth_OpenID_NonceTests extends PHPUnit_TestCase {
     function test_mkNonce()
     {
-        $nonce_str = Auth_OpenID_mkNonce();
+        $nonce_str = \Auth\OpenID\mkNonce();
         $this->assertTrue(preg_match(Tests_Auth_OpenID_nonce_re, $nonce_str));
     }
 
     function test_mkNonce_when()
     {
-        $nonce_str = Auth_OpenID_mkNonce(0);
+        $nonce_str = \Auth\OpenID\mkNonce(0);
         $this->assertTrue(preg_match(Tests_Auth_OpenID_nonce_re, $nonce_str));
         $tpart = substr($nonce_str, 0, 20);
         $this->assertEquals('1970-01-01T00:00:00Z', $tpart);
@@ -133,7 +133,7 @@ class Tests_Auth_OpenID_NonceTests extends PHPUnit_TestCase {
         $s = '1970-01-01T00:00:00Z';
         $expected_t = 0;
         $expected_salt = '';
-        list($actual_t, $actual_salt) = Auth_OpenID_splitNonce($s);
+        list($actual_t, $actual_salt) = \Auth\OpenID\splitNonce($s);
         $this->assertEquals($expected_t, $actual_t);
         $this->assertEquals($expected_salt, $actual_salt);
     }
@@ -142,9 +142,9 @@ class Tests_Auth_OpenID_NonceTests extends PHPUnit_TestCase {
     function test_mkSplit()
     {
         $t = 42;;
-        $nonce_str = Auth_OpenID_mkNonce($t);
+        $nonce_str = \Auth\OpenID\mkNonce($t);
         $this->assertTrue(preg_match(Tests_Auth_OpenID_nonce_re, $nonce_str));
-        list($et, $salt) = Auth_OpenID_splitNonce($nonce_str);
+        list($et, $salt) = \Auth\OpenID\splitNonce($nonce_str);
         $this->assertEquals(6, strlen($salt));
         $this->assertEquals($et, $t);
     }
@@ -158,7 +158,7 @@ class Tests_Auth_OpenID_Nonce_BadSplitCase extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $result = Auth_OpenID_splitNonce($this->nonce_str);
+        $result = \Auth\OpenID\splitNonce($this->nonce_str);
         $this->assertNull($result);
     }
 }

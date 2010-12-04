@@ -7,7 +7,7 @@ require_once "Auth/OpenID/Server.php";
 class PapeRequestTestCase extends PHPUnit_TestCase {
     function setUp()
     {
-        $this->req = new Auth_OpenID_PAPE_Request();
+        $this->req = new \Auth\OpenID\PAPE_Request();
     }
 
     function test_construct()
@@ -16,7 +16,7 @@ class PapeRequestTestCase extends PHPUnit_TestCase {
       $this->assertEquals(null, $this->req->max_auth_age);
       $this->assertEquals('pape', $this->req->ns_alias);
 
-      $req2 = new Auth_OpenID_PAPE_Request(array(PAPE_AUTH_MULTI_FACTOR), 1000);
+      $req2 = new \Auth\OpenID\PAPE_Request(array(PAPE_AUTH_MULTI_FACTOR), 1000);
       $this->assertEquals(array(PAPE_AUTH_MULTI_FACTOR), $req2->preferred_auth_policies);
       $this->assertEquals(1000, $req2->max_auth_age);
     }
@@ -61,25 +61,25 @@ class PapeRequestTestCase extends PHPUnit_TestCase {
     }
 
     function test_fromOpenIDRequest() {
-      $openid_req_msg = Auth_OpenID_Message::fromOpenIDArgs(array(
+      $openid_req_msg = \Auth\OpenID\Message::fromOpenIDArgs(array(
           'mode' => 'checkid_setup',
-          'ns' => Auth_OpenID_OPENID2_NS,
-          'ns.pape' => Auth_OpenID_PAPE_NS_URI,
+          'ns' => \Auth\OpenID\OPENID2_NS,
+          'ns.pape' => \Auth\OpenID\PAPE_NS_URI,
           'pape.preferred_auth_policies' => implode(' ', array(PAPE_AUTH_MULTI_FACTOR, PAPE_AUTH_PHISHING_RESISTANT)),
           'pape.max_auth_age' => '5476'
           ));
-      $oid_req = new Auth_OpenID_Request();
+      $oid_req = new \Auth\OpenID\Request();
       $oid_req->message = $openid_req_msg;
-      $req = Auth_OpenID_PAPE_Request::fromOpenIDRequest($oid_req);
+      $req = \Auth\OpenID\PAPE_Request::fromOpenIDRequest($oid_req);
       $this->assertEquals(array(PAPE_AUTH_MULTI_FACTOR, PAPE_AUTH_PHISHING_RESISTANT), $req->preferred_auth_policies);
       $this->assertEquals(5476, $req->max_auth_age);
     }
 
     function test_fromOpenIDRequest_no_pape() {
-      $message = new Auth_OpenID_Message();
-      $openid_req = new Auth_OpenID_Request();
+      $message = new \Auth\OpenID\Message();
+      $openid_req = new \Auth\OpenID\Request();
       $openid_req->message = $message;
-      $pape_req = Auth_OpenID_PAPE_Request::fromOpenIDRequest($openid_req);
+      $pape_req = \Auth\OpenID\PAPE_Request::fromOpenIDRequest($openid_req);
       $this->assertTrue($pape_req === null);
     }
 
@@ -107,7 +107,7 @@ class PAPE_DummySuccessResponse {
 
 class PapeResponseTestCase extends PHPUnit_TestCase {
   function setUp() {
-    $this->req = new Auth_OpenID_PAPE_Response();
+    $this->req = new \Auth\OpenID\PAPE_Response();
   }
 
   function test_construct() {
@@ -116,7 +116,7 @@ class PapeResponseTestCase extends PHPUnit_TestCase {
     $this->assertEquals('pape', $this->req->ns_alias);
     $this->assertEquals(null, $this->req->nist_auth_level);
 
-    $req2 = new Auth_OpenID_PAPE_Response(array(PAPE_AUTH_MULTI_FACTOR),
+    $req2 = new \Auth\OpenID\PAPE_Response(array(PAPE_AUTH_MULTI_FACTOR),
                                           '2001-01-01T04:05:23Z',
                                           3);
     $this->assertEquals(array(PAPE_AUTH_MULTI_FACTOR), $req2->auth_policies);
@@ -212,10 +212,10 @@ class PapeResponseTestCase extends PHPUnit_TestCase {
   }
 
   function test_fromSuccessResponse() {
-    $openid_req_msg = Auth_OpenID_Message::fromOpenIDArgs(array(
+    $openid_req_msg = \Auth\OpenID\Message::fromOpenIDArgs(array(
           'mode' => 'id_res',
-          'ns' => Auth_OpenID_OPENID2_NS,
-          'ns.pape' => Auth_OpenID_PAPE_NS_URI,
+          'ns' => \Auth\OpenID\OPENID2_NS,
+          'ns.pape' => \Auth\OpenID\PAPE_NS_URI,
           'auth_policies' => implode(' ', array(PAPE_AUTH_MULTI_FACTOR, PAPE_AUTH_PHISHING_RESISTANT)),
           'auth_time' => '2008-03-02T12:34:56Z'
           ));
@@ -224,7 +224,7 @@ class PapeResponseTestCase extends PHPUnit_TestCase {
           'auth_time' => '2008-03-02T12:34:56Z'
         );
     $oid_req = new PAPE_DummySuccessResponse($openid_req_msg, $signed_stuff);
-    $req = Auth_OpenID_PAPE_Response::fromSuccessResponse($oid_req);
+    $req = \Auth\OpenID\PAPE_Response::fromSuccessResponse($oid_req);
     $this->assertEquals(array(PAPE_AUTH_MULTI_FACTOR, PAPE_AUTH_PHISHING_RESISTANT), $req->auth_policies);
     $this->assertEquals('2008-03-02T12:34:56Z', $req->auth_time);
   }

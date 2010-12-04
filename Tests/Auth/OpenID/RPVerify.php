@@ -20,7 +20,7 @@ class Tests_Auth_OpenID_BuildDiscoveryURL extends PHPUnit_TestCase {
      */
     function failUnlessDiscoURL($realm, $expected_discovery_url)
     {
-        $actual_discovery_url = Auth_OpenID_TrustRoot::buildDiscoveryURL($realm);
+        $actual_discovery_url = \Auth\OpenID\TrustRoot::buildDiscoveryURL($realm);
         $this->assertEquals($expected_discovery_url, $actual_discovery_url);
     }
 
@@ -51,7 +51,7 @@ class _MockDiscover {
 
     function mockDiscover($uri, $fetcher, $discover_function=null)
     {
-        $result = new Auth_Yadis_DiscoveryResult($uri);
+        $result = new \Auth\Yadis\DiscoveryResult($uri);
         $result->response_text = $this->data;
         $result->normalized_uri = $uri;
         return $result;
@@ -64,7 +64,7 @@ class Tests_Auth_OpenID_ExtractReturnToURLs extends PHPUnit_TestCase {
     function failUnlessXRDSHasReturnURLs($data, $expected_return_urls)
     {
         $discover_object = new _MockDiscover($data);
-        $actual_return_urls = Auth_OpenID_getAllowedReturnURLs($this->disco_url, null, array($discover_object, 'mockDiscover'));
+        $actual_return_urls = \Auth\OpenID\getAllowedReturnURLs($this->disco_url, null, array($discover_object, 'mockDiscover'));
 
         $this->assertEquals($expected_return_urls, $actual_return_urls);
     }
@@ -72,7 +72,7 @@ class Tests_Auth_OpenID_ExtractReturnToURLs extends PHPUnit_TestCase {
     function failUnlessDiscoveryFailure($text)
     {
         $discover_object = new _MockDiscover($text);
-        $this->assertFalse(Auth_OpenID_getAllowedReturnURLs($this->disco_url, null, array($discover_object, 'mockDiscover')));
+        $this->assertFalse(\Auth\OpenID\getAllowedReturnURLs($this->disco_url, null, array($discover_object, 'mockDiscover')));
     }
 
     function test_empty()
@@ -179,19 +179,19 @@ class Tests_Auth_OpenID_ExtractReturnToURLs extends PHPUnit_TestCase {
 class Tests_Auth_OpenID_ReturnToMatches extends PHPUnit_TestCase {
     function test_noEntries()
     {
-        $this->assertFalse(Auth_OpenID_returnToMatches(array(), 'anything'));
+        $this->assertFalse(\Auth\OpenID\returnToMatches(array(), 'anything'));
     }
 
     function test_exactMatch()
     {
         $r = 'http://example.com/return.to';
-        $this->assertTrue(Auth_OpenID_returnToMatches(array($r), $r));
+        $this->assertTrue(\Auth\OpenID\returnToMatches(array($r), $r));
     }
 
     function test_garbageMatch()
     {
         $r = 'http://example.com/return.to';
-        $this->assertTrue(Auth_OpenID_returnToMatches(
+        $this->assertTrue(\Auth\OpenID\returnToMatches(
                    array('This is not a URL at all. In fact, it has characters, ' .
                          'like "<" that are not allowed in URLs', $r), $r));
     }
@@ -199,13 +199,13 @@ class Tests_Auth_OpenID_ReturnToMatches extends PHPUnit_TestCase {
     function test_descendant()
     {
         $r = 'http://example.com/return.to';
-        $this->assertTrue(Auth_OpenID_returnToMatches(array($r),
+        $this->assertTrue(\Auth\OpenID\returnToMatches(array($r),
             'http://example.com/return.to/user:joe'));
     }
 
     function test_wildcard()
     {
-        $this->assertFalse(Auth_OpenID_returnToMatches(
+        $this->assertFalse(\Auth\OpenID\returnToMatches(
                                 array('http://*.example.com/return.to'),
                                 'http://example.com/return.to'));
     }
@@ -213,7 +213,7 @@ class Tests_Auth_OpenID_ReturnToMatches extends PHPUnit_TestCase {
     function test_noMatch()
     {
         $r = 'http://example.com/return.to';
-        $this->assertFalse(Auth_OpenID_returnToMatches(array($r),
+        $this->assertFalse(\Auth\OpenID\returnToMatches(array($r),
             'http://example.com/xss_exploit'));
     }
 }
@@ -241,7 +241,7 @@ class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_TestCase {
 
     function test_bogusRealm()
     {
-        $this->assertFalse(Auth_OpenID_verifyReturnTo('', 'http://example.com/', null));
+        $this->assertFalse(\Auth\OpenID\verifyReturnTo('', 'http://example.com/', null));
     }
 
     function test_verifyWithDiscoveryCalled()
@@ -251,7 +251,7 @@ class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_TestCase {
 
         $v = new Verifier($this, $return_to);
 
-        $this->assertTrue(Auth_OpenID_verifyReturnTo($realm, $return_to, null, array($v, 'verify')));
+        $this->assertTrue(\Auth\OpenID\verifyReturnTo($realm, $return_to, null, array($v, 'verify')));
     }
 
     function test_verifyFailWithDiscoveryCalled()
@@ -261,7 +261,7 @@ class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_TestCase {
 
         $v = new Verifier($this, 'http://something-else.invalid/');
 
-        $this->assertFalse(Auth_OpenID_verifyReturnTo($realm, $return_to, null, array($v, 'verify')));
+        $this->assertFalse(\Auth\OpenID\verifyReturnTo($realm, $return_to, null, array($v, 'verify')));
     }
 
     function test_verifyFailIfDiscoveryRedirects()
@@ -271,7 +271,7 @@ class Tests_Auth_OpenID_VerifyReturnTo extends PHPUnit_TestCase {
 
         $v = new Verifier($this, false);
 
-        $this->assertFalse(Auth_OpenID_verifyReturnTo($realm, $return_to, null, array($v, 'verify')));
+        $this->assertFalse(\Auth\OpenID\verifyReturnTo($realm, $return_to, null, array($v, 'verify')));
     }
 }
 

@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID\Store;
 
 /**
  * An SQLite store.
@@ -16,7 +17,7 @@ require_once "Auth/OpenID/Store/SQL.php";
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_SQLite extends Auth_OpenID_Store_SQL {
+class SQLite extends \Auth\OpenID\Store\SQL {
     function setSQL()
     {
         $this->sql['nonce_table'] =

@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID\Store;
 
 /**
  * SQL-backed OpenID stores.
@@ -45,7 +46,7 @@ require_once 'Auth/OpenID/Nonce.php';
  * database.  If you're an OpenID integrator and you'd like to create
  * an SQL-driven store that wraps an application's database
  * abstraction, be sure to create a subclass of
- * {@link Auth_OpenID_DatabaseConnection} that calls the application's
+ * {@link \Auth\OpenID\DatabaseConnection} that calls the application's
  * database abstraction calls.  Then, pass an instance of your new
  * database connection class to your SQLStore subclass constructor.
  *
@@ -54,7 +55,7 @@ require_once 'Auth/OpenID/Nonce.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
+class SQL extends \Auth\OpenID\Store {
 
     /**
      * This creates a new SQLStore instance.  It requires an
@@ -65,7 +66,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
      * connection to a database of the correct type for the SQLStore
      * subclass you're using.  This must either be an PEAR DB
      * connection handle or an instance of a subclass of
-     * Auth_OpenID_DatabaseConnection.
+     * \Auth\OpenID\DatabaseConnection.
      *
      * @param associations_table: This is an optional parameter to
      * specify the name of the table used for storing associations.
@@ -89,7 +90,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
               (is_subclass_of($connection, 'db_common') ||
                is_subclass_of($connection,
                               'auth_openid_databaseconnection')))) {
-            trigger_error("Auth_OpenID_SQLStore expected PEAR connection " .
+            trigger_error("\Auth\OpenID\SQLStore expected PEAR connection " .
                           "object (got ".get_class($connection).")",
                           E_USER_ERROR);
             return;
@@ -100,7 +101,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
         // Be sure to set the fetch mode so the results are keyed on
         // column name instead of column index.  This is a PEAR
         // constant, so only try to use it if PEAR is present.  Note
-        // that Auth_Openid_Databaseconnection instances need not
+        // that \Auth\Openid\Databaseconnection instances need not
         // implement ::setFetchMode for this reason.
         if (is_subclass_of($this->connection, 'db_common')) {
             $this->connection->setFetchMode(DB_FETCHMODE_ASSOC);
@@ -414,7 +415,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
             $associations = array();
 
             foreach ($assocs as $assoc_row) {
-                $assoc = new Auth_OpenID_Association($assoc_row['handle'],
+                $assoc = new \Auth\OpenID\Association($assoc_row['handle'],
                                                      $assoc_row['secret'],
                                                      $assoc_row['issued'],
                                                      $assoc_row['lifetime'],
@@ -487,7 +488,7 @@ class Auth_OpenID_Store_SQL extends Auth_OpenID_Store {
     private function _octify($str)
     {
         $result = "";
-        for ($i = 0; $i < Auth_OpenID::bytes($str); $i++) {
+        for ($i = 0; $i < \Auth\OpenID::bytes($str); $i++) {
             $ch = substr($str, $i, 1);
             if ($ch == "\\") {
                 $result .= "\\\\\\\\";

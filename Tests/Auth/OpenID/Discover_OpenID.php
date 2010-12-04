@@ -28,7 +28,7 @@ class _SimpleMockFetcher {
 
 class Tests_Auth_OpenID_ServiceEndpoint extends PHPUnit_TestCase {
     function setUp() {
-        $this->endpoint = new Auth_OpenID_ServiceEndpoint();
+        $this->endpoint = new \Auth\OpenID\ServiceEndpoint();
     }
 
     function test_getDisplayIdentifier_noFragment() {
@@ -83,7 +83,7 @@ class Tests_Auth_OpenID_DiscoveryFailure extends PHPUnit_TestCase {
             list($status, $url, $body) = $case;
             $expected_status = $status;
 
-            $result = Auth_OpenID_discover($this->url, $this->fetcher);
+            $result = \Auth\OpenID\discover($this->url, $this->fetcher);
             list($id_url, $svclist) = $result;
 
             $this->assertEquals($svclist, array());
@@ -136,7 +136,7 @@ class Tests_Auth_OpenID_Discover_FetchException extends PHPUnit_TestCase {
     {
         foreach ($this->cases as $thing_to_raise) {
             $fetcher = ErrorRaisingFetcher($thing_to_raise);
-            Auth_OpenID_discover('http://doesnt.matter/', $fetcher);
+            \Auth\OpenID\discover('http://doesnt.matter/', $fetcher);
             $exc = __getError();
 
             if ($exc !== $thing_to_raise) {
@@ -150,7 +150,7 @@ class Tests_Auth_OpenID_Discover_FetchException extends PHPUnit_TestCase {
 
 // Tests for openid.consumer.discover.discover
 
-class _DiscoveryMockFetcher extends Auth_Yadis_HTTPFetcher {
+class _DiscoveryMockFetcher extends \Auth\Yadis\HTTPFetcher {
     public function __construct($documents)
     {
         $this->redirect = null;
@@ -187,7 +187,7 @@ class _DiscoveryMockFetcher extends Auth_Yadis_HTTPFetcher {
             $body = '';
         }
 
-        return new Auth_Yadis_HTTPResponse($final_url, $status,
+        return new \Auth\Yadis\HTTPResponse($final_url, $status,
                                            array('content-type' => $ctype), $body);
     }
 }
@@ -215,7 +215,7 @@ class _DiscoveryBase extends PHPUnit_TestCase {
             $this->assertFalse($s->compatibilityMode());
             $this->assertTrue($s->isOPIdentifier());
             $this->assertEquals($s->preferredNamespace(),
-                                Auth_OpenID_OPENID2_NS);
+                                \Auth\OpenID\OPENID2_NS);
         } else {
             $this->assertEquals($claimed_id, $s->claimed_id);
             $this->assertEquals($local_id, $s->getLocalID());
@@ -229,10 +229,10 @@ class _DiscoveryBase extends PHPUnit_TestCase {
         }
 
         $openid_types = array(
-                              '1.1' => Auth_OpenID_TYPE_1_1,
-                              '1.0' => Auth_OpenID_TYPE_1_0,
-                              '2.0' => Auth_OpenID_TYPE_2_0,
-                              '2.0 OP' => Auth_OpenID_TYPE_2_0_IDP);
+                              '1.1' => \Auth\OpenID\TYPE_1_1,
+                              '1.0' => \Auth\OpenID\TYPE_1_0,
+                              '2.0' => \Auth\OpenID\TYPE_2_0,
+                              '2.0 OP' => \Auth\OpenID\TYPE_2_0_IDP);
 
         $type_uris = array();
         foreach ($types as $t) {
@@ -271,7 +271,7 @@ class Tests_Auth_OpenID_Discover_OpenID extends _DiscoveryBase {
         }
 
         $this->fetcher->documents[$this->id_url] = array($content_type, $data);
-        list($id_url, $services) = Auth_OpenID_discover($this->id_url,
+        list($id_url, $services) = \Auth\OpenID\discover($this->id_url,
                                                         $this->fetcher);
         $this->assertEquals($expected_services, count($services));
         $this->assertEquals($expected_id, $id_url);
@@ -280,7 +280,7 @@ class Tests_Auth_OpenID_Discover_OpenID extends _DiscoveryBase {
 
     function test_404()
     {
-        list($url, $services) = Auth_OpenID_discover($this->id_url . '/404',
+        list($url, $services) = \Auth\OpenID\discover($this->id_url . '/404',
                                                      $this->fetcher);
         $this->assertTrue($services == array());
     }
@@ -335,7 +335,7 @@ class Tests_Auth_OpenID_Discover_OpenID extends _DiscoveryBase {
         $this->fetcher->documents[$this->id_url] = array($content_type, $data);
         $expected_id = $this->id_url;
         $this->id_url = $this->id_url . '#fragment';
-        list($id_url, $services) = Auth_OpenID_discover($this->id_url, $this->fetcher);
+        list($id_url, $services) = \Auth\OpenID\discover($this->id_url, $this->fetcher);
         $this->assertEquals($expected_services, count($services));
         $this->assertEquals($expected_id, $id_url);
 
@@ -534,7 +534,7 @@ class Tests_Auth_OpenID_Discover_OpenID extends _DiscoveryBase {
     }
 }
 
-class _MockFetcherForXRIProxy extends Auth_Yadis_HTTPFetcher {
+class _MockFetcherForXRIProxy extends \Auth\Yadis\HTTPFetcher {
 
     public function __construct($documents)
     {
@@ -559,13 +559,13 @@ class _MockFetcherForXRIProxy extends Auth_Yadis_HTTPFetcher {
         $u = parse_url($url);
         $proxy_host = $u['host'];
         $xri = $u['path'];
-        $query = Auth_OpenID::arrayGet($u, 'query');
+        $query = \Auth\OpenID::arrayGet($u, 'query');
 
         if ((!$headers) && (!$query)) {
             trigger_error('Error in mock XRI fetcher: no headers or query');
         }
 
-        if (Auth_Yadis_startswith($xri, '/')) {
+        if (\Auth\Yadis\startswith($xri, '/')) {
             $xri = substr($xri, 1);
         }
 
@@ -578,7 +578,7 @@ class _MockFetcherForXRIProxy extends Auth_Yadis_HTTPFetcher {
             $body = '';
         }
 
-        return new Auth_Yadis_HTTPResponse($url, $status,
+        return new \Auth\Yadis\HTTPResponse($url, $status,
                                                array('content-type' => $ctype),
                                                $body);
     }
@@ -597,14 +597,14 @@ class TestXRIDiscovery extends _DiscoveryBase {
     }
 
     function test_xri() {
-        list($user_xri, $services) = Auth_OpenID_discoverXRI('=smoker');
+        list($user_xri, $services) = \Auth\OpenID\discoverXRI('=smoker');
 
 	$this->_checkService(
 			     $services[0],
 			     "http://www.myopenid.com/server",
-			     Auth_Yadis_XRI("=!1000"),
+			     \Auth\Yadis\XRI("=!1000"),
 			     'http://smoker.myopenid.com/',
-			     Auth_Yadis_XRI("=!1000"),
+			     \Auth\Yadis\XRI("=!1000"),
 			     array('1.0'),
 			     true,
 			     '=smoker');
@@ -612,24 +612,24 @@ class TestXRIDiscovery extends _DiscoveryBase {
 	$this->_checkService(
 			     $services[1],
 			     "http://www.livejournal.com/openid/server.bml",
-			     Auth_Yadis_XRI("=!1000"),
+			     \Auth\Yadis\XRI("=!1000"),
 			     'http://frank.livejournal.com/',
-			     Auth_Yadis_XRI("=!1000"),
+			     \Auth\Yadis\XRI("=!1000"),
 			     array('1.0'),
 			     true,
 			     '=smoker');
     }
 
     function test_xriNoCanonicalID() {
-        list($user_xri, $services) = Auth_OpenID_discoverXRI('=smoker*bad');
+        list($user_xri, $services) = \Auth\OpenID\discoverXRI('=smoker*bad');
 	$this->assertFalse($services);
     }
 
     function test_useCanonicalID() {
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
-	$endpoint->claimed_id = Auth_Yadis_XRI("=!1000");
-	$endpoint->canonicalID = Auth_Yadis_XRI("=!1000");
-	$htis->assertEquals($endpoint->getLocalID(), Auth_Yadis_XRI("=!1000"));
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
+	$endpoint->claimed_id = \Auth\Yadis\XRI("=!1000");
+	$endpoint->canonicalID = \Auth\Yadis\XRI("=!1000");
+	$htis->assertEquals($endpoint->getLocalID(), \Auth\Yadis\XRI("=!1000"));
     }
 }
 
@@ -660,7 +660,7 @@ class Tests_Auth_OpenID_DiscoverSession {
 }
 
 global $__Tests_BOGUS_SERVICE;
-$__Tests_BOGUS_SERVICE = new Auth_OpenID_ServiceEndpoint();
+$__Tests_BOGUS_SERVICE = new \Auth\OpenID\ServiceEndpoint();
 $__Tests_BOGUS_SERVICE->claimed_id = "=really.bogus.endpoint";
 
 function __serviceCheck_discover_cb($url, $fetcher)
@@ -717,7 +717,7 @@ class Tests_Auth_OpenID_SSLSupport extends PHPUnit_TestCase {
 
         $f = new _FetcherWithoutSSL($d);
 
-        $result = Auth_OpenID_discover($id_url, $f);
+        $result = \Auth\OpenID\discover($id_url, $f);
 
         list($url, $services) = $result;
 
@@ -744,7 +744,7 @@ class Tests_Auth_OpenID_SSLSupport extends PHPUnit_TestCase {
 
         $f = new _FetcherWithSSL($d);
 
-        $result = Auth_OpenID_discover($id_url, $f);
+        $result = \Auth\OpenID\discover($id_url, $f);
 
         list($url, $services) = $result;
 
@@ -767,7 +767,7 @@ class Tests_Auth_OpenID_SSLSupport extends PHPUnit_TestCase {
 
         $f = new _NonFetcher();
 
-        $result = Auth_OpenID_discover($id_url, $f);
+        $result = \Auth\OpenID\discover($id_url, $f);
 
         $this->assertTrue($result == array($id_url, array()));
         $this->assertFalse($f->used);

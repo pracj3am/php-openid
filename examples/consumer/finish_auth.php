@@ -16,13 +16,13 @@ function run() {
     $response = $consumer->complete($return_to);
 
     // Check the response status.
-    if ($response->status == Auth_OpenID_CANCEL) {
+    if ($response->status == \Auth\OpenID\CANCEL) {
         // This means the authentication was cancelled.
         $msg = 'Verification cancelled.';
-    } else if ($response->status == Auth_OpenID_FAILURE) {
+    } else if ($response->status == \Auth\OpenID\FAILURE) {
         // Authentication failed; display the error message.
         $msg = "OpenID authentication failed: " . $response->message;
-    } else if ($response->status == Auth_OpenID_SUCCESS) {
+    } else if ($response->status == \Auth\OpenID\SUCCESS) {
         // This means the authentication succeeded; extract the
         // identity URL and Simple Registration data (if it was
         // returned).
@@ -38,7 +38,7 @@ function run() {
             $success .= '  (XRI CanonicalID: '.$escaped_canonicalID.') ';
         }
 
-        $sreg_resp = Auth_OpenID_SRegResponse::fromSuccessResponse($response);
+        $sreg_resp = \Auth\OpenID\SRegResponse::fromSuccessResponse($response);
 
         $sreg = $sreg_resp->contents();
 
@@ -57,7 +57,7 @@ function run() {
                 "'.";
         }
 
-	$pape_resp = Auth_OpenID_PAPE_Response::fromSuccessResponse($response);
+	$pape_resp = \Auth\OpenID\PAPE_Response::fromSuccessResponse($response);
 
 	if ($pape_resp) {
             if ($pape_resp->auth_policies) {

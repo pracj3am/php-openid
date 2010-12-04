@@ -29,7 +29,7 @@ class Tests_Auth_OpenID_URINorm_TestCase extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $actual = Auth_OpenID_urinorm($this->uri);
+        $actual = \Auth\OpenID\urinorm($this->uri);
         $this->assertEquals($this->expected, $actual);
     }
 }

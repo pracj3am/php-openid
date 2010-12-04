@@ -1,7 +1,8 @@
 <?php
+namespace Auth\OpenID;
 
 /**
- * The Auth_OpenID_DatabaseConnection class, which is used to emulate
+ * The \Auth\OpenID\DatabaseConnection class, which is used to emulate
  * a PEAR database connection.
  *
  * @package OpenID
@@ -13,16 +14,16 @@
 /**
  * An empty base class intended to emulate PEAR connection
  * functionality in applications that supply their own database
- * abstraction mechanisms.  See {@link Auth_OpenID_SQLStore} for more
+ * abstraction mechanisms.  See {@link \Auth\OpenID\SQLStore} for more
  * information.  You should subclass this class if you need to create
  * an SQL store that needs to access its database using an
  * application's database abstraction layer instead of a PEAR database
- * connection.  Any subclass of Auth_OpenID_DatabaseConnection MUST
+ * connection.  Any subclass of \Auth\OpenID\DatabaseConnection MUST
  * adhere to the interface specified here.
  *
  * @package OpenID
  */
-class Auth_OpenID_DatabaseConnection {
+class DatabaseConnection {
     /**
      * Sets auto-commit mode on this database connection.
      *

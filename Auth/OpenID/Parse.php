@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * This module implements a VERY limited parser that finds <link> tags
@@ -80,11 +81,11 @@
  */
 
 /**
- * Require Auth_OpenID::arrayGet().
+ * Require \Auth\OpenID::arrayGet().
  */
 require_once "Auth/OpenID.php";
 
-class Auth_OpenID_Parse {
+class Parse {
 
     /**
      * Specify some flags for use with regex matching.
@@ -321,7 +322,7 @@ class Auth_OpenID_Parse {
     {
         // Does this link have target_rel as a relationship?
         // XXX: TESTME
-        $rel_attr = Auth_OpeniD::arrayGet($link_attrs, 'rel', null);
+        $rel_attr = \Auth\OpeniD::arrayGet($link_attrs, 'rel', null);
         return ($rel_attr && $this->relMatches($rel_attr,
                                                $target_rel));
     }
@@ -352,14 +353,14 @@ class Auth_OpenID_Parse {
             return null;
         }
         $first = $matches[0];
-        return Auth_OpenID::arrayGet($first, 'href', null);
+        return \Auth\OpenID::arrayGet($first, 'href', null);
     }
 }
 
-function Auth_OpenID_legacy_discover($html_text, $server_rel,
+function legacy_discover($html_text, $server_rel,
                                      $delegate_rel)
 {
-    $p = new Auth_OpenID_Parse();
+    $p = new Parse();
 
     $link_attrs = $p->parseLinkAttrs($html_text);
 

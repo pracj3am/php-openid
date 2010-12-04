@@ -159,7 +159,7 @@ class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
 
     private function _addB64Tests()
     {
-        $lib = Auth_OpenID_getMathLib();
+        $lib = \Auth\OpenID\getMathLib();
         $count = defined('Tests_Auth_OpenID_thorough') ? -1 : 2;
         $data = $this->_parseBase64Data();
         foreach ($data as $b64 => $num_s) {
@@ -184,7 +184,7 @@ class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
 
     private function _addBinLongTests()
     {
-        $lib = Auth_OpenID_getMathLib();
+        $lib = \Auth\OpenID\getMathLib();
         $max = Tests_Auth_OpenID_maxint();
         $upper = defined('Tests_Auth_OpenID_thorough') ? 499 : 3;
 
@@ -220,13 +220,13 @@ class Tests_Auth_OpenID_BigMath extends PHPUnit_TestSuite {
     {
         $this->setName($name);
 
-        if (defined('Auth_OpenID_NO_MATH_SUPPORT')) {
+        if (defined('Auth\OpenID\NO_MATH_SUPPORT')) {
           return;
         }
 
         $this->_addB64Tests();
         $this->_addBinLongTests();
-        $test = new Tests_Auth_OpenID_Rand(Auth_OpenID_getMathLib());
+        $test = new Tests_Auth_OpenID_Rand(\Auth\OpenID\getMathLib());
         $test->setName('Big number rand');
         $this->addTest($test);
     }

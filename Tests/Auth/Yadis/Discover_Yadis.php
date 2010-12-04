@@ -22,7 +22,7 @@ function mkResponse($data)
         $headers[$k] = $v;
     }
     $status = intval($matches[1]);
-    $r = new Auth_Yadis_HTTPResponse(null, $status, $headers, $body);
+    $r = new \Auth\Yadis\HTTPResponse(null, $status, $headers, $body);
     return $r;
 }
 class TestFetcher {
@@ -40,7 +40,7 @@ class TestFetcher {
             $data = generateSample($path, $this->base_url);
 
             if ($data === null) {
-                return new Auth_Yadis_HTTPResponse($current_url,
+                return new \Auth\Yadis\HTTPResponse($current_url,
                                                        404,
                                                        array(),
                                                        '');
@@ -60,7 +60,7 @@ class TestFetcher {
 class BlankContentTypeFetcher {
     function get($url, $headers=null)
     {
-        return new Auth_Yadis_HTTPResponse(
+        return new \Auth\Yadis\HTTPResponse(
             $url, 200, array("Content-Type" => ""), '');
     }
 }
@@ -68,7 +68,7 @@ class BlankContentTypeFetcher {
 class NoContentTypeFetcher {
     function get($url, $headers=null)
     {
-        return new Auth_Yadis_HTTPResponse($url, 200, array(), '');
+        return new \Auth\Yadis\HTTPResponse($url, 200, array(), '');
     }
 }
 
@@ -82,9 +82,9 @@ class MockFetcher {
         $this->count++;
         if ($this->count == 1) {
             $headers = array(strtolower('X-XRDS-Location') . ': http://unittest/404');
-            return new Auth_Yadis_HTTPResponse($uri, 200, $headers, '');
+            return new \Auth\Yadis\HTTPResponse($uri, 200, $headers, '');
         } else {
-            return new Auth_Yadis_HTTPResponse($uri, 404);
+            return new \Auth\Yadis\HTTPResponse($uri, 404);
         }
     }
 }
@@ -96,7 +96,7 @@ class TestSecondGet extends PHPUnit_TestCase {
         $response = null;
         $fetcher = new MockFetcher();
         $this->assertTrue(
-               Auth_Yadis_Yadis::discover($uri, $response, $fetcher) === null);
+               \Auth\Yadis\Yadis::discover($uri, $response, $fetcher) === null);
     }
 }
 
@@ -125,11 +125,11 @@ class _TestCase extends PHPUnit_TestCase {
     function runTest()
     {
         if ($this->expected === null) {
-            $result = Auth_Yadis_Yadis::discover($this->input_url,
+            $result = \Auth\Yadis\Yadis::discover($this->input_url,
                                                      $this->fetcher);
             $this->assertTrue($result->isFailure());
         } else {
-            $result = Auth_Yadis_Yadis::discover($this->input_url,
+            $result = \Auth\Yadis\Yadis::discover($this->input_url,
                                                      $this->fetcher);
 
             if ($result === null) {
@@ -183,7 +183,7 @@ class Tests_Auth_Yadis_Discover_Yadis extends PHPUnit_TestSuite {
 class Tests_Auth_Yadis_Discover_Yadis_ContentTypes extends PHPUnit_TestCase {
     function test_is_xrds_yadis_location()
     {
-        $result = new Auth_Yadis_DiscoveryResult('http://request.uri/');
+        $result = new \Auth\Yadis\DiscoveryResult('http://request.uri/');
         $result->normalized_uri = "http://normalized/";
         $result->xrds_uri = "http://normalized/xrds";
 
@@ -192,16 +192,16 @@ class Tests_Auth_Yadis_Discover_Yadis_ContentTypes extends PHPUnit_TestCase {
 
     function test_is_xrds_content_type()
     {
-        $result = new Auth_Yadis_DiscoveryResult('http://request.uri/');
+        $result = new \Auth\Yadis\DiscoveryResult('http://request.uri/');
         $result->normalized_uri = $result->xrds_uri = "http://normalized/";
-        $result->content_type = Auth_Yadis_CONTENT_TYPE;
+        $result->content_type = \Auth\Yadis\CONTENT_TYPE;
 
         $this->assertTrue($result->isXRDS());
       }
 
     function test_is_xrds_neither()
     {
-        $result = new Auth_Yadis_DiscoveryResult('http://request.uri/');
+        $result = new \Auth\Yadis\DiscoveryResult('http://request.uri/');
         $result->normalized_uri = $result->xrds_uri = "http://normalized/";
         $result->content_type = "another/content-type";
 
@@ -211,14 +211,14 @@ class Tests_Auth_Yadis_Discover_Yadis_ContentTypes extends PHPUnit_TestCase {
     function test_no_content_type()
     {
         $fetcher = new NoContentTypeFetcher();
-        $result = Auth_Yadis_Yadis::discover("http://bogus", $fetcher);
+        $result = \Auth\Yadis\Yadis::discover("http://bogus", $fetcher);
         $this->assertEquals(null, $result->content_type);
     }
 
     function test_blank_content_type()
     {
         $fetcher = new BlankContentTypeFetcher();
-        $result = Auth_Yadis_Yadis::discover("http://bogus", $fetcher);
+        $result = \Auth\Yadis\Yadis::discover("http://bogus", $fetcher);
         $this->assertEquals("", $result->content_type);
     }
 }

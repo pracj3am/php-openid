@@ -14,9 +14,9 @@ abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
      */
     function setUp()
     {
-        $this->letters = Auth_OpenID_letters;
-        $this->digits  = Auth_OpenID_digits;
-        $this->punct   = Auth_OpenID_punct;
+        $this->letters = \Auth\OpenID\letters;
+        $this->digits  = \Auth\OpenID\digits;
+        $this->punct   = \Auth\OpenID\punct;
         
         $this->allowed_nonce  = $this->letters . $this->digits;
         $this->allowed_handle = $this->letters . $this->digits . $this->punct;
@@ -27,9 +27,9 @@ abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
      */
     function genAssoc($now, $issued = 0, $lifetime = 600)
     {
-        $sec = Auth_OpenID_CryptUtil::randomString(20);
-        $hdl = Auth_OpenID_CryptUtil::randomString(128, $this->allowed_handle);
-        return new Auth_OpenID_Association(
+        $sec = \Auth\OpenID\CryptUtil::randomString(20);
+        $hdl = \Auth\OpenID\CryptUtil::randomString(128, $this->allowed_handle);
+        return new \Auth\OpenID\Association(
             $hdl,
             $sec,
             $now + $issued,
@@ -67,9 +67,9 @@ abstract class Tests_Auth_OpenID_Store extends PHPUnit_TestCase {
      *
      * OpenIDStore -> NoneType
      * 
-     * @param Auth_OpenID_Store $store
+     * @param \Auth\OpenID\Store $store
      */
-    private function _testStore(Auth_OpenID_Store $store)
+    private function _testStore(\Auth\OpenID\Store $store)
     {
         // Association functions
         $now = time();
@@ -253,7 +253,7 @@ explicitly');
 
     private function _checkUseNonce($store, $nonce, $expected, $server_url, $msg=null)
     {
-        list($stamp, $salt) = Auth_OpenID_splitNonce($nonce);
+        list($stamp, $salt) = \Auth\OpenID\splitNonce($nonce);
         $actual = $store->useNonce($server_url, $stamp, $salt);
         $this->assertEquals(intval($expected), intval($actual), "_checkUseNonce failed: $server_url, $msg");
     }
@@ -266,7 +266,7 @@ explicitly');
 
         foreach (array($server_url, '') as $url) {
             // Random nonce (not in store)
-            $nonce1 = Auth_OpenID_mkNonce();
+            $nonce1 = \Auth\OpenID\mkNonce();
 
             // A nonce is not by default
             $this->_checkUseNonce($store, $nonce1, true, $url, "blergx");
@@ -279,7 +279,7 @@ explicitly');
 
             // Nonces from when the universe was an hour old should
             // not pass these days.
-            $old_nonce = Auth_OpenID_mkNonce(3600);
+            $old_nonce = \Auth\OpenID\mkNonce(3600);
             $this->_checkUseNonce($store, $old_nonce, false, $url,
                                   "Old nonce ($old_nonce) passed.");
 
@@ -295,9 +295,9 @@ explicitly');
 
         $now = time();
 
-        $old_nonce1 = Auth_OpenID_mkNonce($now - 20000);
-        $old_nonce2 = Auth_OpenID_mkNonce($now - 10000);
-        $recent_nonce = Auth_OpenID_mkNonce($now - 600);
+        $old_nonce1 = \Auth\OpenID\mkNonce($now - 20000);
+        $old_nonce2 = \Auth\OpenID\mkNonce($now - 10000);
+        $recent_nonce = \Auth\OpenID\mkNonce($now - 600);
 
         global $Auth_OpenID_SKEW;
         $orig_skew = $Auth_OpenID_SKEW;
@@ -307,15 +307,15 @@ explicitly');
         // Set SKEW high so stores will keep our nonces.
         $Auth_OpenID_SKEW = 100000;
 
-        $params = Auth_OpenID_splitNonce($old_nonce1);
+        $params = \Auth\OpenID\splitNonce($old_nonce1);
         array_unshift($params, $server_url);
         $this->assertTrue(call_user_func_array(array($store, 'useNonce'), $params));
 
-        $params = Auth_OpenID_splitNonce($old_nonce2);
+        $params = \Auth\OpenID\splitNonce($old_nonce2);
         array_unshift($params, $server_url);
         $this->assertTrue(call_user_func_array(array($store, 'useNonce'), $params));
 
-        $params = Auth_OpenID_splitNonce($recent_nonce);
+        $params = \Auth\OpenID\splitNonce($recent_nonce);
         array_unshift($params, $server_url);
         $this->assertTrue(call_user_func_array(array($store, 'useNonce'), $params));
 
@@ -327,15 +327,15 @@ explicitly');
         // A roundabout method of checking that the old nonces were
         // cleaned is to see if we're allowed to add them again.
 
-        $params = Auth_OpenID_splitNonce($old_nonce1);
+        $params = \Auth\OpenID\splitNonce($old_nonce1);
         array_unshift($params, $server_url);
         $this->assertTrue(call_user_func_array(array($store, 'useNonce'), $params));
-        $params = Auth_OpenID_splitNonce($old_nonce2);
+        $params = \Auth\OpenID\splitNonce($old_nonce2);
         array_unshift($params, $server_url);
         $this->assertTrue(call_user_func_array(array($store, 'useNonce'), $params));
 
         // The recent nonce wasn't cleaned, so it should still fail.
-        $params = Auth_OpenID_splitNonce($recent_nonce);
+        $params = \Auth\OpenID\splitNonce($recent_nonce);
         array_unshift($params, $server_url);
         $this->assertFalse(call_user_func_array(array($store, 'useNonce'), $params));
 

@@ -34,8 +34,8 @@ $identifier = getOpenIDIdentifier();
 <?
 if ($identifier) {
 
-    $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
-    list($normalized_identifier, $endpoints) = Auth_OpenID_discover(
+    $fetcher = \Auth\Yadis\Yadis::getHTTPFetcher();
+    list($normalized_identifier, $endpoints) = \Auth\OpenID\discover(
         $identifier, $fetcher);
 
 ?>

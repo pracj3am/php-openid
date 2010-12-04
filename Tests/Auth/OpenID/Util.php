@@ -86,11 +86,11 @@ class Tests_Auth_OpenID_Util extends PHPUnit_TestCase {
 
         foreach ($cases as $pair) {
             list($orig, $after) = $pair;
-            list($base, $frag) = Auth_OpenID::urldefrag($orig);
+            list($base, $frag) = \Auth\OpenID::urldefrag($orig);
             $this->assertEquals($after, $base);
             $this->assertEquals($frag, '');
 
-            list($base, $frag) = Auth_OpenID::urldefrag($orig . "#fragment");
+            list($base, $frag) = \Auth\OpenID::urldefrag($orig . "#fragment");
             $this->assertEquals($after, $base);
             $this->assertEquals('fragment', $frag);
         }
@@ -99,44 +99,44 @@ class Tests_Auth_OpenID_Util extends PHPUnit_TestCase {
     function test_normalizeUrl()
     {
         $this->assertEquals("http://foo.com/",
-                            Auth_OpenID::normalizeUrl("foo.com"));
+                            \Auth\OpenID::normalizeUrl("foo.com"));
 
         $this->assertEquals("http://foo.com/",
-                            Auth_OpenID::normalizeUrl("http://foo.com"));
+                            \Auth\OpenID::normalizeUrl("http://foo.com"));
 
         $this->assertEquals("https://foo.com/",
-                            Auth_OpenID::normalizeUrl("https://foo.com"));
+                            \Auth\OpenID::normalizeUrl("https://foo.com"));
 
         $this->assertEquals("http://foo.com/bar",
-                            Auth_OpenID::normalizeUrl("foo.com/bar"));
+                            \Auth\OpenID::normalizeUrl("foo.com/bar"));
 
         $this->assertEquals("http://foo.com/bar",
-                            Auth_OpenID::normalizeUrl("http://foo.com/bar"));
+                            \Auth\OpenID::normalizeUrl("http://foo.com/bar"));
 
         $this->assertEquals("http://foo.com/",
-                            Auth_OpenID::normalizeUrl("http://foo.com/"));
+                            \Auth\OpenID::normalizeUrl("http://foo.com/"));
 
         $this->assertEquals("https://foo.com/",
-                            Auth_OpenID::normalizeUrl("https://foo.com/"));
+                            \Auth\OpenID::normalizeUrl("https://foo.com/"));
 
         $this->assertEquals("https://foo.com/bar" ,
-                            Auth_OpenID::normalizeUrl("https://foo.com/bar"));
+                            \Auth\OpenID::normalizeUrl("https://foo.com/bar"));
 
         $this->assertEquals("http://foo.com/bar" ,
-                            Auth_OpenID::normalizeUrl("HTtp://foo.com/bar"));
+                            \Auth\OpenID::normalizeUrl("HTtp://foo.com/bar"));
 
         $this->assertEquals("http://foo.com/bar" ,
-             Auth_OpenID::normalizeUrl("HTtp://foo.com/bar#fraggle"));
+             \Auth\OpenID::normalizeUrl("HTtp://foo.com/bar#fraggle"));
 
         $this->assertEquals("http://foo.com/bAr/" ,
-             Auth_OpenID::normalizeUrl("HTtp://fOo.com/bAr/.#fraggle"));
+             \Auth\OpenID::normalizeUrl("HTtp://fOo.com/bAr/.#fraggle"));
 
         if (0) {
             $this->assertEquals("http://foo.com/%E8%8D%89",
-                           Auth_OpenID::normalizeUrl("foo.com/\u8349"));
+                           \Auth\OpenID::normalizeUrl("foo.com/\u8349"));
 
             $this->assertEquals("http://foo.com/%E8%8D%89",
-                           Auth_OpenID::normalizeUrl("http://foo.com/\u8349"));
+                           \Auth\OpenID::normalizeUrl("http://foo.com/\u8349"));
         }
 
         $non_ascii_domain_cases = array(
@@ -171,16 +171,16 @@ class Tests_Auth_OpenID_Util extends PHPUnit_TestCase {
 
     for expected, case in non_ascii_domain_cases:
 try:
-actual = Auth_OpenID::normalizeUrl(case)
+actual = \Auth\OpenID::normalizeUrl(case)
          except UnicodeError:
             assert should_raise
     else:
 assert not should_raise and actual == expected, case
         */
 
-        $this->assertNull(Auth_OpenID::normalizeUrl(null));
-        $this->assertNull(Auth_OpenID::normalizeUrl(''));
-        $this->assertNull(Auth_OpenID::normalizeUrl('http://'));
+        $this->assertNull(\Auth\OpenID::normalizeUrl(null));
+        $this->assertNull(\Auth\OpenID::normalizeUrl(''));
+        $this->assertNull(\Auth\OpenID::normalizeUrl('http://'));
     }
 
     function test_appendArgs()
@@ -283,7 +283,7 @@ assert not should_raise and actual == expected, case
             list($desc, $data, $expected) = $case;
             list($url, $query) = $data;
             $this->assertEquals($expected,
-                    Auth_OpenID::appendArgs($url, $query));
+                    \Auth\OpenID::appendArgs($url, $query));
         }
     }
 
@@ -303,7 +303,7 @@ assert not should_raise and actual == expected, case
                          );
 
         foreach ($queries as $s => $data) {
-            $query = Auth_OpenID::getQuery($s);
+            $query = \Auth\OpenID::getQuery($s);
 
             foreach ($data as $key => $value) {
                 $this->assertTrue($query[$key] === $value);

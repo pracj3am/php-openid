@@ -24,7 +24,7 @@ class Tests_Auth_Yadis_ParseTest extends PHPUnit_TestCase {
         $this->result = $result;
         $this->comment = $comment;
         $this->html_string = $html;
-        $this->parser = new Auth_Yadis_ParseHTML();
+        $this->parser = new \Auth\Yadis\ParseHTML();
     }
 
     function getName()

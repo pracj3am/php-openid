@@ -1,5 +1,5 @@
 <?php
-
+namespace Auth\OpenID\Store;
 /**
  * A PostgreSQL store.
  *
@@ -16,7 +16,7 @@ require_once "Auth/OpenID/Store/SQL.php";
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_PostgreSQL extends Auth_OpenID_Store_SQL {
+class PostgreSQL extends \Auth\OpenID\Store\SQL {
     /**
      * @access private
      */

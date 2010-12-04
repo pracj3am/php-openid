@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID\Store;
 
 /**
  * A MySQL store.
@@ -16,7 +17,7 @@ require_once "Auth/OpenID/Store/SQL.php";
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_MySQL extends Auth_OpenID_Store_SQL {
+class MySQL extends \Auth\OpenID\Store\SQL {
 
     /**
      * @access private

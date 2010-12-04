@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * This is the HMACSHA1 implementation for the OpenID library.
@@ -20,9 +21,9 @@ require_once 'Auth/OpenID.php';
  * SHA1_BLOCKSIZE is this module's SHA1 blocksize used by the fallback
  * implementation.
  */
-define('Auth_OpenID_SHA1_BLOCKSIZE', 64);
+define('Auth\OpenID\SHA1_BLOCKSIZE', 64);
 
-function Auth_OpenID_SHA1($text)
+function SHA1($text)
 {
     if (function_exists('hash') &&
         function_exists('hash_algos') &&
@@ -54,45 +55,45 @@ function Auth_OpenID_SHA1($text)
  * @param string $text The message text to hash
  * @return string $mac The MAC
  */
-function Auth_OpenID_HMACSHA1($key, $text)
+function HMACSHA1($key, $text)
 {
-    if (Auth_OpenID::bytes($key) > Auth_OpenID_SHA1_BLOCKSIZE) {
-        $key = Auth_OpenID_SHA1($key, true);
+    if (\Auth\OpenID::bytes($key) > SHA1_BLOCKSIZE) {
+        $key = SHA1($key, true);
     }
 
-    $key = str_pad($key, Auth_OpenID_SHA1_BLOCKSIZE, chr(0x00));
-    $ipad = str_repeat(chr(0x36), Auth_OpenID_SHA1_BLOCKSIZE);
-    $opad = str_repeat(chr(0x5c), Auth_OpenID_SHA1_BLOCKSIZE);
-    $hash1 = Auth_OpenID_SHA1(($key ^ $ipad) . $text, true);
-    $hmac = Auth_OpenID_SHA1(($key ^ $opad) . $hash1, true);
+    $key = str_pad($key, SHA1_BLOCKSIZE, chr(0x00));
+    $ipad = str_repeat(chr(0x36), SHA1_BLOCKSIZE);
+    $opad = str_repeat(chr(0x5c), SHA1_BLOCKSIZE);
+    $hash1 = SHA1(($key ^ $ipad) . $text, true);
+    $hmac = SHA1(($key ^ $opad) . $hash1, true);
     return $hmac;
 }
 
 if (function_exists('hash') &&
     function_exists('hash_algos') &&
     (in_array('sha256', hash_algos()))) {
-    function Auth_OpenID_SHA256($text)
+    function SHA256($text)
     {
         // PHP 5 case: 'hash' available and 'sha256' algo supported.
         return hash('sha256', $text, true);
     }
-    define('Auth_OpenID_SHA256_SUPPORTED', true);
+    define('Auth\OpenID\SHA256_SUPPORTED', true);
 } else {
-    define('Auth_OpenID_SHA256_SUPPORTED', false);
+    define('Auth\OpenID\SHA256_SUPPORTED', false);
 }
 
 if (function_exists('hash_hmac') &&
     function_exists('hash_algos') &&
     (in_array('sha256', hash_algos()))) {
 
-    function Auth_OpenID_HMACSHA256($key, $text)
+    function HMACSHA256($key, $text)
     {
         // Return raw MAC (not hex string).
         return hash_hmac('sha256', $text, $key, true);
     }
 
-    define('Auth_OpenID_HMACSHA256_SUPPORTED', true);
+    define('Auth\OpenID\HMACSHA256_SUPPORTED', true);
 } else {
-    define('Auth_OpenID_HMACSHA256_SUPPORTED', false);
+    define('Auth\OpenID\HMACSHA256_SUPPORTED', false);
 }
 

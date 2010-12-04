@@ -17,26 +17,26 @@ class Tests_Auth_Yadis_XriDiscoveryTestCase extends PHPUnit_TestCase {
     function runTest()
     {
         $this->assertEquals(
-               Auth_Yadis_identifierScheme('=john.smith'), 'XRI');
+               \Auth\Yadis\identifierScheme('=john.smith'), 'XRI');
 
         $this->assertEquals(
-               Auth_Yadis_identifierScheme(''), 'URI');
+               \Auth\Yadis\identifierScheme(''), 'URI');
 
         $this->assertEquals(
-               Auth_Yadis_identifierScheme('@smiths/john'), 'XRI');
+               \Auth\Yadis\identifierScheme('@smiths/john'), 'XRI');
 
         $this->assertEquals(
-               Auth_Yadis_identifierScheme('smoker.myopenid.com'), 'URI');
+               \Auth\Yadis\identifierScheme('smoker.myopenid.com'), 'URI');
 
         $this->assertEquals(
-               Auth_Yadis_identifierScheme('xri://=john'), 'XRI');
+               \Auth\Yadis\identifierScheme('xri://=john'), 'XRI');
     }
 }
 
 class Tests_Auth_Yadis_XriEscapingTestCase extends PHPUnit_TestCase {
     function test_escaping_percents()
     {
-        $this->assertEquals(Auth_Yadis_escapeForIRI('@example/abc%2Fd/ef'),
+        $this->assertEquals(\Auth\Yadis\escapeForIRI('@example/abc%2Fd/ef'),
                             '@example/abc%252Fd/ef');
     }
 
@@ -44,18 +44,18 @@ class Tests_Auth_Yadis_XriEscapingTestCase extends PHPUnit_TestCase {
     {
         // no escapes
         $this->assertEquals('@example/foo/(@bar)',
-               Auth_Yadis_escapeForIRI('@example/foo/(@bar)'));
+               \Auth\Yadis\escapeForIRI('@example/foo/(@bar)'));
 
         // escape slashes
         $this->assertEquals('@example/foo/(@bar%2Fbaz)',
-               Auth_Yadis_escapeForIRI('@example/foo/(@bar/baz)'));
+               \Auth\Yadis\escapeForIRI('@example/foo/(@bar/baz)'));
 
         $this->assertEquals('@example/foo/(@bar%2Fbaz)/(+a%2Fb)',
-               Auth_Yadis_escapeForIRI('@example/foo/(@bar/baz)/(+a/b)'));
+               \Auth\Yadis\escapeForIRI('@example/foo/(@bar/baz)/(+a/b)'));
 
         // escape query ? and fragment
         $this->assertEquals('@example/foo/(@baz%3Fp=q%23r)?i=j#k',
-               Auth_Yadis_escapeForIRI('@example/foo/(@baz?p=q#r)?i=j#k'));
+               \Auth\Yadis\escapeForIRI('@example/foo/(@baz?p=q#r)?i=j#k'));
     }
 }
 
@@ -63,8 +63,8 @@ class Tests_Auth_Yadis_ProxyQueryTestCase extends PHPUnit_TestCase {
     function setUp()
     {
         $this->proxy_url = 'http://xri.example.com/';
-        $this->fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
-        $this->proxy = new Auth_Yadis_ProxyResolver($this->fetcher,
+        $this->fetcher = \Auth\Yadis\Yadis::getHTTPFetcher();
+        $this->proxy = new \Auth\Yadis\ProxyResolver($this->fetcher,
                                                         $this->proxy_url);
         $this->servicetype = 'xri://+i-service*(+forwarding)*($v*1.0)';
         $this->servicetype_enc = 'xri%3A%2F%2F%2Bi-service%2A%28%2Bforwarding%29%2A%28%24v%2A1.0%29';
@@ -118,8 +118,8 @@ class Tests_Auth_Yadis_TestGetRootAuthority extends PHPUnit_TestCase {
 
         foreach ($xris as $tupl) {
             list($thexri, $expected_root) = $tupl;
-            $this->assertEquals(Auth_Yadis_XRI($expected_root),
-                                Auth_Yadis_rootAuthority($thexri),
+            $this->assertEquals(\Auth\Yadis\XRI($expected_root),
+                                \Auth\Yadis\rootAuthority($thexri),
                                 'rootAuthority test ('.$thexri.')');
         }
     }

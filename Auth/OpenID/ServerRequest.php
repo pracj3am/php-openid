@@ -1,8 +1,9 @@
 <?php
+namespace Auth\OpenID;
 /**
  * OpenID Server Request
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  *
  * PHP versions 4 and 5
  *
@@ -24,10 +25,10 @@ require_once "Auth/OpenID.php";
  *
  * With accessor functions to get at the internal request data.
  *
- * @see Auth_OpenID_Server
+ * @see \Auth\OpenID\Server
  * @package OpenID
  */
-class Auth_OpenID_ServerRequest {
+class ServerRequest {
     public function __construct()
     {
         $this->mode = null;

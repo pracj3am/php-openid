@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID\Store;
 
 /**
  * This file supplies a memcached store backend for OpenID servers and
@@ -33,10 +34,10 @@ require_once 'Auth/OpenID/Store.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_Memcached extends Auth_OpenID_Store {
+class Memcached extends \Auth\OpenID\Store {
 
     /**
-     * Initializes a new {@link Auth_OpenID_MemcachedStore} instance.
+     * Initializes a new {@link \Auth\OpenID\MemcachedStore} instance.
      * Just saves memcached object as property.
      *
      * @param resource connection Memcache connection resourse

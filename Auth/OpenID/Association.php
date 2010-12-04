@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * This module contains code for dealing with associations between
@@ -33,7 +34,7 @@ require_once 'Auth/OpenID/HMAC.php';
  * This class represents an association between a server and a
  * consumer.  In general, users of this library will never see
  * instances of this object.  The only exception is if you implement a
- * custom {@link Auth_OpenID_OpenIDStore}.
+ * custom {@link \Auth\OpenID\OpenIDStore}.
  *
  * If you do implement such a store, it will need to store the values
  * of the handle, secret, issued, lifetime, and assoc_type instance
@@ -41,7 +42,7 @@ require_once 'Auth/OpenID/HMAC.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_Association {
+class Association {
 
     /**
      * This is a HMAC-SHA1 specific value.
@@ -65,8 +66,8 @@ class Auth_OpenID_Association {
                             );
 
     public $_macs = array(
-                       'HMAC-SHA1' => 'Auth_OpenID_HMACSHA1',
-                       'HMAC-SHA256' => 'Auth_OpenID_HMACSHA256'
+                       'HMAC-SHA1' => '\Auth\OpenID\HMACSHA1',
+                       'HMAC-SHA256' => '\Auth\OpenID\HMACSHA256'
                        );
 
     /**
@@ -91,14 +92,14 @@ class Auth_OpenID_Association {
      * this time is 'HMAC-SHA1' and 'HMAC-SHA256', but new types may
      * be defined in the future.
      *
-     * @return association An {@link Auth_OpenID_Association}
+     * @return association An {@link \Auth\OpenID\Association}
      * instance.
      */
     static function fromExpiresIn($expires_in, $handle, $secret, $assoc_type)
     {
         $issued = time();
         $lifetime = $expires_in;
-        return new Auth_OpenID_Association($handle, $secret,
+        return new Association($handle, $secret,
                                            $issued, $lifetime, $assoc_type);
     }
 
@@ -132,7 +133,7 @@ class Auth_OpenID_Association {
         $handle, $secret, $issued, $lifetime, $assoc_type)
     {
         if (!in_array($assoc_type,
-                      Auth_OpenID_getSupportedAssociationTypes(), true)) {
+                      getSupportedAssociationTypes(), true)) {
             $fmt = 'Unsupported association type (%s)';
             trigger_error(sprintf($fmt, $assoc_type), E_USER_ERROR);
         }
@@ -161,7 +162,7 @@ class Auth_OpenID_Association {
     }
 
     /**
-     * This checks to see if two {@link Auth_OpenID_Association}
+     * This checks to see if two {@link \Auth\OpenID\Association}
      * instances represent the same association.
      *
      * @return bool $result true if the two instances represent the
@@ -196,7 +197,7 @@ class Auth_OpenID_Association {
 
         assert(array_keys($data) == $this->assoc_keys);
 
-        return Auth_OpenID_KVForm::fromArray($data, $strict = true);
+        return KVForm::fromArray($data, $strict = true);
     }
 
     /**
@@ -204,11 +205,11 @@ class Auth_OpenID_Association {
      * inverse of serialize.
      *
      * @param string $assoc_s Association as serialized by serialize()
-     * @return Auth_OpenID_Association $result instance of this class
+     * @return Association $result instance of this class
      */
     static function deserialize($class_name, $assoc_s)
     {
-        $pairs = Auth_OpenID_KVForm::toArray($assoc_s, $strict = true);
+        $pairs = KVForm::toArray($assoc_s, $strict = true);
         $keys = array();
         $values = array();
         foreach ($pairs as $key => $value) {
@@ -262,7 +263,7 @@ class Auth_OpenID_Association {
      */
     function sign($pairs)
     {
-        $kv = Auth_OpenID_KVForm::fromArray($pairs);
+        $kv = KVForm::fromArray($pairs);
 
         /* Invalid association types should be caught at constructor */
         $callback = $this->_macs[$this->assoc_type];
@@ -282,13 +283,13 @@ class Auth_OpenID_Association {
      */
     function signMessage($message)
     {
-        if ($message->hasKey(Auth_OpenID_OPENID_NS, 'sig') ||
-            $message->hasKey(Auth_OpenID_OPENID_NS, 'signed')) {
+        if ($message->hasKey(OPENID_NS, 'sig') ||
+            $message->hasKey(OPENID_NS, 'signed')) {
             // Already has a sig
             return null;
         }
 
-        $extant_handle = $message->getArg(Auth_OpenID_OPENID_NS,
+        $extant_handle = $message->getArg(OPENID_NS,
                                           'assoc_handle');
 
         if ($extant_handle && ($extant_handle != $this->handle)) {
@@ -297,7 +298,7 @@ class Auth_OpenID_Association {
         }
 
         $signed_message = $message;
-        $signed_message->setArg(Auth_OpenID_OPENID_NS, 'assoc_handle',
+        $signed_message->setArg(OPENID_NS, 'assoc_handle',
                                 $this->handle);
 
         $message_keys = array_keys($signed_message->toPostArgs());
@@ -313,15 +314,15 @@ class Auth_OpenID_Association {
         $signed_list[] = 'signed';
         sort($signed_list);
 
-        $signed_message->setArg(Auth_OpenID_OPENID_NS, 'signed',
+        $signed_message->setArg(OPENID_NS, 'signed',
                                 implode(',', $signed_list));
         $sig = $this->getMessageSignature($signed_message);
-        $signed_message->setArg(Auth_OpenID_OPENID_NS, 'sig', $sig);
+        $signed_message->setArg(OPENID_NS, 'sig', $sig);
         return $signed_message;
     }
 
     /**
-     * Given a {@link Auth_OpenID_Message}, return the key/value pairs
+     * Given a {@link \Auth\OpenID\Message}, return the key/value pairs
      * to be signed according to the signed list in the message.  If
      * the message lacks a signed list, return null.
      *
@@ -329,8 +330,8 @@ class Auth_OpenID_Association {
      */
     private function _makePairs($message)
     {
-        $signed = $message->getArg(Auth_OpenID_OPENID_NS, 'signed');
-        if (!$signed || Auth_OpenID::isFailure($signed)) {
+        $signed = $message->getArg(OPENID_NS, 'signed');
+        if (!$signed || \Auth\OpenID::isFailure($signed)) {
             // raise ValueError('Message has no signed list: %s' % (message,))
             return null;
         }
@@ -339,7 +340,7 @@ class Auth_OpenID_Association {
         $pairs = array();
         $data = $message->toPostArgs();
         foreach ($signed_list as $field) {
-            $pairs[] = array($field, Auth_OpenID::arrayGet($data,
+            $pairs[] = array($field, \Auth\OpenID::arrayGet($data,
                                                            'openid.' .
                                                            $field, ''));
         }
@@ -347,7 +348,7 @@ class Auth_OpenID_Association {
     }
 
     /**
-     * Given an {@link Auth_OpenID_Message}, return the signature for
+     * Given an {@link \Auth\OpenID\Message}, return the signature for
      * the signed list in the message.
      *
      * @access private
@@ -366,19 +367,19 @@ class Auth_OpenID_Association {
      */
     function checkMessageSignature($message)
     {
-        $sig = $message->getArg(Auth_OpenID_OPENID_NS,
+        $sig = $message->getArg(OPENID_NS,
                                 'sig');
 
-        if (!$sig || Auth_OpenID::isFailure($sig)) {
+        if (!$sig || \Auth\OpenID::isFailure($sig)) {
             return false;
         }
 
         $calculated_sig = $this->getMessageSignature($message);
-        return Auth_OpenID_CryptUtil::constEq($calculated_sig, $sig);
+        return CryptUtil::constEq($calculated_sig, $sig);
     }
 }
 
-function Auth_OpenID_getSecretSize($assoc_type)
+function getSecretSize($assoc_type)
 {
     if ($assoc_type == 'HMAC-SHA1') {
         return 20;
@@ -389,75 +390,75 @@ function Auth_OpenID_getSecretSize($assoc_type)
     }
 }
 
-function Auth_OpenID_getAllAssociationTypes()
+function getAllAssociationTypes()
 {
     return array('HMAC-SHA1', 'HMAC-SHA256');
 }
 
-function Auth_OpenID_getSupportedAssociationTypes()
+function getSupportedAssociationTypes()
 {
     $a = array('HMAC-SHA1');
 
-    if (Auth_OpenID_HMACSHA256_SUPPORTED) {
+    if (HMACSHA256_SUPPORTED) {
         $a[] = 'HMAC-SHA256';
     }
 
     return $a;
 }
 
-function Auth_OpenID_getSessionTypes($assoc_type)
+function getSessionTypes($assoc_type)
 {
     $assoc_to_session = array(
        'HMAC-SHA1' => array('DH-SHA1', 'no-encryption'));
 
-    if (Auth_OpenID_HMACSHA256_SUPPORTED) {
+    if (HMACSHA256_SUPPORTED) {
         $assoc_to_session['HMAC-SHA256'] =
             array('DH-SHA256', 'no-encryption');
     }
 
-    return Auth_OpenID::arrayGet($assoc_to_session, $assoc_type, array());
+    return \Auth\OpenID::arrayGet($assoc_to_session, $assoc_type, array());
 }
 
-function Auth_OpenID_checkSessionType($assoc_type, $session_type)
+function checkSessionType($assoc_type, $session_type)
 {
     if (!in_array($session_type,
-                  Auth_OpenID_getSessionTypes($assoc_type))) {
+                  getSessionTypes($assoc_type))) {
         return false;
     }
 
     return true;
 }
 
-function Auth_OpenID_getDefaultAssociationOrder()
+function getDefaultAssociationOrder()
 {
     $order = array();
 
-    if (!Auth_OpenID_noMathSupport()) {
+    if (!noMathSupport()) {
         $order[] = array('HMAC-SHA1', 'DH-SHA1');
 
-        if (Auth_OpenID_HMACSHA256_SUPPORTED) {
+        if (HMACSHA256_SUPPORTED) {
             $order[] = array('HMAC-SHA256', 'DH-SHA256');
         }
     }
 
     $order[] = array('HMAC-SHA1', 'no-encryption');
 
-    if (Auth_OpenID_HMACSHA256_SUPPORTED) {
+    if (HMACSHA256_SUPPORTED) {
         $order[] = array('HMAC-SHA256', 'no-encryption');
     }
 
     return $order;
 }
 
-function Auth_OpenID_getOnlyEncryptedOrder()
+function getOnlyEncryptedOrder()
 {
     $result = array();
 
-    foreach (Auth_OpenID_getDefaultAssociationOrder() as $pair) {
+    foreach (getDefaultAssociationOrder() as $pair) {
         list($assoc, $session) = $pair;
 
         if ($session != 'no-encryption') {
-            if (Auth_OpenID_HMACSHA256_SUPPORTED &&
+            if (HMACSHA256_SUPPORTED &&
                 ($assoc == 'HMAC-SHA256')) {
                 $result[] = $pair;
             } else if ($assoc != 'HMAC-SHA256') {
@@ -469,22 +470,22 @@ function Auth_OpenID_getOnlyEncryptedOrder()
     return $result;
 }
 
-function Auth_OpenID_getDefaultNegotiator()
+function getDefaultNegotiator()
 {
-    return new Auth_OpenID_SessionNegotiator(
-                 Auth_OpenID_getDefaultAssociationOrder());
+    return new SessionNegotiator(
+                 getDefaultAssociationOrder());
 }
 
-function Auth_OpenID_getEncryptedNegotiator()
+function getEncryptedNegotiator()
 {
-    return new Auth_OpenID_SessionNegotiator(
-                 Auth_OpenID_getOnlyEncryptedOrder());
+    return new SessionNegotiator(
+                 getOnlyEncryptedOrder());
 }
 
 /**
  * A session negotiator controls the allowed and preferred association
  * types and association session types. Both the {@link
- * Auth_OpenID_Consumer} and {@link Auth_OpenID_Server} use
+ * Consumer} and {@link Server} use
  * negotiators when creating associations.
  *
  * You can create and use negotiators if you:
@@ -522,7 +523,7 @@ function Auth_OpenID_getEncryptedNegotiator()
  *
  * @package OpenID
  */
-class Auth_OpenID_SessionNegotiator {
+class SessionNegotiator {
     public function __construct($allowed_types)
     {
         $this->allowed_types = array();
@@ -539,7 +540,7 @@ class Auth_OpenID_SessionNegotiator {
     {
         foreach ($allowed_types as $pair) {
             list($assoc_type, $session_type) = $pair;
-            if (!Auth_OpenID_checkSessionType($assoc_type, $session_type)) {
+            if (!checkSessionType($assoc_type, $session_type)) {
                 return false;
             }
         }
@@ -562,7 +563,7 @@ class Auth_OpenID_SessionNegotiator {
         }
 
         if ($session_type === null) {
-            $available = Auth_OpenID_getSessionTypes($assoc_type);
+            $available = getSessionTypes($assoc_type);
 
             if (!$available) {
                 return false;
@@ -572,7 +573,7 @@ class Auth_OpenID_SessionNegotiator {
                 $this->addAllowedType($assoc_type, $session_type);
             }
         } else {
-            if (Auth_OpenID_checkSessionType($assoc_type, $session_type)) {
+            if (checkSessionType($assoc_type, $session_type)) {
                 $this->allowed_types[] = array($assoc_type, $session_type);
             } else {
                 return false;
@@ -589,7 +590,7 @@ class Auth_OpenID_SessionNegotiator {
                                $this->allowed_types);
 
         $matches = in_array($session_type,
-                            Auth_OpenID_getSessionTypes($assoc_type));
+                            getSessionTypes($assoc_type));
 
         return ($assoc_good && $matches);
     }

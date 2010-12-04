@@ -32,7 +32,7 @@ class OpenIDTestMixin extends PHPUnit_TestCase {
     function failUnlessOpenIDValueEquals($msg, $key, $expected, $ns=null)
     {
         if ($ns === null) {
-            $ns = Auth_OpenID_OPENID_NS;
+            $ns = \Auth\OpenID\OPENID_NS;
         }
 
         $actual = $msg->getArg($ns, $key);
@@ -46,7 +46,7 @@ class OpenIDTestMixin extends PHPUnit_TestCase {
     function failIfOpenIDKeyExists($msg, $key, $ns=null)
     {
         if ($ns === null) {
-            $ns = Auth_OpenID_OPENID_NS;
+            $ns = \Auth\OpenID\OPENID_NS;
         }
 
         $actual = $msg->getArg($ns, $key);

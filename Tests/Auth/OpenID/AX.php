@@ -9,7 +9,7 @@ require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID/Consumer.php";
 require_once "Auth/OpenID/Server.php";
 
-class BogusAXMessage extends Auth_OpenID_AX_Message {
+class BogusAXMessage extends \Auth\OpenID\AX_Message {
     public $mode = 'bogus';
 
     function getExtensionArgs()
@@ -27,10 +27,10 @@ class AXMessageTest extends PHPUnit_TestCase {
     function test_checkMode()
     {
         $result = $this->bax->_checkMode(array());
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
 
         $result = $this->bax->_checkMode(array('mode' => 'fetch_request'));
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
 
         // does not raise an exception when the mode is right
         $result = $this->bax->_checkMode(array('mode' => $this->bax->mode));
@@ -51,7 +51,7 @@ class AttrInfoTest extends PHPUnit_TestCase {
     function test_construct()
     {
         $type_uri = 'a uri';
-        $ainfo = Auth_OpenID_AX_AttrInfo::make($type_uri);
+        $ainfo = \Auth\OpenID\AX_AttrInfo::make($type_uri);
 
         $this->assertEquals($type_uri, $ainfo->type_uri);
         $this->assertEquals(1, $ainfo->count);
@@ -63,22 +63,22 @@ class AttrInfoTest extends PHPUnit_TestCase {
 class ToTypeURIsTest extends PHPUnit_TestCase {
     function setUp()
     {
-        $this->aliases = new Auth_OpenID_NamespaceMap();
+        $this->aliases = new \Auth\OpenID\NamespaceMap();
     }
 
     function test_empty()
     {
         foreach (array(null, '') as $empty) {
-            $uris = Auth_OpenID_AX_toTypeURIs($this->aliases, $empty);
+            $uris = \Auth\OpenID\AX_toTypeURIs($this->aliases, $empty);
             $this->assertEquals(array(), $uris);
         }
     }
 
     function test_undefined()
     {
-        $result = Auth_OpenID_AX_toTypeURIs($this->aliases,
+        $result = \Auth\OpenID\AX_toTypeURIs($this->aliases,
                                             'http://janrain.com/');
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
     }
 
     function test_one()
@@ -86,7 +86,7 @@ class ToTypeURIsTest extends PHPUnit_TestCase {
         $uri = 'http://janrain.com/';
         $alias = 'openid_hackers';
         $this->aliases->addAlias($uri, $alias);
-        $uris = Auth_OpenID_AX_toTypeURIs($this->aliases, $alias);
+        $uris = \Auth\OpenID\AX_toTypeURIs($this->aliases, $alias);
         $this->assertEquals(array($uri), $uris);
     }
 
@@ -100,7 +100,7 @@ class ToTypeURIsTest extends PHPUnit_TestCase {
         $alias2 = 'openid_hack';
         $this->aliases->addAlias($uri2, $alias2);
 
-        $uris = Auth_OpenID_AX_toTypeURIs($this->aliases,
+        $uris = \Auth\OpenID\AX_toTypeURIs($this->aliases,
                                           implode(',', array($alias1, $alias2)));
         $this->assertEquals(array($uri1, $uri2), $uris);
     }
@@ -109,15 +109,15 @@ class ToTypeURIsTest extends PHPUnit_TestCase {
 class ParseAXValuesTest extends PHPUnit_TestCase {
     function failUnlessAXKeyError($ax_args)
     {
-        $msg = new Auth_OpenID_AX_KeyValueMessage();
+        $msg = new \Auth\OpenID\AX_KeyValueMessage();
         $result = $msg->parseExtensionArgs($ax_args);
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
         $this->assertTrue($result->message);
     }
 
     function failUnlessAXValues($ax_args, $expected_args)
     {
-        $msg = new Auth_OpenID_AX_KeyValueMessage();
+        $msg = new \Auth\OpenID\AX_KeyValueMessage();
         $msg->parseExtensionArgs($ax_args);
         $this->assertEquals($expected_args, $msg->data);
     }
@@ -130,8 +130,8 @@ class ParseAXValuesTest extends PHPUnit_TestCase {
     function test_invalidAlias()
     {
         $types = array(
-                       'Auth_OpenID_AX_KeyValueMessage',
-                       'Auth_OpenID_AX_FetchRequest'
+                       '\Auth\OpenID\AX_KeyValueMessage',
+                       '\Auth\OpenID\AX_FetchRequest'
                        );
 
         $inputs = array(
@@ -145,7 +145,7 @@ class ParseAXValuesTest extends PHPUnit_TestCase {
             foreach ($inputs as $input) {
                 $msg = new $typ();
                 $result = $msg->parseExtensionArgs($input);
-                $this->assertTrue(Auth_OpenID_AX::isError($result));
+                $this->assertTrue(\Auth\OpenID\AX::isError($result));
             }
         }
     }
@@ -163,29 +163,29 @@ class ParseAXValuesTest extends PHPUnit_TestCase {
 
     function test_invalidCountValue()
     {
-        $msg = new Auth_OpenID_AX_FetchRequest();
+        $msg = new \Auth\OpenID\AX_FetchRequest();
 
         $result = $msg->parseExtensionArgs(
                     array('type.foo' => 'urn:foo',
                           'count.foo' => 'bogus'));
 
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
     }
 
     function test_requestUnlimitedValues()
     {
-        $msg = new Auth_OpenID_AX_FetchRequest();
+        $msg = new \Auth\OpenID\AX_FetchRequest();
 
         $result = $msg->parseExtensionArgs(
                array('mode' => 'fetch_request',
                      'required' => 'foo',
                      'type.foo' => 'urn:foo',
-                     'count.foo' => Auth_OpenID_AX_UNLIMITED_VALUES));
+                     'count.foo' => \Auth\OpenID\AX_UNLIMITED_VALUES));
 
         $attrs = $msg->iterAttrs();
         $foo = $attrs[0];
 
-        $this->assertTrue($foo->count == Auth_OpenID_AX_UNLIMITED_VALUES);
+        $this->assertTrue($foo->count == \Auth\OpenID\AX_UNLIMITED_VALUES);
         $this->assertTrue($foo->wantsUnlimitedValues());
     }
 
@@ -193,15 +193,15 @@ class ParseAXValuesTest extends PHPUnit_TestCase {
     {
         // Spec minimum length is 32 characters.  This is a silly test
         // for this library, but it's here for completeness.
-        $alias = str_repeat('x', Auth_OpenID_AX_MINIMUM_SUPPORTED_ALIAS_LENGTH);
+        $alias = str_repeat('x', \Auth\OpenID\AX_MINIMUM_SUPPORTED_ALIAS_LENGTH);
 
-        $msg = new Auth_OpenID_AX_KeyValueMessage();
+        $msg = new \Auth\OpenID\AX_KeyValueMessage();
         $result = $msg->parseExtensionArgs(
                                  array('type.' . $alias => 'urn:foo',
                                        'count.' . $alias => '1',
                                        'value.'.$alias.'.1' => 'first')
                                  );
-        $this->assertFalse(Auth_OpenID_AX::isError($result));
+        $this->assertFalse(\Auth\OpenID\AX::isError($result));
     }
 
     function test_countPresentAndIsZero()
@@ -252,7 +252,7 @@ class ParseAXValuesTest extends PHPUnit_TestCase {
 class FetchRequestTest extends PHPUnit_TestCase {
     function setUp()
     {
-        $this->msg = new Auth_OpenID_AX_FetchRequest();
+        $this->msg = new \Auth\OpenID\AX_FetchRequest();
         $this->type_a = 'http://janrain.example.com/a';
         $this->alias_a = 'a';
     }
@@ -267,7 +267,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
         $this->assertEquals(array(), $this->msg->requested_attributes);
         $this->assertEquals(null, $this->msg->update_url);
 
-        $msg = new Auth_OpenID_AX_FetchRequest('hailstorm');
+        $msg = new \Auth\OpenID\AX_FetchRequest('hailstorm');
         $this->assertEquals(array(), $msg->requested_attributes);
         $this->assertEquals('hailstorm', $msg->update_url);
     }
@@ -279,7 +279,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
         // Not yet added:
         $this->assertFalse(in_array($uri, $this->msg->iterTypes()));
 
-        $attr = Auth_OpenID_AX_AttrInfo::make($uri);
+        $attr = \Auth\OpenID\AX_AttrInfo::make($uri);
         $this->msg->add($attr);
 
         // Present after adding
@@ -290,9 +290,9 @@ class FetchRequestTest extends PHPUnit_TestCase {
     {
         $uri = 'lightning://storm';
 
-        $attr = Auth_OpenID_AX_AttrInfo::make($uri);
+        $attr = \Auth\OpenID\AX_AttrInfo::make($uri);
         $this->msg->add($attr);
-        $this->assertTrue(Auth_OpenID_AX::isError($this->msg->add($attr)));
+        $this->assertTrue(\Auth\OpenID\AX::isError($this->msg->add($attr)));
     }
 
     function test_getExtensionArgs_empty()
@@ -305,7 +305,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
 
     function test_getExtensionArgs_noAlias()
     {
-        $attr = Auth_OpenID_AX_AttrInfo::make('type://of.transportation');
+        $attr = \Auth\OpenID\AX_AttrInfo::make('type://of.transportation');
 
         $this->msg->add($attr);
         $ax_args = $this->msg->getExtensionArgs();
@@ -332,7 +332,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
 
     function test_getExtensionArgs_alias_if_available()
     {
-        $attr = Auth_OpenID_AX_AttrInfo::make(
+        $attr = \Auth\OpenID\AX_AttrInfo::make(
                                               'type://of.transportation', 1, false,
                                               'transport');
 
@@ -344,7 +344,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
 
     function test_getExtensionArgs_alias_req()
     {
-        $attr = Auth_OpenID_AX_AttrInfo::make(
+        $attr = \Auth\OpenID\AX_AttrInfo::make(
             'type://of.transportation',
             1, true, 'transport');
 
@@ -382,7 +382,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
                                 'mode' => 'fetch_request',
                                 'type.' . $this->alias_a => $this->type_a);
 
-        $this->assertTrue(Auth_OpenID_AX::isError(
+        $this->assertTrue(\Auth\OpenID\AX::isError(
                $this->msg->parseExtensionArgs($extension_args)));
     }
 
@@ -395,7 +395,7 @@ class FetchRequestTest extends PHPUnit_TestCase {
 
         $this->msg->parseExtensionArgs($extension_args);
         $this->assertEquals(array($this->type_a), $this->msg->iterTypes());
-        $attr_info = Auth_OpenID::arrayGet($this->msg->requested_attributes,
+        $attr_info = \Auth\OpenID::arrayGet($this->msg->requested_attributes,
                                            $this->type_a);
         $this->assertTrue($attr_info);
         $this->assertFalse($attr_info->required);
@@ -453,66 +453,66 @@ class FetchRequestTest extends PHPUnit_TestCase {
 
     function test_openidNoRealm()
     {
-        $openid_req_msg = Auth_OpenID_Message::fromOpenIDArgs(array(
+        $openid_req_msg = \Auth\OpenID\Message::fromOpenIDArgs(array(
             'mode' => 'checkid_setup',
-            'ns' => Auth_OpenID_OPENID2_NS,
-            'ns.ax' => Auth_OpenID_AX_NS_URI,
+            'ns' => \Auth\OpenID\OPENID2_NS,
+            'ns.ax' => \Auth\OpenID\AX_NS_URI,
             'ax.update_url' => 'http://different.site/path',
             'ax.mode' => 'fetch_request',
             ));
-		$openid_req = new Auth_OpenID_Request();
+		$openid_req = new \Auth\OpenID\Request();
 		$openid_req->message =& $openid_req_msg;
-        $result = Auth_OpenID_AX_FetchRequest::fromOpenIDRequest(
+        $result = \Auth\OpenID\AX_FetchRequest::fromOpenIDRequest(
                                                      $openid_req);
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
     }
 
     function test_openidUpdateURLVerificationError()
     {
-        $openid_req_msg = Auth_OpenID_Message::fromOpenIDArgs(array(
+        $openid_req_msg = \Auth\OpenID\Message::fromOpenIDArgs(array(
             'mode' => 'checkid_setup',
-            'ns' => Auth_OpenID_OPENID2_NS,
+            'ns' => \Auth\OpenID\OPENID2_NS,
             'realm' => 'http://example.com/realm',
-            'ns.ax' => Auth_OpenID_AX_NS_URI,
+            'ns.ax' => \Auth\OpenID\AX_NS_URI,
             'ax.update_url' => 'http://different.site/path',
             'ax.mode' => 'fetch_request',
             ));
-		$openid_req = new Auth_OpenID_Request();
+		$openid_req = new \Auth\OpenID\Request();
 		$openid_req->message =& $openid_req_msg;
-        $result = Auth_OpenID_AX_FetchRequest::fromOpenIDRequest($openid_req);
-        $this->assertTrue(Auth_OpenID_AX::isError($result));
+        $result = \Auth\OpenID\AX_FetchRequest::fromOpenIDRequest($openid_req);
+        $this->assertTrue(\Auth\OpenID\AX::isError($result));
     }
 
     function test_openidUpdateURLVerificationSuccess()
     {
-        $openid_req_msg = Auth_OpenID_Message::fromOpenIDArgs(array(
+        $openid_req_msg = \Auth\OpenID\Message::fromOpenIDArgs(array(
             'mode' => 'checkid_setup',
-            'ns' => Auth_OpenID_OPENID2_NS,
+            'ns' => \Auth\OpenID\OPENID2_NS,
             'realm' => 'http://example.com/realm',
-            'ns.ax' => Auth_OpenID_AX_NS_URI,
+            'ns.ax' => \Auth\OpenID\AX_NS_URI,
             'ax.update_url' => 'http://example.com/realm/update_path',
             'ax.mode' => 'fetch_request',
             ));
-		$openid_req = new Auth_OpenID_Request();
+		$openid_req = new \Auth\OpenID\Request();
 		$openid_req->message =& $openid_req_msg;
-        $fr = Auth_OpenID_AX_FetchRequest::fromOpenIDRequest($openid_req);
-        $this->assertFalse(Auth_OpenID_AX::isError($fr));
+        $fr = \Auth\OpenID\AX_FetchRequest::fromOpenIDRequest($openid_req);
+        $this->assertFalse(\Auth\OpenID\AX::isError($fr));
     }
 
     function test_openidUpdateURLVerificationSuccessReturnTo()
     {
-        $openid_req_msg = Auth_OpenID_Message::fromOpenIDArgs(array(
+        $openid_req_msg = \Auth\OpenID\Message::fromOpenIDArgs(array(
             'mode' => 'checkid_setup',
-            'ns' => Auth_OpenID_OPENID2_NS,
+            'ns' => \Auth\OpenID\OPENID2_NS,
             'return_to' => 'http://example.com/realm',
-            'ns.ax' => Auth_OpenID_AX_NS_URI,
+            'ns.ax' => \Auth\OpenID\AX_NS_URI,
             'ax.update_url' => 'http://example.com/realm/update_path',
             'ax.mode' => 'fetch_request',
             ));
-		$openid_req = new Auth_OpenID_Request();
+		$openid_req = new \Auth\OpenID\Request();
 		$openid_req->message =& $openid_req_msg;
-        $fr = Auth_OpenID_AX_FetchRequest::fromOpenIDRequest($openid_req);
-        $this->assertFalse(Auth_OpenID_AX::isError($fr));
+        $fr = \Auth\OpenID\AX_FetchRequest::fromOpenIDRequest($openid_req);
+        $this->assertFalse(\Auth\OpenID\AX::isError($fr));
     }
 }
 
@@ -525,7 +525,7 @@ class FauxEndpoint {
 class FetchResponseTest extends PHPUnit_TestCase {
     function setUp()
     {
-        $this->msg = new Auth_OpenID_AX_FetchResponse();
+        $this->msg = new \Auth\OpenID\AX_FetchResponse();
         $this->value_a = 'monkeys';
         $this->type_a = 'http://phone.home/';
         $this->alias_a = 'robocop';
@@ -552,7 +552,7 @@ class FetchResponseTest extends PHPUnit_TestCase {
         $expected_args = array(
             'mode' => 'fetch_response',
                                );
-        $req = new Auth_OpenID_AX_FetchRequest();
+        $req = new \Auth\OpenID\AX_FetchRequest();
         $this->assertEquals($expected_args, $this->msg->getExtensionArgs($req));
     }
 
@@ -566,8 +566,8 @@ class FetchResponseTest extends PHPUnit_TestCase {
             'type.' . $alias => $uri,
             'count.' . $alias => '0'
                                );
-        $req = new Auth_OpenID_AX_FetchRequest();
-        $req->add(Auth_OpenID_AX_AttrInfo::make('http://not.found/'));
+        $req = new \Auth\OpenID\AX_FetchRequest();
+        $req->add(\Auth\OpenID\AX_AttrInfo::make('http://not.found/'));
         $this->assertEquals($expected_args, $this->msg->getExtensionArgs($req));
     }
 
@@ -582,8 +582,8 @@ class FetchResponseTest extends PHPUnit_TestCase {
             'type.' . $alias => $uri,
             'count.' . $alias => '0'
                                );
-        $req = new Auth_OpenID_AX_FetchRequest($this->request_update_url);
-        $req->add(Auth_OpenID_AX_AttrInfo::make($uri));
+        $req = new \Auth\OpenID\AX_FetchRequest($this->request_update_url);
+        $req->add(\Auth\OpenID\AX_AttrInfo::make($uri));
         $this->assertEquals($expected_args, $this->msg->getExtensionArgs($req));
     }
 
@@ -596,8 +596,8 @@ class FetchResponseTest extends PHPUnit_TestCase {
             'count.' . $this->alias_a => '1'
                                );
 
-        $req = new Auth_OpenID_AX_FetchRequest();
-        $req->add(Auth_OpenID_AX_AttrInfo::make($this->type_a, 1, false, $this->alias_a));
+        $req = new \Auth\OpenID\AX_FetchRequest();
+        $req->add(\Auth\OpenID\AX_AttrInfo::make($this->type_a, 1, false, $this->alias_a));
         $this->msg->addValue($this->type_a, $this->value_a);
 
         $result = $this->msg->getExtensionArgs($req);
@@ -606,14 +606,14 @@ class FetchResponseTest extends PHPUnit_TestCase {
 
     function test_getExtensionArgs_some_not_request()
     {
-        $req = new Auth_OpenID_AX_FetchRequest();
+        $req = new \Auth\OpenID\AX_FetchRequest();
         $this->msg->addValue($this->type_a, $this->value_a);
-        $this->assertTrue(Auth_OpenID_AX::isError($this->msg->getExtensionArgs($req)));
+        $this->assertTrue(\Auth\OpenID\AX::isError($this->msg->getExtensionArgs($req)));
     }
 
     function test_getSingle_success()
     {
-        $req = new Auth_OpenID_AX_FetchRequest();
+        $req = new \Auth\OpenID\AX_FetchRequest();
         $this->msg->addValue($this->type_a, $this->value_a);
         $this->assertEquals($this->value_a, $this->msg->getSingle($this->type_a));
     }
@@ -627,28 +627,28 @@ class FetchResponseTest extends PHPUnit_TestCase {
     {
         $data = array('x', 'y');
         $this->msg->setValues($this->type_a, $data);
-        $this->assertTrue(Auth_OpenID_AX::isError($this->msg->getSingle($this->type_a)));
+        $this->assertTrue(\Auth\OpenID\AX::isError($this->msg->getSingle($this->type_a)));
     }
 
     function test_get()
     {
-      $this->assertTrue(Auth_OpenID_AX::isError($this->msg->get($this->type_a)));
+      $this->assertTrue(\Auth\OpenID\AX::isError($this->msg->get($this->type_a)));
     }
 
     function test_fromSuccessResponseWithoutExtension()
     {
         $args = array(
                       'mode' => 'id_res',
-                      'ns' => Auth_OpenID_OPENID2_NS
+                      'ns' => \Auth\OpenID\OPENID2_NS
                      );
         $sf = array();
         foreach (array_keys($args) as $k) {
             array_push($sf, $k);
         }
-        $msg = Auth_OpenID_Message::fromOpenIDArgs($args);
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs($args);
         $e = new FauxEndpoint();
-        $resp = new Auth_OpenID_SuccessResponse($e, $msg, $sf);
-        $ax_resp = Auth_OpenID_AX_FetchResponse::fromSuccessResponse($resp);
+        $resp = new \Auth\OpenID\SuccessResponse($e, $msg, $sf);
+        $ax_resp = \Auth\OpenID\AX_FetchResponse::fromSuccessResponse($resp);
         $this->assertTrue($ax_resp === null);
     }
 
@@ -656,18 +656,18 @@ class FetchResponseTest extends PHPUnit_TestCase {
     {
         $args = array(
                       'mode' => 'id_res',
-                      'ns' => Auth_OpenID_OPENID2_NS,
-                      'ns.ax' => Auth_OpenID_AX_NS_URI,
+                      'ns' => \Auth\OpenID\OPENID2_NS,
+                      'ns.ax' => \Auth\OpenID\AX_NS_URI,
                       'ax.mode' => 'fetch_response',
                      );
         $sf = array();
         foreach (array_keys($args) as $k) {
             array_push($sf, $k);
         }
-        $msg = Auth_OpenID_Message::fromOpenIDArgs($args);
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs($args);
         $e = new FauxEndpoint();
-        $resp = new Auth_OpenID_SuccessResponse($e, $msg, $sf);
-        $ax_resp = Auth_OpenID_AX_FetchResponse::fromSuccessResponse($resp);
+        $resp = new \Auth\OpenID\SuccessResponse($e, $msg, $sf);
+        $ax_resp = \Auth\OpenID\AX_FetchResponse::fromSuccessResponse($resp);
         $this->assertTrue($ax_resp === null);
     }
 
@@ -678,8 +678,8 @@ class FetchResponseTest extends PHPUnit_TestCase {
         $uri = "http://david.bowie.name/";
         $args = array(
                       'mode' => 'id_res',
-                      'ns' => Auth_OpenID_OPENID2_NS,
-                      'ns.ax' => Auth_OpenID_AX_NS_URI,
+                      'ns' => \Auth\OpenID\OPENID2_NS,
+                      'ns.ax' => \Auth\OpenID\AX_NS_URI,
                       'ax.mode' => 'fetch_response',
                       'ax.update_url' => 'http://example.com/realm/update_path',
                       'ax.type.'.$name => $uri,
@@ -690,12 +690,12 @@ class FetchResponseTest extends PHPUnit_TestCase {
         foreach (array_keys($args) as $k) {
             array_push($sf, $k);
         }
-        $msg = Auth_OpenID_Message::fromOpenIDArgs($args);
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs($args);
         $e = new FauxEndpoint();
-        $resp = new Auth_OpenID_SuccessResponse($e, $msg, $sf);
-        $ax_resp = Auth_OpenID_AX_FetchResponse::fromSuccessResponse($resp, false);
+        $resp = new \Auth\OpenID\SuccessResponse($e, $msg, $sf);
+        $ax_resp = \Auth\OpenID\AX_FetchResponse::fromSuccessResponse($resp, false);
         $this->assertFalse($ax_resp === null);
-        $this->assertTrue(is_a($ax_resp, 'Auth_OpenID_AX_FetchResponse'));
+        $this->assertTrue(is_a($ax_resp, '\Auth\OpenID\AX_FetchResponse'));
         $values = $ax_resp->get($uri);
         $this->assertEquals(array($value), $values);
     }
@@ -704,7 +704,7 @@ class FetchResponseTest extends PHPUnit_TestCase {
 class StoreRequestTest extends PHPUnit_TestCase {
     function setUp()
     {
-        $this->msg = new Auth_OpenID_AX_StoreRequest();
+        $this->msg = new \Auth\OpenID\AX_StoreRequest();
         $this->type_a = 'http://three.count/';
         $this->alias_a = 'juggling';
     }
@@ -727,7 +727,7 @@ class StoreRequestTest extends PHPUnit_TestCase {
     {
         $data = array('foo', 'bar');
         $this->msg->setValues($this->type_a, $data);
-        $aliases = new Auth_OpenID_NamespaceMap();
+        $aliases = new \Auth\OpenID\NamespaceMap();
         $aliases->addAlias($this->type_a, $this->alias_a);
         $args = $this->msg->getExtensionArgs($aliases);
         $expected_args = array(
@@ -744,7 +744,7 @@ class StoreRequestTest extends PHPUnit_TestCase {
 class StoreResponseTest extends PHPUnit_TestCase {
     function test_success()
     {
-        $msg = new Auth_OpenID_AX_StoreResponse();
+        $msg = new \Auth\OpenID\AX_StoreResponse();
         $this->assertTrue($msg->succeeded());
         $this->assertFalse($msg->error_message);
         $this->assertEquals(array('mode' => 'store_response_success'),
@@ -753,7 +753,7 @@ class StoreResponseTest extends PHPUnit_TestCase {
 
     function test_fail_nomsg()
     {
-        $msg = new Auth_OpenID_AX_StoreResponse(false);
+        $msg = new \Auth\OpenID\AX_StoreResponse(false);
         $this->assertFalse($msg->succeeded());
         $this->assertFalse($msg->error_message);
         $this->assertEquals(array('mode' => 'store_response_failure'),
@@ -763,7 +763,7 @@ class StoreResponseTest extends PHPUnit_TestCase {
     function test_fail_msg()
     {
         $reason = 'no reason, really';
-        $msg = new Auth_OpenID_AX_StoreResponse(false, $reason);
+        $msg = new \Auth\OpenID\AX_StoreResponse(false, $reason);
         $this->assertFalse($msg->succeeded());
         $this->assertEquals($reason, $msg->error_message);
         $this->assertEquals(array('mode' => 'store_response_failure',

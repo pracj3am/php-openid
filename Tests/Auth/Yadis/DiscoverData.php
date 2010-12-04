@@ -138,7 +138,7 @@ function generateResult($base_url, $input_name, $id_name, $result_name, $success
 
     $id_url = $base_url . $id_name;
 
-    $result = new Auth_Yadis_Yadis();
+    $result = new \Auth\Yadis\Yadis();
     $result->uri = $id_url;
     if ($success) {
         $result->xrds_uri = $base_url . $result_name;

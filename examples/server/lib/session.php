@@ -82,7 +82,7 @@ function getServer()
 {
     static $server = null;
     if (!isset($server)) {
-        $server =& new Auth_OpenID_Server(getOpenIDStore(),
+        $server =& new \Auth\OpenID\Server(getOpenIDStore(),
                                           buildURL());
     }
     return $server;
@@ -93,7 +93,7 @@ function getServer()
  */
 function hashPassword($password)
 {
-    return bin2hex(Auth_OpenID_SHA1($password));
+    return bin2hex(\Auth\OpenID\SHA1($password));
 }
 
 /**

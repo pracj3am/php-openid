@@ -20,11 +20,11 @@ class Tests_Auth_OpenID_Association extends PHPUnit_TestCase {
     {
         $issued = time();
         $lifetime = 600;
-        $assoc = new Auth_OpenID_Association('handle', 'secret', $issued,
+        $assoc = new \Auth\OpenID\Association('handle', 'secret', $issued,
                                             $lifetime, 'HMAC-SHA1');
         $s = $assoc->serialize();
-        $assoc2 = Auth_OpenID_Association::deserialize(
-            'Auth_OpenID_Association', $s);
+        $assoc2 = \Auth\OpenID\Association::deserialize(
+            '\Auth\OpenID\Association', $s);
 
         if ($assoc2 === null) {
             $this->fail('deserialize returned null');
@@ -34,14 +34,14 @@ class Tests_Auth_OpenID_Association extends PHPUnit_TestCase {
     }
     function test_me256()
     {
-        if(!Auth_OpenID_HMACSHA256_SUPPORTED) return;
+        if(!\Auth\OpenID\HMACSHA256_SUPPORTED) return;
         $issued = time();
         $lifetime = 600;
-        $assoc = new Auth_OpenID_Association('handle', 'secret', $issued,
+        $assoc = new \Auth\OpenID\Association('handle', 'secret', $issued,
                                             $lifetime, 'HMAC-SHA256');
         $s = $assoc->serialize();
-        $assoc2 = Auth_OpenID_Association::deserialize(
-            'Auth_OpenID_Association', $s);
+        $assoc2 = \Auth\OpenID\Association::deserialize(
+            '\Auth\OpenID\Association', $s);
 
         if ($assoc2 === null) {
             $this->fail('deserialize returned null');

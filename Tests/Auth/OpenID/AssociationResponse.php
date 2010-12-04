@@ -15,7 +15,7 @@ $association_response_values = array(
     'assoc_handle' => 'a handle',
     'assoc_type' => 'a type',
     'session_type' => 'a session type',
-    'ns' => Auth_OpenID_OPENID2_NS
+    'ns' => \Auth\OpenID\OPENID2_NS
     );
 
 /**
@@ -35,27 +35,27 @@ function mkAssocResponse($keys)
         $args[$key] = $association_response_values[$key];
     }
 
-    return Auth_OpenID_Message::fromOpenIDArgs($args);
+    return \Auth\OpenID\Message::fromOpenIDArgs($args);
 }
 
 class Tests_Auth_OpenID_AssociationResponse extends PHPUnit_TestCase {
     function setUp()
     {
         $this->store = new Tests_Auth_OpenID_MemStore();
-        $this->consumer = new Auth_OpenID_GenericConsumer($this->store);
-        $this->endpoint = new Auth_OpenID_ServiceEndpoint();
+        $this->consumer = new \Auth\OpenID\GenericConsumer($this->store);
+        $this->endpoint = new \Auth\OpenID\ServiceEndpoint();
     }
 
     function failUnlessProtocolError($thing)
     {
-        $this->assertTrue(Auth_OpenID::isFailure($thing));
+        $this->assertTrue(\Auth\OpenID::isFailure($thing));
     }
 
     protected function _run($keys, $session_type_value=null, $openid1=false)
     {
         $msg = mkAssocResponse($keys);
         $dumb = null;
-        $this->assertTrue(Auth_OpenID::isFailure($this->consumer->_extractAssociation($msg, $dumb)));
+        $this->assertTrue(\Auth\OpenID::isFailure($this->consumer->_extractAssociation($msg, $dumb)));
     }
 }
 
@@ -139,7 +139,7 @@ class ExtractAssociationSessionTypeMismatch extends Tests_Auth_OpenID_Associatio
         }
 
         $msg = mkAssocResponse($keys);
-        $msg->setArg(Auth_OpenID_OPENID_NS, 'session_type',
+        $msg->setArg(\Auth\OpenID\OPENID_NS, 'session_type',
                      $response_session_type);
         $this->assertTrue(
            $this->consumer->_extractAssociation($msg, $assoc_session) === null);
@@ -191,7 +191,7 @@ class TestOpenID1AssociationResponseSessionType extends Tests_Auth_OpenID_Associ
         if ($session_type_value !== null) {
             $args['session_type'] = $session_type_value;
         }
-        $message = Auth_OpenID_Message::fromOpenIDArgs($args);
+        $message = \Auth\OpenID\Message::fromOpenIDArgs($args);
         $this->assertTrue($message->isOpenID1());
 
         $actual_session_type = $this->consumer->_getOpenID1SessionType($message);
@@ -261,12 +261,12 @@ class TestInvalidFields extends Tests_Auth_OpenID_AssociationResponse {
         $this->assoc_handle = 'testing-assoc-handle';
 
         // These arguments should all be valid
-        $this->assoc_response = Auth_OpenID_Message::fromOpenIDArgs(array(
+        $this->assoc_response = \Auth\OpenID\Message::fromOpenIDArgs(array(
             'expires_in' => '1000',
             'assoc_handle' => $this->assoc_handle,
             'assoc_type' => $this->assoc_type,
             'session_type' => $this->session_type,
-            'ns' => Auth_OpenID_OPENID2_NS,
+            'ns' => \Auth\OpenID\OPENID2_NS,
             ));
 
         $this->assoc_session = new DummyAssociationSession();
@@ -301,10 +301,10 @@ class TestInvalidFields extends Tests_Auth_OpenID_AssociationResponse {
     function test_badExpiresIn()
     {
         // Invalid value for expires_in should cause failure
-        $this->assoc_response->setArg(Auth_OpenID_OPENID_NS, 'expires_in', 'forever');
+        $this->assoc_response->setArg(\Auth\OpenID\OPENID_NS, 'expires_in', 'forever');
         $assoc = $this->consumer->_extractAssociation($this->assoc_response,
                                                       $this->assoc_session);
-        $this->assertTrue(Auth_OpenID::isFailure($assoc));
+        $this->assertTrue(\Auth\OpenID::isFailure($assoc));
     }
 }
 
@@ -320,13 +320,13 @@ class TestExtractAssociationDiffieHellman extends Tests_Auth_OpenID_AssociationR
         $this->assertEquals($this->endpoint->compatibilityMode(),
                             $message->isOpenID1());
 
-        $server_sess = Auth_OpenID_DiffieHellmanSHA1ServerSession::fromMessage($message);
+        $server_sess = \Auth\OpenID\DiffieHellmanSHA1ServerSession::fromMessage($message);
         $server_resp = $server_sess->answer($this->secret);
         $server_resp['assoc_type'] = 'HMAC-SHA1';
         $server_resp['assoc_handle'] = 'handle';
         $server_resp['expires_in'] = '1000';
         $server_resp['session_type'] = 'DH-SHA1';
-        return array($sess, Auth_OpenID_Message::fromOpenIDArgs($server_resp));
+        return array($sess, \Auth\OpenID\Message::fromOpenIDArgs($server_resp));
     }
 
     function test_success()
@@ -344,8 +344,8 @@ class TestExtractAssociationDiffieHellman extends Tests_Auth_OpenID_AssociationR
     {
         // Use openid 2 type in endpoint so _setUpDH checks
         // compatibility mode state properly
-        $this->endpoint->type_uris = array(Auth_OpenID_TYPE_2_0,
-                                           Auth_OpenID_TYPE_1_1);
+        $this->endpoint->type_uris = array(\Auth\OpenID\TYPE_2_0,
+                                           \Auth\OpenID\TYPE_1_1);
         $this->test_success();
     }
 
@@ -356,7 +356,7 @@ class TestExtractAssociationDiffieHellman extends Tests_Auth_OpenID_AssociationR
     function test_badDHValues()
     {
         list($sess, $server_resp) = $this->_setUpDH();
-        $server_resp->setArg(Auth_OpenID_OPENID_NS, 'enc_mac_key', "\x00\x00\x00");
+        $server_resp->setArg(\Auth\OpenID\OPENID_NS, 'enc_mac_key', "\x00\x00\x00");
         $this->assertTrue($this->consumer->_extractAssociation($server_resp, $sess) === null);
     }
     */
@@ -371,7 +371,7 @@ $Tests_Auth_OpenID_AssociationResponse_other = array(
                                                      new TestExtractAssociationMissingFieldsOpenID2()
                                                      );
 
-if (!defined('Auth_OpenID_NO_MATH_SUPPORT')) {
+if (!defined('Auth\OpenID\NO_MATH_SUPPORT')) {
     $Tests_Auth_OpenID_AssociationResponse_other[] = new TestExtractAssociationDiffieHellman();
 }
 

@@ -24,7 +24,7 @@ class Tests_Auth_OpenID_Link extends PHPUnit_TestCase {
         $this->markup = $markup;
         $this->expected_links = $links;
         $this->case_text = $case_text;
-        $this->parser = new Auth_OpenID_Parse();
+        $this->parser = new \Auth\OpenID\Parse();
     }
 
     function getName()

@@ -181,7 +181,7 @@ if (isset($_SERVER['REQUEST_METHOD'])) {
 function detect_math($r, &$out)
 {
     $out .= $r->h2('Math support');
-    $ext = Auth_OpenID_detectMathLibrary(Auth_OpenID_math_extensions());
+    $ext = \Auth\OpenID\detectMathLibrary(\Auth\OpenID\math_extensions());
     if (!isset($ext['extension']) || !isset($ext['class'])) {
         $out .= $r->p(
             'Your PHP installation does not include big integer math ' .
@@ -195,7 +195,7 @@ function detect_math($r, &$out)
             'Install the ' . $gmp_lnk . ' PHP extension',
             'Install the ' . $bc_lnk . ' PHP extension',
             'If your site is low-security, call ' .
-            'Auth_OpenID_setNoMathSupport(), defined in Auth/OpenID/BigMath.php. ',
+            '\Auth\OpenID\setNoMathSupport(), defined in Auth/OpenID/BigMath.php. ',
 	    'The library will function, but ' .
             'the security of your OpenID server will depend on the ' .
             'security of the network links involved. If you are only ' .
@@ -239,18 +239,18 @@ function detect_math($r, &$out)
 function detect_random($r, &$out)
 {
     $out .= $r->h2('Cryptographic-quality randomness source');
-    if (Auth_OpenID_RAND_SOURCE === null) {
+    if (\Auth\OpenID\RAND_SOURCE === null) {
         $out .= $r->p('Using (insecure) pseudorandom number source, because ' .
-                      'Auth_OpenID_RAND_SOURCE has been defined as null.');
+                      '\Auth\OpenID\RAND_SOURCE has been defined as null.');
         return false;
     }
 
-    $msg = 'The library will try to access ' . Auth_OpenID_RAND_SOURCE
+    $msg = 'The library will try to access ' . \Auth\OpenID\RAND_SOURCE
         . ' as a source of random data. ';
 
     $numbytes = 6;
 
-    $f = @fopen(Auth_OpenID_RAND_SOURCE, 'r');
+    $f = @fopen(\Auth\OpenID\RAND_SOURCE, 'r');
     if ($f !== false) {
         $data = fread($f, $numbytes);
         $stat = fstat($f);
@@ -262,7 +262,7 @@ function detect_random($r, &$out)
     }
 
     if ($f !== false) {
-        $dataok = (Auth_OpenID::bytes($data) == $numbytes);
+        $dataok = (\Auth\OpenID::bytes($data) == $numbytes);
         $ok = $dataok && !$size;
         $msg .= 'It seems to exist ';
         if ($dataok) {
@@ -277,7 +277,7 @@ function detect_random($r, &$out)
                 'mistake by using a regular file as a randomness source.';
         }
     } else {
-        $msg .= Auth_OpenID_RAND_SOURCE .
+        $msg .= \Auth\OpenID\RAND_SOURCE .
             ' could not be opened. This could be because of restrictions on' .
             ' your PHP environment or that randomness source may not exist' .
             ' on this platform.';
@@ -292,12 +292,12 @@ function detect_random($r, &$out)
 
     if (!$ok) {
         $out .= $r->p(
-            'To set a source of randomness, define Auth_OpenID_RAND_SOURCE ' .
+            'To set a source of randomness, define \Auth\OpenID\RAND_SOURCE ' .
             'to the path to the randomness source. If your platform does ' .
             'not provide a secure randomness source, the library can' .
             'operate in pseudorandom mode, but it is then vulnerable to ' .
             'theoretical attacks. If you wish to operate in pseudorandom ' .
-            'mode, define Auth_OpenID_RAND_SOURCE to null.');
+            'mode, define \Auth\OpenID\RAND_SOURCE to null.');
         $out .= $r->p('You are running on:');
         $out .= $r->pre(php_uname());
         $out .= $r->p('There does not seem to be an available source ' .
@@ -379,7 +379,7 @@ function detect_xml($r, &$out)
     $out .= $r->h2('XML Support');
 
     // Try to get an XML extension.
-    $ext = Auth_Yadis_getXMLParser();
+    $ext = \Auth\Yadis\getXMLParser();
 
     if ($ext !== null) {
         $out .= $r->p('XML parsing support is present using the '.
@@ -421,7 +421,7 @@ function detect_fetcher($r, &$out)
 	return false;
     }
 
-    if (Auth_Yadis_Yadis::curlPresent()) {
+    if (\Auth\Yadis\Yadis::curlPresent()) {
         $out .= $r->p('This PHP installation has support for libcurl. Good.');
     } else {
         $out .= $r->p('This PHP installation does not have support for ' .
@@ -433,7 +433,7 @@ function detect_fetcher($r, &$out)
     }
 
     $ok = true;
-    $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
+    $fetcher = \Auth\Yadis\Yadis::getHTTPFetcher();
     $fetch_url = 'http://gist.github.com/raw/465630/c57eff55ebc0c54973903af5f72bac72762cf4f4/helloworld';
     $expected_url = $fetch_url;// . '.txt';
     $result = $fetcher->get($fetch_url);

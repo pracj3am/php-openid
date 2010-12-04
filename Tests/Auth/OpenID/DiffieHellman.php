@@ -40,8 +40,8 @@ class Tests_Auth_OpenID_DiffieHellman_Private extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $lib =& Auth_OpenID_getMathLib();
-        $dh = new Auth_OpenID_DiffieHellman(null, null, $this->input);
+        $lib =& \Auth\OpenID\getMathLib();
+        $dh = new \Auth\OpenID\DiffieHellman(null, null, $this->input);
         $this->assertEquals($lib->cmp($this->expected, $dh->getPublicKey()), 0);
     }
 }
@@ -57,10 +57,10 @@ class Tests_Auth_OpenID_DiffieHellman_Exch extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $lib = Auth_OpenID_getMathLib();
+        $lib = \Auth\OpenID\getMathLib();
         $shared = $lib->init($this->shared);
-        $dh1 = new Auth_OpenID_DiffieHellman(null, null, $this->p1);
-        $dh2 = new Auth_OpenID_DiffieHellman(null, null, $this->p2);
+        $dh1 = new \Auth\OpenID\DiffieHellman(null, null, $this->p1);
+        $dh2 = new \Auth\OpenID\DiffieHellman(null, null, $this->p2);
         $sh1 = $dh1->getSharedSecret($dh2->getPublicKey());
         $sh2 = $dh2->getSharedSecret($dh1->getPublicKey());
         $this->assertEquals($lib->cmp($shared, $sh1), 0);
@@ -130,7 +130,7 @@ class Tests_Auth_OpenID_DiffieHellman extends PHPUnit_TestSuite {
         $sanity->setName('Check parsing of exch test data');
         $this->addTest($sanity);
 
-        if (!defined('Auth_OpenID_NO_MATH_SUPPORT')) {
+        if (!defined('Auth\OpenID\NO_MATH_SUPPORT')) {
             if (defined('Tests_Auth_OpenID_thorough')) {
                 $npriv = count($priv_cases);
                 $nexch = count($exch_cases);

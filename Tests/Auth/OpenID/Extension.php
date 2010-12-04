@@ -3,7 +3,7 @@
 require_once 'Auth/OpenID/Message.php';
 require_once 'Auth/OpenID/Extension.php';
 
-class _ExtensionTest_DummyExtension extends Auth_OpenID_Extension {
+class _ExtensionTest_DummyExtension extends \Auth\OpenID\Extension {
     public $ns_uri = 'http://an.extension/';
     public $ns_alias = 'dummy';
 
@@ -16,7 +16,7 @@ class _ExtensionTest_DummyExtension extends Auth_OpenID_Extension {
 class Tests_Auth_OpenID_Extension extends PHPUnit_TestCase {
     function test_OpenID1()
     {
-        $oid1_msg = new Auth_OpenID_Message(Auth_OpenID_OPENID1_NS);
+        $oid1_msg = new \Auth\OpenID\Message(\Auth\OpenID\OPENID1_NS);
         $ext = new _ExtensionTest_DummyExtension();
         $ext->toMessage($oid1_msg);
         $namespaces = $oid1_msg->namespaces;
@@ -30,7 +30,7 @@ class Tests_Auth_OpenID_Extension extends PHPUnit_TestCase {
 
     function test_OpenID2()
     {
-        $oid2_msg = new Auth_OpenID_Message(Auth_OpenID_OPENID2_NS);
+        $oid2_msg = new \Auth\OpenID\Message(\Auth\OpenID\OPENID2_NS);
         $ext = new _ExtensionTest_DummyExtension();
         $ext->toMessage($oid2_msg);
         $namespaces = $oid2_msg->namespaces;

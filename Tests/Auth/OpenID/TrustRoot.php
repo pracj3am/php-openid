@@ -17,8 +17,8 @@ class Tests_Auth_OpenID_TRParseCase extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $is_sane = Auth_OpenID_TrustRoot::isSane($this->case);
-        $parsed = (bool)Auth_OpenID_TrustRoot::_parse($this->case);
+        $is_sane = \Auth\OpenID\TrustRoot::isSane($this->case);
+        $parsed = (bool)\Auth\OpenID\TrustRoot::_parse($this->case);
         switch ($this->expected) {
         case 'sane':
             $this->assertTrue($parsed, "Did not parse");
@@ -46,7 +46,7 @@ class Tests_Auth_OpenID_TRMatchCase extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $matches = Auth_OpenID_TrustRoot::match($this->tr, $this->rt);
+        $matches = \Auth\OpenID\TrustRoot::match($this->tr, $this->rt);
         $this->assertEquals((bool)$this->matches, (bool)$matches);
     }
 }

@@ -25,8 +25,8 @@ class Tests_Auth_Yadis_DiscoveryTest extends PHPUnit_TestCase {
 
     function runTest()
     {
-        $fetcher = Auth_Yadis_Yadis::getHTTPFetcher();
-        $y = Auth_Yadis_Yadis::discover(
+        $fetcher = \Auth\Yadis\Yadis::getHTTPFetcher();
+        $y = \Auth\Yadis\Yadis::discover(
              $this->input_url, $fetcher);
         $this->assertTrue($y !== null);
 
@@ -37,7 +37,7 @@ class Tests_Auth_Yadis_DiscoveryTest extends PHPUnit_TestCase {
             $this->assertEquals($this->xrds_uri, $y->xrds_uri);
             // Compare contents of actual HTTP GET with that of Yadis
             // response.
-            $f = Auth_Yadis_Yadis::getHTTPFetcher();
+            $f = \Auth\Yadis\Yadis::getHTTPFetcher();
             $http_response = $f->get($this->xrds_uri);
 
             $this->assertEquals($http_response->body, $y->response_text);

@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * The OpenID library's Diffie-Hellman implementation.
@@ -17,7 +18,7 @@
 require_once 'Auth/OpenID.php';
 require_once 'Auth/OpenID/BigMath.php';
 
-function Auth_OpenID_getDefaultMod()
+function getDefaultMod()
 {
     return '155172898181473697471232257763715539915724801'.
         '966915404479707795314057629378541917580651227423'.
@@ -28,19 +29,19 @@ function Auth_OpenID_getDefaultMod()
         '848253359305585439638443';
 }
 
-function Auth_OpenID_getDefaultGen()
+function getDefaultGen()
 {
     return '2';
 }
 
 /**
  * The Diffie-Hellman key exchange class.  This class relies on
- * {@link Auth_OpenID_MathLibrary} to perform large number operations.
+ * {@link \Auth\OpenID\MathLibrary} to perform large number operations.
  *
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_DiffieHellman {
+class DiffieHellman {
 
     public $mod;
     public $gen;
@@ -51,19 +52,19 @@ class Auth_OpenID_DiffieHellman {
                                        $private = null, $lib = null)
     {
         if ($lib === null) {
-            $this->lib = Auth_OpenID_getMathLib();
+            $this->lib = getMathLib();
         } else {
             $this->lib = $lib;
         }
 
         if ($mod === null) {
-            $this->mod = $this->lib->init(Auth_OpenID_getDefaultMod());
+            $this->mod = $this->lib->init(getDefaultMod());
         } else {
             $this->mod = $mod;
         }
 
         if ($gen === null) {
-            $this->gen = $this->lib->init(Auth_OpenID_getDefaultGen());
+            $this->gen = $this->lib->init(getDefaultGen());
         } else {
             $this->gen = $gen;
         }
@@ -91,8 +92,8 @@ class Auth_OpenID_DiffieHellman {
 
     function usingDefaultValues()
     {
-        return ($this->mod == Auth_OpenID_getDefaultMod() &&
-                $this->gen == Auth_OpenID_getDefaultGen());
+        return ($this->mod == getDefaultMod() &&
+                $this->gen == getDefaultGen());
     }
 
     function xorSecret($composite, $secret, $hash_func)
@@ -102,7 +103,7 @@ class Auth_OpenID_DiffieHellman {
         $hash_dh_shared = $hash_func($dh_shared_str);
 
         $xsecret = "";
-        for ($i = 0; $i < Auth_OpenID::bytes($secret); $i++) {
+        for ($i = 0; $i < \Auth\OpenID::bytes($secret); $i++) {
             $xsecret .= chr(ord($secret[$i]) ^ ord($hash_dh_shared[$i]));
         }
 

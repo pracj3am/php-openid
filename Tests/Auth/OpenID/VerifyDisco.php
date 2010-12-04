@@ -6,18 +6,18 @@ require_once "Tests/Auth/OpenID/MemStore.php";
 require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID/Consumer.php";
 
-class Tests_Auth_OpenID_VerifyDisco_1 extends Auth_OpenID_GenericConsumer {
+class Tests_Auth_OpenID_VerifyDisco_1 extends \Auth\OpenID\GenericConsumer {
     private function _discoverAndVerify($claimed_id, $to_match_endpoints)
     {
         $this->test_case->assertEquals($this->endpoint->claimed_id, $claimed_id);
-        return new Auth_OpenID_FailureResponse(null, $this->text);
+        return new \Auth\OpenID\FailureResponse(null, $this->text);
     }
 }
 
-class __VerifiedError extends Auth_OpenID_FailureResponse {
+class __VerifiedError extends \Auth\OpenID\FailureResponse {
 }
 
-class VerifyDisco_Consumer_verifiedError extends Auth_OpenID_GenericConsumer {
+class VerifyDisco_Consumer_verifiedError extends \Auth\OpenID\GenericConsumer {
     private function _discoverAndVerify($to_match, $to_match_endpoints=null)
     {
         return new __VerifiedError(null, 'verified error');
@@ -25,7 +25,7 @@ class VerifyDisco_Consumer_verifiedError extends Auth_OpenID_GenericConsumer {
 }
 
 class _DiscoverAndVerify extends OpenIDTestMixin {
-    public $consumer_class = 'Auth_OpenID_GenericConsumer';
+    public $consumer_class = '\Auth\OpenID\GenericConsumer';
 
     function setUp()
     {
@@ -33,7 +33,7 @@ class _DiscoverAndVerify extends OpenIDTestMixin {
         $cl = $this->consumer_class;
         $this->consumer = new $cl($this->store);
         $this->return_to = "http://some.host/path";
-        $this->endpoint = new Auth_OpenID_ServiceEndpoint();
+        $this->endpoint = new \Auth\OpenID\ServiceEndpoint();
 
         $this->server_id = "sirod";
         $this->server_url = "serlie";
@@ -42,12 +42,12 @@ class _DiscoverAndVerify extends OpenIDTestMixin {
         $this->endpoint->claimed_id = $this->consumer_id;
         $this->endpoint->server_url = $this->server_url;
         $this->endpoint->local_id = $this->server_id;
-        $this->endpoint->type_uris = array(Auth_OpenID_TYPE_1_1);
+        $this->endpoint->type_uris = array(\Auth\OpenID\TYPE_1_1);
     }
 
     function failUnlessProtocolError($thing)
     {
-        $this->assertTrue(Auth_OpenID::isFailure($thing));
+        $this->assertTrue(\Auth\OpenID::isFailure($thing));
     }
 }
 
@@ -66,13 +66,13 @@ class Tests_openID1Fallback1_0 extends _DiscoverAndVerify {
     function test_openID1Fallback1_0()
     {
         $claimed_id = 'http://claimed.id/';
-        $resp_msg = Auth_OpenID_Message::fromOpenIDArgs(
-            array('ns' => Auth_OpenID_OPENID1_NS,
+        $resp_msg = \Auth\OpenID\Message::fromOpenIDArgs(
+            array('ns' => \Auth\OpenID\OPENID1_NS,
                   'identity' => $claimed_id));
-        $resp_msg->setArg(Auth_OpenID_BARE_NS, 'openid1_claimed_id',
+        $resp_msg->setArg(\Auth\OpenID\BARE_NS, 'openid1_claimed_id',
                           $claimed_id);
-        $expected_endpoint = new Auth_OpenID_ServiceEndpoint();
-        $expected_endpoint->type_uris = array(Auth_OpenID_TYPE_1_0);
+        $expected_endpoint = new \Auth\OpenID\ServiceEndpoint();
+        $expected_endpoint->type_uris = array(\Auth\OpenID\TYPE_1_0);
         $expected_endpoint->local_id = null;
         $expected_endpoint->claimed_id = $claimed_id;
 
@@ -82,7 +82,7 @@ class Tests_openID1Fallback1_0 extends _DiscoverAndVerify {
         $actual_endpoint = $this->consumer->_verifyDiscoveryResults(
             $resp_msg, null);
 
-        $this->assertTrue(is_a($actual_endpoint, "Auth_OpenID_ServiceEndpoint"));
+        $this->assertTrue(is_a($actual_endpoint, "\Auth\OpenID\ServiceEndpoint"));
 
         $this->assertEquals($expected_endpoint->local_id,
                             $actual_endpoint->local_id);
@@ -101,29 +101,29 @@ class Tests_openID1Fallback1_0 extends _DiscoverAndVerify {
 class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
     function test_openID1NoLocalID()
     {
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->claimed_id = 'bogus';
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(array());
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(array());
         // 'Missing required field openid.identity'
         $this->failUnlessProtocolError($this->consumer->_verifyDiscoveryResults($msg, $endpoint));
     }
 
     function test_openID1NoEndpoint()
     {
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(array('identity' => 'snakes on a plane'));
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(array('identity' => 'snakes on a plane'));
         $this->failUnlessProtocolError($this->consumer->_verifyDiscoveryResults($msg));
     }
 
     function test_openID2NoOPEndpointArg()
     {
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(array('ns' => Auth_OpenID_OPENID2_NS));
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(array('ns' => \Auth\OpenID\OPENID2_NS));
         $this->failUnlessProtocolError($this->consumer->_verifyDiscoveryResults($msg, null));
     }
 
     function test_openID2LocalIDNoClaimed()
     {
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(array('ns' => \Auth\OpenID\OPENID2_NS,
                                                          'op_endpoint' => 'Phone Home',
                                                          'identity' => 'Jose Lius Borges'));
         // 'openid.identity is present without',
@@ -132,7 +132,7 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
 
     function test_openID2NoLocalIDClaimed()
     {
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(array('ns' => \Auth\OpenID\OPENID2_NS,
                                                          'op_endpoint' => 'Phone Home',
                                                          'claimed_id' => 'Manuel Noriega'));
         // 'openid.claimed_id is present without',
@@ -143,7 +143,7 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
     function test_openID2NoIdentifiers()
     {
         $op_endpoint = 'Phone Home';
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(array('ns' => \Auth\OpenID\OPENID2_NS,
                                                          'op_endpoint' => $op_endpoint));
         $result_endpoint = $this->consumer->_verifyDiscoveryResults($msg);
         $this->assertTrue($result_endpoint->isOPIdentifier());
@@ -153,14 +153,14 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
 
     function test_openid2UsePreDiscovered()
     {
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->local_id = 'my identity';
         $endpoint->claimed_id = 'i am sam';
         $endpoint->server_url = 'Phone Home';
-        $endpoint->type_uris = array(Auth_OpenID_TYPE_2_0);
+        $endpoint->type_uris = array(\Auth\OpenID\TYPE_2_0);
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-                    array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+                    array('ns' => \Auth\OpenID\OPENID2_NS,
                           'identity' => $endpoint->local_id,
                           'claimed_id' => $endpoint->claimed_id,
                           'op_endpoint' => $endpoint->server_url));
@@ -175,16 +175,16 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
         $this->consumer->test_case =& $this;
         $this->consumer->text = "verify failed";
 
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->local_id = 'my identity';
         $endpoint->claimed_id = 'i am sam';
         $endpoint->server_url = 'Phone Home';
-        $endpoint->type_uris = array(Auth_OpenID_TYPE_1_1);
+        $endpoint->type_uris = array(\Auth\OpenID\TYPE_1_1);
 
         $this->consumer->endpoint =& $endpoint;
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-              array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+              array('ns' => \Auth\OpenID\OPENID2_NS,
                     'identity' => $endpoint->local_id,
                     'claimed_id' => $endpoint->claimed_id,
                     'op_endpoint' => $endpoint->server_url));
@@ -196,14 +196,14 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
 
     function test_openid1UsePreDiscovered()
     {
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->local_id = 'my identity';
         $endpoint->claimed_id = 'i am sam';
         $endpoint->server_url = 'Phone Home';
-        $endpoint->type_uris = array(Auth_OpenID_TYPE_1_1);
+        $endpoint->type_uris = array(\Auth\OpenID\TYPE_1_1);
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-            array('ns' => Auth_OpenID_OPENID1_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+            array('ns' => \Auth\OpenID\OPENID1_NS,
                   'identity' => $endpoint->local_id));
         $result = $this->consumer->_verifyDiscoveryResults($msg, $endpoint);
         $this->assertTrue($result == $endpoint);
@@ -214,14 +214,14 @@ class Tests_Auth_OpenID_VerifyDisco extends _DiscoverAndVerify {
         $claimed_id = "http://unittest.invalid/";
         $claimed_id_frag = $claimed_id . "#fragment";
 
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->local_id = 'my identity';
         $endpoint->claimed_id = $claimed_id;
         $endpoint->server_url = 'Phone Home';
-        $endpoint->type_uris = array(Auth_OpenID_TYPE_2_0);
+        $endpoint->type_uris = array(\Auth\OpenID\TYPE_2_0);
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-                    array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+                    array('ns' => \Auth\OpenID\OPENID2_NS,
                           'identity' => $endpoint->local_id,
                           'claimed_id' => $claimed_id_frag,
                           'op_endpoint' => $endpoint->server_url));
@@ -242,14 +242,14 @@ class Tests_openid1UsePreDiscoveredWrongType extends _DiscoverAndVerify {
 
     function test_openid1UsePreDiscoveredWrongType()
     {
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->local_id = 'my identity';
         $endpoint->claimed_id = 'i am sam';
         $endpoint->server_url = 'Phone Home';
-        $endpoint->type_uris = array(Auth_OpenID_TYPE_2_0);
+        $endpoint->type_uris = array(\Auth\OpenID\TYPE_2_0);
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-            array('ns' => Auth_OpenID_OPENID1_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+            array('ns' => \Auth\OpenID\OPENID1_NS,
                   'identity' => $endpoint->local_id));
 
         $result = $this->consumer->_verifyDiscoveryResults($msg, $endpoint);
@@ -260,7 +260,7 @@ class Tests_openid1UsePreDiscoveredWrongType extends _DiscoverAndVerify {
 
 // XXX: test the implementation of _discoverAndVerify
 
-class Tests_openID2NoEndpointDoesDisco_sentinel extends Auth_OpenID_GenericConsumer {
+class Tests_openID2NoEndpointDoesDisco_sentinel extends \Auth\OpenID\GenericConsumer {
     public $sentinel = 'blah';
 
     private function _discoverAndVerify($to_match, $to_match_endpoints)
@@ -269,12 +269,12 @@ class Tests_openID2NoEndpointDoesDisco_sentinel extends Auth_OpenID_GenericConsu
     }
 }
 
-class Tests_openID2NoEndpointDoesDisco_failure extends Auth_OpenID_GenericConsumer {
+class Tests_openID2NoEndpointDoesDisco_failure extends \Auth\OpenID\GenericConsumer {
     public $failure_message = 'A fake failure response message';
 
     private function _verifyDiscoverySingle($to_match, $to_match2 = null)
     {
-        return new Auth_OpenID_FailureResponse(null, $this->failure_message);
+        return new \Auth\OpenID\FailureResponse(null, $this->failure_message);
     }
 }
 
@@ -284,11 +284,11 @@ class Tests_openID2NoEndpointDoesDisco extends Tests_Auth_OpenID_VerifyDisco {
     function test_openID2NoEndpointDoesDisco()
     {
         $op_endpoint = 'Phone Home';
-        $this->consumer->sentinel = new Auth_OpenID_ServiceEndpoint();
+        $this->consumer->sentinel = new \Auth\OpenID\ServiceEndpoint();
         $this->consumer->sentinel->claimed_id = 'monkeysoft';
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-            array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+            array('ns' => \Auth\OpenID\OPENID2_NS,
                   'identity' => 'sour grapes',
                   'claimed_id' => 'monkeysoft',
                   'op_endpoint' => $op_endpoint));
@@ -303,18 +303,18 @@ class Tests_openID2MismatchedDoesDisco extends Tests_Auth_OpenID_VerifyDisco {
 
     function test_openID2MismatchedDoesDisco()
     {
-        $mismatched = new Auth_OpenID_ServiceEndpoint();
+        $mismatched = new \Auth\OpenID\ServiceEndpoint();
         $mismatched->identity = 'nothing special, but different';
         $mismatched->local_id = 'green cheese';
 
-        $sentinel = new Auth_OpenID_ServiceEndpoint();
+        $sentinel = new \Auth\OpenID\ServiceEndpoint();
         $sentinel->claimed_id = 'monkeysoft';
         $this->consumer->sentinel = $sentinel;
 
         $op_endpoint = 'Phone Home';
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-            array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+            array('ns' => \Auth\OpenID\OPENID2_NS,
                   'identity' => 'sour grapes',
                   'claimed_id' => 'monkeysoft',
                   'op_endpoint' => $op_endpoint));
@@ -333,7 +333,7 @@ class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_TestCase {
         $cl = $this->consumer_class;
         $this->consumer = new $cl($this->store);
         $this->return_to = "http://some.host/path";
-        $this->endpoint = new Auth_OpenID_ServiceEndpoint();
+        $this->endpoint = new \Auth\OpenID\ServiceEndpoint();
 
         $this->consumer->discoverMethod = array($this, "_getServices");
 
@@ -344,7 +344,7 @@ class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_TestCase {
         $this->endpoint->claimed_id = $this->consumer_id;
         $this->endpoint->server_url = $this->server_url;
         $this->endpoint->local_id = $this->server_id;
-        $this->endpoint->type_uris = array(Auth_OpenID_TYPE_1_1);
+        $this->endpoint->type_uris = array(\Auth\OpenID\TYPE_1_1);
     }
 
     public function _getServices($claimed_id, $fetcher=null) {
@@ -353,25 +353,25 @@ class Tests_openID2MismatchedDoesDisco_failure extends PHPUnit_TestCase {
 
     function test_openID2MismatchedDoesDisco_failure()
     {
-        $mismatched = new Auth_OpenID_ServiceEndpoint();
+        $mismatched = new \Auth\OpenID\ServiceEndpoint();
         $mismatched->identity = 'nothing special, but different';
         $mismatched->local_id = 'green cheese';
 
         $op_endpoint = 'Phone Home';
 
-        $msg = Auth_OpenID_Message::fromOpenIDArgs(
-            array('ns' => Auth_OpenID_OPENID2_NS,
+        $msg = \Auth\OpenID\Message::fromOpenIDArgs(
+            array('ns' => \Auth\OpenID\OPENID2_NS,
                   'identity' => 'sour grapes',
                   'claimed_id' => 'monkeysoft',
                   'op_endpoint' => $op_endpoint));
 
         $result = $this->consumer->_verifyDiscoveryResults($msg, $mismatched);
-        $this->assertTrue(Auth_OpenID::isFailure($result));
+        $this->assertTrue(\Auth\OpenID::isFailure($result));
     }
 }
 
 class TestVerifyDiscoverySingle extends OpenIDTestMixin {
-    public $consumer_class = 'Auth_OpenID_GenericConsumer';
+    public $consumer_class = '\Auth\OpenID\GenericConsumer';
 
     function setUp()
     {
@@ -379,7 +379,7 @@ class TestVerifyDiscoverySingle extends OpenIDTestMixin {
         $cl = $this->consumer_class;
         $this->consumer = new $cl($this->store);
         $this->return_to = "http://some.host/path";
-        $this->endpoint = new Auth_OpenID_ServiceEndpoint();
+        $this->endpoint = new \Auth\OpenID\ServiceEndpoint();
 
         $this->server_id = "sirod";
         $this->server_url = "serlie";
@@ -388,18 +388,18 @@ class TestVerifyDiscoverySingle extends OpenIDTestMixin {
         $this->endpoint->claimed_id = $this->consumer_id;
         $this->endpoint->server_url = $this->server_url;
         $this->endpoint->local_id = $this->server_id;
-        $this->endpoint->type_uris = array(Auth_OpenID_TYPE_1_1);
+        $this->endpoint->type_uris = array(\Auth\OpenID\TYPE_1_1);
     }
 
     function test_endpointWithoutLocalID()
     {
         // An endpoint like this with no local_id is generated as a
         // result of e.g. Yadis discovery with no LocalID tag.
-        $endpoint = new Auth_OpenID_ServiceEndpoint();
+        $endpoint = new \Auth\OpenID\ServiceEndpoint();
         $endpoint->server_url = "http://localhost:8000/openidserver";
         $endpoint->claimed_id = "http://localhost:8000/id/id-jo";
 
-        $to_match = new Auth_OpenID_ServiceEndpoint();
+        $to_match = new \Auth\OpenID\ServiceEndpoint();
         $to_match->server_url = "http://localhost:8000/openidserver";
         $to_match->claimed_id = "http://localhost:8000/id/id-jo";
         $to_match->local_id = "http://localhost:8000/id/id-jo";

@@ -68,16 +68,16 @@ foreach ($flags as $flag) {
     list($option, $value) = $flag;
     switch ($option) {
     case '--insecure-rand':
-        define('Auth_OpenID_RAND_SOURCE', null);
+        define('Auth\OpenID\RAND_SOURCE', null);
         break;
     case '--no-math':
-        define('Auth_OpenID_NO_MATH_SUPPORT', true);
+        define('Auth\OpenID\NO_MATH_SUPPORT', true);
         break;
     case '--buggy-gmp':
-        define('Auth_OpenID_BUGGY_GMP', true);
+        define('Auth\OpenID\BUGGY_GMP', true);
         break;
     case '--no-curl':
-        define('Auth_Yadis_CURL_OVERRIDE', true);
+        define('Auth\Yadis\CURL\OVERRIDE', true);
         break;
     case '--thorough':
         define('Tests_Auth_OpenID_thorough', true);
@@ -97,7 +97,7 @@ foreach ($flags as $flag) {
 //         $math_type[] = $value;
 //         break;
 if ($math_type && false) {
-    if (defined('Auth_OpenID_NO_MATH_SUPPORT')) {
+    if (defined('Auth\OpenID\NO_MATH_SUPPORT')) {
         print "--no-math and --math-lib are mutually exclusive\n";
         exit(1);
     }
@@ -105,7 +105,7 @@ if ($math_type && false) {
     $new_extensions = array();
     foreach ($math_type as $lib) {
         $found = false;
-        foreach (Auth_OpenID_math_extensions() as $ext) {
+        foreach (\Auth\OpenID\math_extensions() as $ext) {
             if ($ext['extension'] == $lib) {
                 $new_extensions[] = $ext;
                 $found = true;

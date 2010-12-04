@@ -19,7 +19,7 @@ class ServerAssocs {
 
     function get($handle)
     {
-        return Auth_OpenID::arrayGet($this->assocs, $handle);
+        return \Auth\OpenID::arrayGet($this->assocs, $handle);
     }
 
     function remove($handle)
@@ -75,7 +75,7 @@ class ServerAssocs {
  *
  * Use for single long-running processes.  No persistence supplied.
  */
-class Tests_Auth_OpenID_MemStore extends Auth_OpenID_Store {
+class Tests_Auth_OpenID_MemStore extends \Auth\OpenID\Store {
 
     function __construct()
     {

@@ -24,8 +24,8 @@ function userXrds_render($identity)
     $headers = array('Content-type: application/xrds+xml');
 
     $body = sprintf(user_xrds_pat,
-                    Auth_OpenID_TYPE_2_0,
-                    Auth_OpenID_TYPE_1_1,
+                    \Auth\OpenID\TYPE_2_0,
+                    \Auth\OpenID\TYPE_1_1,
                     buildURL());
 
     return array($headers, $body);

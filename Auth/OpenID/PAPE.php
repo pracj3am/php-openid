@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 
 /**
  * An implementation of the OpenID Provider Authentication Policy
@@ -10,7 +11,7 @@
 
 require_once "Auth/OpenID/Extension.php";
 
-define('Auth_OpenID_PAPE_NS_URI',
+define('Auth\OpenID\PAPE_NS_URI',
        "http://specs.openid.net/extensions/pape/1.0");
 
 define('PAPE_AUTH_MULTI_FACTOR_PHYSICAL',
@@ -32,10 +33,10 @@ define('PAPE_TIME_VALIDATOR',
  * max_auth_age: The maximum time, in seconds, that the relying party
  * wants to allow to have elapsed before the user must re-authenticate
  */
-class Auth_OpenID_PAPE_Request extends Auth_OpenID_Extension {
+class PAPE_Request extends Extension {
 
     public $ns_alias = 'pape';
-    public $ns_uri = Auth_OpenID_PAPE_NS_URI;
+    public $ns_uri = PAPE_NS_URI;
 
     public function __construct($preferred_auth_policies=null,
                                       $max_auth_age=null)
@@ -84,8 +85,8 @@ class Auth_OpenID_PAPE_Request extends Auth_OpenID_Extension {
      */
     static function fromOpenIDRequest($request)
     {
-        $obj = new Auth_OpenID_PAPE_Request();
-        $args = $request->message->getArgs(Auth_OpenID_PAPE_NS_URI);
+        $obj = new PAPE_Request();
+        $args = $request->message->getArgs(PAPE_NS_URI);
 
         if ($args === null || $args === array()) {
             return null;
@@ -107,7 +108,7 @@ class Auth_OpenID_PAPE_Request extends Auth_OpenID_Extension {
         // URIs
         $this->preferred_auth_policies = array();
 
-        $policies_str = Auth_OpenID::arrayGet($args, 'preferred_auth_policies');
+        $policies_str = \Auth\OpenID::arrayGet($args, 'preferred_auth_policies');
         if ($policies_str) {
             foreach (explode(' ', $policies_str) as $uri) {
                 if (!in_array($uri, $this->preferred_auth_policies)) {
@@ -117,9 +118,9 @@ class Auth_OpenID_PAPE_Request extends Auth_OpenID_Extension {
         }
 
         // max_auth_age is base-10 integer number of seconds
-        $max_auth_age_str = Auth_OpenID::arrayGet($args, 'max_auth_age');
+        $max_auth_age_str = \Auth\OpenID::arrayGet($args, 'max_auth_age');
         if ($max_auth_age_str) {
-            $this->max_auth_age = Auth_OpenID::intval($max_auth_age_str);
+            $this->max_auth_age = \Auth\OpenID::intval($max_auth_age_str);
         } else {
             $this->max_auth_age = null;
         }
@@ -156,10 +157,10 @@ class Auth_OpenID_PAPE_Request extends Auth_OpenID_Extension {
  * A Provider Authentication Policy response, sent from a provider to
  * a relying party
  */
-class Auth_OpenID_PAPE_Response extends Auth_OpenID_Extension {
+class PAPE_Response extends Extension {
 
     public $ns_alias = 'pape';
-    public $ns_uri = Auth_OpenID_PAPE_NS_URI;
+    public $ns_uri = PAPE_NS_URI;
 
     public function __construct($auth_policies=null, $auth_time=null,
                                        $nist_auth_level=null)
@@ -192,21 +193,21 @@ class Auth_OpenID_PAPE_Response extends Auth_OpenID_Extension {
     }
 
     /**
-     * Create an Auth_OpenID_PAPE_Response object from a successful
+     * Create an PAPE_Response object from a successful
      * OpenID library response.
      *
      * @param success_response $success_response A SuccessResponse
-     * from Auth_OpenID_Consumer::complete()
+     * from \Auth\OpenID\Consumer::complete()
      *
      * @returns: A provider authentication policy response from the
      * data that was supplied with the id_res response.
      */
     static function fromSuccessResponse($success_response)
     {
-        $obj = new Auth_OpenID_PAPE_Response();
+        $obj = new PAPE_Response();
 
         // PAPE requires that the args be signed.
-        $args = $success_response->getSignedNS(Auth_OpenID_PAPE_NS_URI);
+        $args = $success_response->getSignedNS(PAPE_NS_URI);
 
         if ($args === null || $args === array()) {
             return null;
@@ -236,14 +237,14 @@ class Auth_OpenID_PAPE_Response extends Auth_OpenID_Extension {
     */
     function parseExtensionArgs($args, $strict=false)
     {
-        $policies_str = Auth_OpenID::arrayGet($args, 'auth_policies');
+        $policies_str = \Auth\OpenID::arrayGet($args, 'auth_policies');
         if ($policies_str && $policies_str != "none") {
             $this->auth_policies = explode(" ", $policies_str);
         }
 
-        $nist_level_str = Auth_OpenID::arrayGet($args, 'nist_auth_level');
+        $nist_level_str = \Auth\OpenID::arrayGet($args, 'nist_auth_level');
         if ($nist_level_str !== null) {
-            $nist_level = Auth_OpenID::intval($nist_level_str);
+            $nist_level = \Auth\OpenID::intval($nist_level_str);
 
             if ($nist_level === false) {
                 if ($strict) {
@@ -260,7 +261,7 @@ class Auth_OpenID_PAPE_Response extends Auth_OpenID_Extension {
             }
         }
 
-        $auth_time = Auth_OpenID::arrayGet($args, 'auth_time');
+        $auth_time = \Auth\OpenID::arrayGet($args, 'auth_time');
         if ($auth_time !== null) {
             if (preg_match(PAPE_TIME_VALIDATOR, $auth_time)) {
                 $this->auth_time = $auth_time;

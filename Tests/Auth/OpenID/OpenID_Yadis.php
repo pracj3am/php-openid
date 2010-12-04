@@ -42,8 +42,8 @@ $__ext_types = array(
 // endpoint
 global $__openid_types;
 $__openid_types = array(
-                        Auth_OpenID_TYPE_1_0,
-                        Auth_OpenID_TYPE_1_1);
+                        \Auth\OpenID\TYPE_1_0,
+                        \Auth\OpenID\TYPE_1_1);
 
 $temp = array();
 foreach (__subsets($__ext_types) as $exts) {
@@ -163,13 +163,13 @@ class Tests_Auth_OpenID_Tester extends PHPUnit_TestCase {
     function runTest()
     {
         // Parse into endpoint objects that we will check
-        $xrds_object = Auth_Yadis_XRDS::parseXRDS($this->xrds);
+        $xrds_object = \Auth\Yadis\XRDS::parseXRDS($this->xrds);
 
         $endpoints = array();
 
         if ($xrds_object) {
             $endpoints = $xrds_object->services(array('filter_MatchesAnyOpenIDType'));
-            $endpoints = Auth_OpenID_makeOpenIDEndpoints($this->yadis_url, $endpoints);
+            $endpoints = \Auth\OpenID\makeOpenIDEndpoints($this->yadis_url, $endpoints);
         }
 
         // make sure there are the same number of endpoints as

@@ -1,4 +1,5 @@
 <?php
+namespace Auth\Yadis;
 
 /**
  * This module contains the plain non-curl HTTP fetcher
@@ -25,7 +26,7 @@ require_once "Auth/Yadis/HTTPFetcher.php";
  *
  * @package OpenID
  */
-class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
+class PlainHTTPFetcher extends HTTPFetcher {
     /**
      * Does this fetcher support SSL URLs?
      */
@@ -73,7 +74,7 @@ class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
                 $host = 'ssl://' . $host;
             }
 
-            $user_agent = Auth_OpenID_USER_AGENT;
+            $user_agent = \Auth\OpenID\USER_AGENT;
 
             $headers = array(
                              "GET ".$parts['path'].
@@ -107,7 +108,7 @@ class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
             $data = "";
             $kilobytes = 0;
             while (!feof($sock) &&
-                   $kilobytes < Auth_OpenID_FETCHER_MAX_RESPONSE_KB ) {
+                   $kilobytes < \Auth\OpenID\FETCHER_MAX_RESPONSE_KB ) {
                 $data .= fgets($sock, 1024);
                 $kilobytes += 1;
             }
@@ -145,7 +146,7 @@ class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
 
         }
 
-        return new Auth_Yadis_HTTPResponse($url, $code, $new_headers, $body);
+        return new HTTPResponse($url, $code, $new_headers, $body);
     }
 
     function post($url, $body, $extra_headers = null)
@@ -241,7 +242,7 @@ class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
 
         }
 
-        return new Auth_Yadis_HTTPResponse($url, $code,
+        return new HTTPResponse($url, $code,
                                            $new_headers, $response_body);
     }
 }

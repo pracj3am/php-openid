@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID;
 /**
  * Functions for dealing with OpenID trust roots
  *
@@ -20,7 +21,7 @@ require_once 'Auth/OpenID/Discover.php';
  *
  * @access private
  */
-define('Auth_OpenID___TLDs',
+define('Auth\OpenID___TLDs',
        '/\.(ac|ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|asia' .
        '|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br' .
        '|bs|bt|bv|bw|by|bz|ca|cat|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co' .
@@ -40,13 +41,13 @@ define('Auth_OpenID___TLDs',
        '|xn--hgbk6aj7f53bba|xn--hlcj6aya9esc7a|xn--jxalpdlp' .
        '|xn--kgbechtv|xn--zckzah|ye|yt|yu|za|zm|zw)\.?$/');
 
-define('Auth_OpenID___HostSegmentRe',
+define('Auth\OpenID___HostSegmentRe',
        "/^(?:[-a-zA-Z0-9!$&'\\(\\)\\*+,;=._~]|%[a-zA-Z0-9]{2})*$/");
 
 /**
  * A wrapper for trust-root related functions
  */
-class Auth_OpenID_TrustRoot {
+class TrustRoot {
     /*
      * Return a discovery URL for this realm.
      *
@@ -60,7 +61,7 @@ class Auth_OpenID_TrustRoot {
      */
     static function buildDiscoveryURL($realm)
     {
-        $parsed = Auth_OpenID_TrustRoot::_parse($realm);
+        $parsed = TrustRoot::_parse($realm);
 
         if ($parsed === false) {
             return false;
@@ -95,7 +96,7 @@ class Auth_OpenID_TrustRoot {
      */
     static function _parse($trust_root)
     {
-        $trust_root = Auth_OpenID_urinorm($trust_root);
+        $trust_root = urinorm($trust_root);
         if ($trust_root === null) {
             return false;
         }
@@ -120,7 +121,7 @@ class Auth_OpenID_TrustRoot {
             return false;
         }
 
-        if (!preg_match(Auth_OpenID___HostSegmentRe, $parts['host'])) {
+        if (!preg_match(\Auth\OpenID___HostSegmentRe, $parts['host'])) {
             return false;
         }
 
@@ -201,7 +202,7 @@ class Auth_OpenID_TrustRoot {
      */
     static function isSane($trust_root)
     {
-        $parts = Auth_OpenID_TrustRoot::_parse($trust_root);
+        $parts = TrustRoot::_parse($trust_root);
         if ($parts === false) {
             return false;
         }
@@ -232,7 +233,7 @@ class Auth_OpenID_TrustRoot {
 
         // Get the top-level domain of the host. If it is not a valid TLD,
         // it's not sane.
-        preg_match(Auth_OpenID___TLDs, $parts['host'], $matches);
+        preg_match(\Auth\OpenID___TLDs, $parts['host'], $matches);
         if (!$matches) {
             return false;
         }
@@ -271,8 +272,8 @@ class Auth_OpenID_TrustRoot {
      */
     static function match($trust_root, $url)
     {
-        $trust_root_parsed = Auth_OpenID_TrustRoot::_parse($trust_root);
-        $url_parsed = Auth_OpenID_TrustRoot::_parse($url);
+        $trust_root_parsed = TrustRoot::_parse($trust_root);
+        $url_parsed = TrustRoot::_parse($url);
         if (!$trust_root_parsed || !$url_parsed) {
             return false;
         }
@@ -343,14 +344,14 @@ class Auth_OpenID_TrustRoot {
  */
 function filter_extractReturnURL($endpoint)
 {
-    if ($endpoint->matchTypes(array(Auth_OpenID_RP_RETURN_TO_URL_TYPE))) {
+    if ($endpoint->matchTypes(array(RP_RETURN_TO_URL_TYPE))) {
         return $endpoint;
     } else {
         return null;
     }
 }
 
-function &Auth_OpenID_extractReturnURL(&$endpoint_list)
+function &extractReturnURL(&$endpoint_list)
 {
     $result = array();
 
@@ -367,7 +368,7 @@ function &Auth_OpenID_extractReturnURL(&$endpoint_list)
  * Is the return_to URL under one of the supplied allowed return_to
  * URLs?
  */
-function Auth_OpenID_returnToMatches($allowed_return_to_urls, $return_to)
+function returnToMatches($allowed_return_to_urls, $return_to)
 {
     foreach ($allowed_return_to_urls as $allowed_return_to) {
         // A return_to pattern works the same as a realm, except that
@@ -375,13 +376,13 @@ function Auth_OpenID_returnToMatches($allowed_return_to_urls, $return_to)
         // parsing it as a realm, and not trying to match it if it has
         // a wildcard.
 
-        $return_realm = Auth_OpenID_TrustRoot::_parse($allowed_return_to);
+        $return_realm = TrustRoot::_parse($allowed_return_to);
         if (// Parses as a trust root
             ($return_realm !== false) &&
             // Does not have a wildcard
             (!$return_realm['wildcard']) &&
             // Matches the return_to that we passed in with it
-            (Auth_OpenID_TrustRoot::match($allowed_return_to, $return_to))) {
+            (TrustRoot::match($allowed_return_to, $return_to))) {
             return true;
         }
     }
@@ -394,17 +395,17 @@ function Auth_OpenID_returnToMatches($allowed_return_to_urls, $return_to)
  * Given a relying party discovery URL return a list of return_to
  * URLs.
  */
-function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
+function getAllowedReturnURLs($relying_party_url, $fetcher,
               $discover_function=null)
 {
     if ($discover_function === null) {
-        $discover_function = array('Auth_Yadis_Yadis', 'discover');
+        $discover_function = array('\Auth\Yadis\Yadis', 'discover');
     }
 
-    $xrds_parse_cb = array('Auth_OpenID_ServiceEndpoint', 'consumerFromXRDS');
+    $xrds_parse_cb = array('\Auth\OpenID\ServiceEndpoint', 'consumerFromXRDS');
 
     list($rp_url_after_redirects, $endpoints) =
-        Auth_Yadis_getServiceEndpoints($relying_party_url, $xrds_parse_cb,
+        \Auth\Yadis\getServiceEndpoints($relying_party_url, $xrds_parse_cb,
                                        $discover_function, $fetcher);
 
     if ($rp_url_after_redirects != $relying_party_url) {
@@ -416,7 +417,7 @@ function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
                          array($relying_party_url, &$fetcher));
 
     $return_to_urls = array();
-    $matching_endpoints = Auth_OpenID_extractReturnURL($endpoints);
+    $matching_endpoints = extractReturnURL($endpoints);
 
     foreach ($matching_endpoints as $e) {
         $return_to_urls[] = $e->server_url;
@@ -435,10 +436,10 @@ function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
  *
  * @return true if the return_to URL is valid for the realm
  */
-function Auth_OpenID_verifyReturnTo($realm_str, $return_to, $fetcher,
-              $_vrfy='Auth_OpenID_getAllowedReturnURLs')
+function verifyReturnTo($realm_str, $return_to, $fetcher,
+              $_vrfy='\Auth\OpenID\getAllowedReturnURLs')
 {
-    $disco_url = Auth_OpenID_TrustRoot::buildDiscoveryURL($realm_str);
+    $disco_url = TrustRoot::buildDiscoveryURL($realm_str);
 
     if ($disco_url === false) {
         return false;
@@ -452,7 +453,7 @@ function Auth_OpenID_verifyReturnTo($realm_str, $return_to, $fetcher,
         return false;
     }
 
-    if (Auth_OpenID_returnToMatches($allowable_urls, $return_to)) {
+    if (returnToMatches($allowable_urls, $return_to)) {
         return true;
     } else {
         return false;

@@ -1,4 +1,5 @@
 <?php
+namespace Auth\OpenID\Store;
 
 /**
  * SQL-backed OpenID stores for use with PEAR::MDB2.
@@ -43,7 +44,7 @@ require_once 'Auth/OpenID/Nonce.php';
  *
  * @package OpenID
  */
-class Auth_OpenID_Store_MDB2 extends Auth_OpenID_Store {
+class MDB2 extends \Auth\OpenID\Store {
 
     /**
      * This creates a new MDB2Store instance.  It requires an
@@ -74,7 +75,7 @@ class Auth_OpenID_Store_MDB2 extends Auth_OpenID_Store {
         // database connection.
         if (!is_object($connection) ||
             !is_subclass_of($connection, 'mdb2_driver_common')) {
-            trigger_error("Auth_OpenID_MDB2Store expected PEAR connection " .
+            trigger_error("\Auth\OpenID\MDB2Store expected PEAR connection " .
                           "object (got ".get_class($connection).")",
                           E_USER_ERROR);
             return;
@@ -344,7 +345,7 @@ class Auth_OpenID_Store_MDB2 extends Auth_OpenID_Store {
         if (!$assoc || PEAR::isError($assoc)) {
             return null;
         } else {
-            $association = new Auth_OpenID_Association($assoc['handle'],
+            $association = new \Auth\OpenID\Association($assoc['handle'],
                                                        stream_get_contents(
                                                            $assoc['secret']),
                                                        $assoc['issued'],

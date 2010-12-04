@@ -50,7 +50,7 @@ class TestAuthRequestMixin extends OpenIDTestMixin {
         $this->realm = 'http://example/';
         $this->return_to = 'http://example/return/';
         $this->assoc = new AuthRequest_DummyAssoc();
-        $this->authreq = new Auth_OpenID_AuthRequest($this->endpoint, $this->assoc);
+        $this->authreq = new \Auth\OpenID\AuthRequest($this->endpoint, $this->assoc);
     }
 
     function failUnlessAnonymous($msg)
@@ -128,7 +128,7 @@ class TestAuthRequestMixin extends OpenIDTestMixin {
 }
 
 class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
-    public $preferred_namespace = Auth_OpenID_OPENID2_NS;
+    public $preferred_namespace = \Auth\OpenID\OPENID2_NS;
 
     function failUnlessHasRealm($msg)
     {
@@ -140,8 +140,8 @@ class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
 
     function failUnlessIdentifiersPresent($msg)
     {
-        $identity_present = $msg->hasKey(Auth_OpenID_OPENID_NS, 'identity');
-        $claimed_present = $msg->hasKey(Auth_OpenID_OPENID_NS, 'claimed_id');
+        $identity_present = $msg->hasKey(\Auth\OpenID\OPENID_NS, 'identity');
+        $claimed_present = $msg->hasKey(\Auth\OpenID\OPENID_NS, 'claimed_id');
 
         $this->assertEquals($claimed_present, $identity_present);
     }
@@ -158,7 +158,7 @@ class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
     {
         $result = $this->authreq->formMarkup($this->realm,
                                              null, true);
-        $this->assertTrue(Auth_OpenID::isFailure($result));
+        $this->assertTrue(\Auth\OpenID::isFailure($result));
     }
 
     function test_markup_returnToArgs()
@@ -166,7 +166,7 @@ class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
         $this->authreq->return_to_args = array('extra' => 'args');
         $result = $this->authreq->formMarkup($this->realm,
                                              null, false);
-        $this->assertTrue(Auth_OpenID::isFailure($result));
+        $this->assertTrue(\Auth\OpenID::isFailure($result));
     }
 
     function test_setAnonymousWorksForOpenID2()
@@ -203,18 +203,18 @@ class TestAuthRequestOpenID2 extends TestAuthRequestMixin {
                                           $this->immediate);
         $this->failUnlessHasRequiredFields($msg);
         $this->failUnlessHasIdentifiers($msg,
-                                        Auth_OpenID_IDENTIFIER_SELECT,
-                                        Auth_OpenID_IDENTIFIER_SELECT);
+                                        \Auth\OpenID\IDENTIFIER_SELECT,
+                                        \Auth\OpenID\IDENTIFIER_SELECT);
     }
 }
 
 class TestAuthRequestOpenID1 extends TestAuthRequestMixin {
-    public $preferred_namespace = Auth_OpenID_OPENID1_NS;
+    public $preferred_namespace = \Auth\OpenID\OPENID1_NS;
 
     function setUpEndpoint()
     {
         parent::setUpEndpoint();
-        $this->endpoint->preferred_namespace = Auth_OpenID_OPENID1_NS;
+        $this->endpoint->preferred_namespace = \Auth\OpenID\OPENID1_NS;
     }
 
     function failUnlessHasIdentifiers($msg, $op_specific_id, $claimed_id)
@@ -227,7 +227,7 @@ class TestAuthRequestOpenID1 extends TestAuthRequestMixin {
     function failUnlessIdentifiersPresent($msg)
     {
         $this->failIfOpenIDKeyExists($msg, 'claimed_id');
-        $this->assertTrue($msg->hasKey(Auth_OpenID_OPENID_NS, 'identity'));
+        $this->assertTrue($msg->hasKey(\Auth\OpenID\OPENID_NS, 'identity'));
     }
 
     function failUnlessHasRealm($msg)
@@ -244,7 +244,7 @@ class TestAuthRequestOpenID1 extends TestAuthRequestMixin {
     {
         $result = $this->authreq->formMarkup($this->realm,
                                              null, false);
-        $this->assertTrue(Auth_OpenID::isFailure($result));
+        $this->assertTrue(\Auth\OpenID::isFailure($result));
     }
 
     function test_setAnonymousFailsForOpenID1()
@@ -265,8 +265,8 @@ class TestAuthRequestOpenID1 extends TestAuthRequestMixin {
         $msg = $this->authreq->getMessage($this->realm, $this->return_to,
                                           $this->immediate);
         $this->failUnlessHasRequiredFields($msg);
-        $this->assertEquals(Auth_OpenID_IDENTIFIER_SELECT,
-                            $msg->getArg(Auth_OpenID_OPENID1_NS,
+        $this->assertEquals(\Auth\OpenID\IDENTIFIER_SELECT,
+                            $msg->getArg(\Auth\OpenID\OPENID1_NS,
                                          'identity'));
     }
 }

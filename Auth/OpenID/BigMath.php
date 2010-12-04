@@ -1,5 +1,5 @@
 <?php
-
+namespace Auth\OpenID;
 /**
  * BigMath: A math library wrapper that abstracts out the underlying
  * long integer library.
@@ -21,7 +21,7 @@
 require_once 'Auth/OpenID/CryptUtil.php';
 
 /**
- * Need Auth_OpenID::bytes().
+ * Need \Auth\OpenID::bytes().
  */
 require_once 'Auth/OpenID.php';
 
@@ -30,7 +30,7 @@ require_once 'Auth/OpenID.php';
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_MathLibrary {
+class MathLibrary {
     /**
      * Given a long integer, returns the number converted to a binary
      * string.  This function accepts long integer values of arbitrary
@@ -150,9 +150,9 @@ class Auth_OpenID_MathLibrary {
             list($duplicate, $nbytes) = $duplicate_cache[$rbytes];
         } else {
             if ($rbytes[0] == "\x00") {
-                $nbytes = Auth_OpenID::bytes($rbytes) - 1;
+                $nbytes = \Auth\OpenID::bytes($rbytes) - 1;
             } else {
-                $nbytes = Auth_OpenID::bytes($rbytes);
+                $nbytes = \Auth\OpenID::bytes($rbytes);
             }
 
             $mxrand = $this->pow(256, $nbytes);
@@ -169,7 +169,7 @@ class Auth_OpenID_MathLibrary {
         }
 
         do {
-            $bytes = "\x00" . Auth_OpenID_CryptUtil::getBytes($nbytes);
+            $bytes = "\x00" . CryptUtil::getBytes($nbytes);
             $n = $this->binaryToLong($bytes);
             // Keep looping if this value is in the low duplicated range
         } while ($this->cmp($n, $duplicate) < 0);
@@ -181,13 +181,13 @@ class Auth_OpenID_MathLibrary {
 /**
  * Exposes BCmath math library functionality.
  *
- * {@link Auth_OpenID_BcMathWrapper} wraps the functionality provided
+ * {@link BcMathWrapper} wraps the functionality provided
  * by the BCMath extension.
  *
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
+class BcMathWrapper extends MathLibrary{
     public $type = 'bcmath';
 
     function add($x, $y)
@@ -267,13 +267,13 @@ class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
 /**
  * Exposes GMP math library functionality.
  *
- * {@link Auth_OpenID_GmpMathWrapper} wraps the functionality provided
+ * {@link GmpMathWrapper} wraps the functionality provided
  * by the GMP extension.
  *
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_GmpMathWrapper extends Auth_OpenID_MathLibrary{
+class GmpMathWrapper extends MathLibrary{
     public $type = 'gmp';
 
     function add($x, $y)
@@ -334,26 +334,26 @@ class Auth_OpenID_GmpMathWrapper extends Auth_OpenID_MathLibrary{
  * values will be suffixed with a library file extension (e.g. ".so").
  * 'extension' is the name of a PHP extension which will be tested
  * before 'modules' are loaded.  'class' is the string name of a
- * {@link Auth_OpenID_MathWrapper} subclass which should be
+ * {@link \Auth\OpenID\MathWrapper} subclass which should be
  * instantiated if a given extension is present.
  *
  * You can define new math library implementations and add them to
  * this array.
  */
-function Auth_OpenID_math_extensions()
+function math_extensions()
 {
     $result = array();
 
-    if (!defined('Auth_OpenID_BUGGY_GMP')) {
+    if (!defined('Auth\OpenID\BUGGY_GMP')) {
         $result[] =
             array('modules' => array('gmp', 'php_gmp'),
                   'extension' => 'gmp',
-                  'class' => 'Auth_OpenID_GmpMathWrapper');
+                  'class' => '\Auth\OpenID\GmpMathWrapper');
     }
 
     $result[] = array('modules' => array('bcmath', 'php_bcmath'),
                       'extension' => 'bcmath',
-                      'class' => 'Auth_OpenID_BcMathWrapper');
+                      'class' => '\Auth\OpenID\BcMathWrapper');
 
     return $result;
 }
@@ -361,7 +361,7 @@ function Auth_OpenID_math_extensions()
 /**
  * Detect which (if any) math library is available
  */
-function Auth_OpenID_detectMathLibrary($exts)
+function detectMathLibrary($exts)
 {
     $loaded = false;
 
@@ -376,30 +376,30 @@ function Auth_OpenID_detectMathLibrary($exts)
 }
 
 /**
- * {@link Auth_OpenID_getMathLib} checks for the presence of long
+ * {@link \Auth\OpenID\getMathLib} checks for the presence of long
  * number extension modules and returns an instance of
- * {@link Auth_OpenID_MathWrapper} which exposes the module's
+ * {@link \Auth\OpenID\MathWrapper} which exposes the module's
  * functionality.
  *
  * Checks for the existence of an extension module described by the
- * result of {@link Auth_OpenID_math_extensions()} and returns an
+ * result of {@link \Auth\OpenID\math_extensions()} and returns an
  * instance of a wrapper for that extension module.  If no extension
- * module is found, an instance of {@link Auth_OpenID_MathWrapper} is
+ * module is found, an instance of {@link \Auth\OpenID\MathWrapper} is
  * returned, which wraps the native PHP integer implementation.  The
  * proper calling convention for this method is $lib =
- * Auth_OpenID_getMathLib().
+ * \Auth\OpenID\getMathLib().
  *
  * This function checks for the existence of specific long number
  * implementations in the following order: GMP followed by BCmath.
  *
- * @return Auth_OpenID_MathWrapper $instance An instance of
- * {@link Auth_OpenID_MathWrapper} or one of its subclasses
+ * @return MathWrapper $instance An instance of
+ * {@link \Auth\OpenID\MathWrapper} or one of its subclasses
  *
  * @package OpenID
  */
-function Auth_OpenID_getMathLib()
+function getMathLib()
 {
-    // The instance of Auth_OpenID_MathWrapper that we choose to
+    // The instance of \Auth\OpenID\MathWrapper that we choose to
     // supply will be stored here, so that subseqent calls to this
     // method will return a reference to the same object.
     static $lib = null;
@@ -408,23 +408,23 @@ function Auth_OpenID_getMathLib()
         return $lib;
     }
 
-    if (Auth_OpenID_noMathSupport()) {
+    if (noMathSupport()) {
         $null = null;
         return $null;
     }
 
     // If this method has not been called before, look at
-    // Auth_OpenID_math_extensions and try to find an extension that
+    // \Auth\OpenID\math_extensions and try to find an extension that
     // works.
-    $ext = Auth_OpenID_detectMathLibrary(Auth_OpenID_math_extensions());
+    $ext = detectMathLibrary(math_extensions());
     if ($ext === false) {
         $tried = array();
-        foreach (Auth_OpenID_math_extensions() as $extinfo) {
+        foreach (math_extensions() as $extinfo) {
             $tried[] = $extinfo['extension'];
         }
         $triedstr = implode(", ", $tried);
 
-        Auth_OpenID_setNoMathSupport();
+        setNoMathSupport();
 
         $result = null;
         return $result;
@@ -437,16 +437,16 @@ function Auth_OpenID_getMathLib()
     return $lib;
 }
 
-function Auth_OpenID_setNoMathSupport()
+function setNoMathSupport()
 {
-    if (!defined('Auth_OpenID_NO_MATH_SUPPORT')) {
-        define('Auth_OpenID_NO_MATH_SUPPORT', true);
+    if (!defined('Auth\OpenID\NO_MATH_SUPPORT')) {
+        define('Auth\OpenID\NO_MATH_SUPPORT', true);
     }
 }
 
-function Auth_OpenID_noMathSupport()
+function noMathSupport()
 {
-    return defined('Auth_OpenID_NO_MATH_SUPPORT');
+    return defined('Auth\OpenID\NO_MATH_SUPPORT');
 }
 
 

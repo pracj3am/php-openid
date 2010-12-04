@@ -18,7 +18,7 @@ configuration changes necessary to run the library.
 INSTALLATION
 ============
 
-You will need PHP 5.1.0 or greater to use this library.  We have
+You will need PHP 5.3.0 or greater to use this library.  We have
 tested the library Linux on PHP 5.3.3.
 
 Follow these steps:
