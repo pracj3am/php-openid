@@ -1093,12 +1093,12 @@ class Tests_Auth_OpenID_CheckID extends PHPUnit_TestCase {
         return $value;
     }
 
-    private function _verifyTrue($trust_root, $return_to)
+    public function _verifyTrue($trust_root, $return_to)
     {
         return $this->_verify($trust_root, $return_to, true);
     }
 
-    private function _verifyFalse($trust_root, $return_to)
+    public function _verifyFalse($trust_root, $return_to)
     {
         return $this->_verify($trust_root, $return_to, false);
     }
