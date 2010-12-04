@@ -116,7 +116,7 @@ class HTTPFetcher {
     /**
      * @access private
      */
-    private function _findRedirect($headers, $url)
+    protected function _findRedirect($headers, $url)
     {
         foreach ($headers as $line) {
             if (strpos(strtolower($line), "location: ") === 0) {
