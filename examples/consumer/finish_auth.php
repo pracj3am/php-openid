@@ -57,7 +57,7 @@ function run() {
                 "'.";
         }
 
-	$pape_resp = \Auth\OpenID\PAPE_Response::fromSuccessResponse($response);
+	$pape_resp = \Auth\OpenID\PAPE\Response::fromSuccessResponse($response);
 
 	if ($pape_resp) {
             if ($pape_resp->auth_policies) {

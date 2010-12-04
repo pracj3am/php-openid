@@ -42,7 +42,7 @@ function run() {
     	$policy_uris = $_GET['policies'];
 	}
 
-    $pape_request = new \Auth\OpenID\PAPE_Request($policy_uris);
+    $pape_request = new \Auth\OpenID\PAPE\Request($policy_uris);
     if ($pape_request) {
         $auth_request->addExtension($pape_request);
     }

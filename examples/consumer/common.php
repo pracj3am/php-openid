@@ -32,15 +32,17 @@ function doIncludes() {
      * Require the PAPE extension module.
      */
     require_once "Auth/OpenID/PAPE.php";
+    require_once "Auth/OpenID/PAPE/Request.php";
+    require_once "Auth/OpenID/PAPE/Response.php";
 }
 
 doIncludes();
 
 global $pape_policy_uris;
 $pape_policy_uris = array(
-			  PAPE_AUTH_MULTI_FACTOR_PHYSICAL,
-			  PAPE_AUTH_MULTI_FACTOR,
-			  PAPE_AUTH_PHISHING_RESISTANT
+			  \Auth\OpenID\PAPE\MULTI_FACTOR_PHYSICAL,
+			  \Auth\OpenID\PAPE\MULTI_FACTOR,
+			  \Auth\OpenID\PAPE\PHISHING_RESISTANT
 			  );
 
 function &getStore() {
