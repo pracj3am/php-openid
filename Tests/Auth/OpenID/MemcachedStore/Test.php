@@ -25,7 +25,7 @@ class Tests_Auth_OpenID_MemcachedStore_Test extends Tests_Auth_OpenID_Store {
         if (!$memcached->connect($_Auth_OpenID_memcache_test_host)) {
             $this->fail("skipping memcache store tests - couldn't connect");
         } else {
-            $store = new \Auth\OpenID\Store\Memcached(_$memcached);
+            $store = new \Auth\OpenID\Store\Memcached($memcached);
 
             $this->_testStore($store);
             $this->_testNonce($store);

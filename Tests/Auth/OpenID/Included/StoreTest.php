@@ -32,7 +32,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        $store = new \Auth\OpenID\Store\File(_$temp_dir);
+        $store = new \Auth\OpenID\Store\File($temp_dir);
         $this->_testStore($store);
         $this->_testNonce($store);
         $this->_testNonceCleanup($store);
@@ -112,7 +112,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             return;
         }
 
-        $store = new \Auth\OpenID\Store\PostgreSQL(_$db);
+        $store = new \Auth\OpenID\Store\PostgreSQL($db);
 
         $this->assertFalse($store->tableExists($store->nonces_table_name));
         $this->assertFalse($store->tableExists($store->associations_table_name));
@@ -181,7 +181,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
             $this->fail("SQLite database connection failed: " .
                         $db->getMessage());
         } else {
-            $store = new \Auth\OpenID\Store\SQLite(_$db);
+            $store = new \Auth\OpenID\Store\SQLite($db);
             $this->assertTrue($store->createTables(), "Table creation failed");
             $this->_testStore($store);
             $this->_testNonce($store);
@@ -234,7 +234,7 @@ class Tests_Auth_OpenID_Included_StoreTest extends Tests_Auth_OpenID_Store {
 
         $db->query("USE $temp_db_name");
 
-        $store = new \Auth\OpenID\Store\MySQL(_$db);
+        $store = new \Auth\OpenID\Store\MySQL($db);
         $store->createTables();
         $this->_testStore($store);
         $this->_testNonce($store);
