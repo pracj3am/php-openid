@@ -12,6 +12,10 @@ class Response extends \Auth\OpenID\Extension {
     public $ns_alias = 'pape';
     public $ns_uri = NS_URI;
 
+    public $auth_policies;
+    public $auth_time;
+    public $nist_auth_level;
+
     public function __construct($auth_policies=null, $auth_time=null,
                                        $nist_auth_level=null)
     {

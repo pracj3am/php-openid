@@ -73,8 +73,8 @@ function run() {
                 $success .= "<p>No PAPE policies affected the authentication.</p>";
             }
 
-            if ($pape_resp->auth_age) {
-                $age = escape($pape_resp->auth_age);
+            if ($pape_resp->auth_time) {
+                $age = escape($pape_resp->auth_time);
                 $success .= "<p>The authentication age returned by the " .
                     "server is: <tt>".$age."</tt></p>";
             }
