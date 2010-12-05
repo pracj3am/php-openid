@@ -87,7 +87,7 @@ class SQL extends \Auth\OpenID\Store {
         // Check the connection object type to be sure it's a PEAR
         // database connection.
         if (!(is_object($connection) &&
-              (is_subclass_of($connection, 'db_common') ||
+              ($connection instanceof \DB_common ||
                $connection instanceof \Auth\OpenID\DatabaseConnection))) {
             trigger_error("\Auth\OpenID\SQLStore expected PEAR connection " .
                           "object (got ".get_class($connection).")",
@@ -155,30 +155,39 @@ class SQL extends \Auth\OpenID\Store {
 
     function tableExists($table_name)
     {
-        return !$this->isError(
-                      $this->connection->query(
-                          sprintf("SELECT * FROM %s LIMIT 0",
-                                  $table_name)));
+        try {
+            $this->resultToException($this->connection->query(
+                         sprintf("SELECT * FROM %s LIMIT 0",
+                                 $table_name)));
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
      * Returns true if $value constitutes a database error; returns
      * false otherwise.
      */
-    function isError($value)
+    private function isError($value)
     {
-        return PEAR::isError($value);
+        if ($this->connection instanceof \DB_common) {
+            return PEAR::isError($value);
+        }
+
+        return false;
     }
 
     /**
-     * Converts a query result to a boolean.  If the result is a
-     * database error according to $this->isError(), this returns
-     * false; otherwise, this returns true.
+     * Converts a query result to an exception.  If the result is a
+     * database error according to $this->isError(), this throws
+     * an Excpetion; otherwise, this returns true.
+     * @throws SQLException
      */
-    function resultToBool($obj)
+    protected function resultToException($obj)
     {
         if ($this->isError($obj)) {
-            return false;
+            throw new SQLException;
         } else {
             return true;
         }
@@ -302,7 +311,11 @@ class SQL extends \Auth\OpenID\Store {
     {
         if (!$this->tableExists($this->nonces_table_name)) {
             $r = $this->connection->query($this->sql['nonce_table']);
-            return $this->resultToBool($r);
+            try {
+                $this->resultToException($r);
+            } catch (\Exception $e) {
+                return false;
+            }
         }
         return true;
     }
@@ -311,7 +324,11 @@ class SQL extends \Auth\OpenID\Store {
     {
         if (!$this->tableExists($this->associations_table_name)) {
             $r = $this->connection->query($this->sql['assoc_table']);
-            return $this->resultToBool($r);
+            try {
+                $this->resultToException($r);
+            } catch (\Exception $e) {
+                return false;
+            }
         }
         return true;
     }
@@ -334,7 +351,8 @@ class SQL extends \Auth\OpenID\Store {
 
     function storeAssociation($server_url, $association)
     {
-        if ($this->resultToBool($this->_set_assoc(
+        try {
+            $this->resultToException($this->_set_assoc(
                                             $server_url,
                                             $association->handle,
                                             $this->blobEncode(
@@ -342,9 +360,9 @@ class SQL extends \Auth\OpenID\Store {
                                             $association->issued,
                                             $association->lifetime,
                                             $association->assoc_type
-                                            ))) {
+                                            ));
             $this->connection->commit();
-        } else {
+        } catch (\Exception $e) {
             $this->connection->rollback();
         }
     }
@@ -354,12 +372,13 @@ class SQL extends \Auth\OpenID\Store {
      */
     private function _get_assoc($server_url, $handle)
     {
-        $result = $this->connection->getRow($this->sql['get_assoc'],
-                                            array($server_url, $handle));
-        if ($this->isError($result)) {
-            return null;
-        } else {
+        try {
+            $this->resultToException(
+                    $result = $this->connection->getRow($this->sql['get_assoc'],
+                                                array($server_url, $handle)));
             return $result;
+        } catch (\Exception $e) {
+            return null;
         }
     }
 
@@ -368,13 +387,13 @@ class SQL extends \Auth\OpenID\Store {
      */
     private function _get_assocs($server_url)
     {
-        $result = $this->connection->getAll($this->sql['get_assocs'],
-                                            array($server_url));
-
-        if ($this->isError($result)) {
-            return array();
-        } else {
+        try {
+            $this->resultToException(
+                    $result = $this->connection->getAll($this->sql['get_assocs'],
+                                                array($server_url)));
             return $result;
+        } catch (\Exception $e) {
+            return array();
         }
     }
 
@@ -384,11 +403,12 @@ class SQL extends \Auth\OpenID\Store {
             return false;
         }
 
-        if ($this->resultToBool($this->connection->query(
+        try {
+            $this->resultToException($this->connection->query(
                               $this->sql['remove_assoc'],
-                              array($server_url, $handle)))) {
+                              array($server_url, $handle)));
             $this->connection->commit();
-        } else {
+        } catch (\Exception $e) {
             $this->connection->rollback();
         }
 
@@ -455,15 +475,17 @@ class SQL extends \Auth\OpenID\Store {
     private function _add_nonce($server_url, $timestamp, $salt)
     {
         $sql = $this->sql['add_nonce'];
-        $result = $this->connection->query($sql, array($server_url,
-                                                       $timestamp,
-                                                       $salt));
-        if ($this->isError($result)) {
-            $this->connection->rollback();
-        } else {
+        try {
+            $this->resultToException(
+                    $result = $this->connection->query($sql, array($server_url,
+                                                           $timestamp,
+                                                           $salt)));
             $this->connection->commit();
+        } catch (\Exception $e) {
+            $this->connection->rollback();
+            return false;
         }
-        return $this->resultToBool($result);
+        return true;
     }
 
     function useNonce($server_url, $timestamp, $salt)
@@ -556,3 +578,4 @@ class SQL extends \Auth\OpenID\Store {
 }
 
 
+class SQLException extends \Exception {}
