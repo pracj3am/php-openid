@@ -1,6 +1,7 @@
 <?php
 namespace Auth\OpenID\PAPE;
 
+require_once "Auth/OpenID/PAPE.php";
 require_once "Auth/OpenID/Extension.php";
 
 
