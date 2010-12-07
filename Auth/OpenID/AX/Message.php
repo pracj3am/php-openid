@@ -11,6 +11,7 @@ use Auth\OpenID\AX;
  * Require utility classes and functions for the consumer.
  */
 require_once "Auth/OpenID/AX.php";
+require_once "Auth/OpenID/AX/Common.php";
 require_once "Auth/OpenID/Extension.php";
 require_once "Auth/OpenID/Message.php";
 require_once "Auth/OpenID/TrustRoot.php";
